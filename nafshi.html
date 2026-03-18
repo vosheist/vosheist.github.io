@@ -65,7 +65,7 @@
     </div>
     <section class="auth-section">
         <div class="auth-wrap">
-            <h2>אַרײַנגיין צו נפשי</h2>
+            <h2>קום אריין צו נפשי</h2>
             <form id="login-form" class="auth-card auth-single">
                 <h3>לאָג אַריין</h3>
                 <label for="login-name" class="form-label">נאָמען</label>
@@ -73,7 +73,7 @@
                 <label for="login-password" class="form-label">פּאַראָל</label>
                 <input id="login-password" name="password" class="form-control" type="password" required>
                 <button type="submit" class="btn btn-primary auth-btn">אַרײַנגיין</button>
-                <p class="auth-switch-text">קיין חשבו?</p>
+                <p class="auth-switch-text">האסט נישט קיין חשבון?</p>
                 <button type="button" class="btn btn-outline-secondary auth-switch-btn" data-bs-toggle="modal"
                     data-bs-target="#createAccountModal">שאַף אַ נײַעם חשבון</button>
                 <p id="login-message" class="auth-message" aria-live="polite"></p>
@@ -105,7 +105,7 @@
                         <p id="create-message" class="auth-message mt-2" aria-live="polite"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">פארמאכן</button>
                         <button type="submit" class="btn btn-primary auth-btn">שאַפֿן חשבון</button>
                     </div>
                 </form>
@@ -229,12 +229,12 @@
             const userKey = normalizeName(name);
 
             if (!userKey) {
-                showMessage(createMessage, "שרייב אַ נאָמען.", "error");
+                showMessage(createMessage, "לייג אריין א נאמען.", "error");
                 return;
             }
 
             if (!nickname || nickname.length < 2) {
-                showMessage(createMessage, "שרייב א פען נאמען (מינימום 2 אותיות).", "error");
+                showMessage(createMessage, "לייג אריין א פען נאמען (מינימום 2 אותיות).", "error");
                 return;
             }
 
@@ -250,7 +250,7 @@
 
             const users = loadUsers();
             if (users[userKey]) {
-                showMessage(createMessage, "דער נאָמען איז שוין פאראן.", "error");
+                showMessage(createMessage, "דער נאמען איז שוין פארנומען.", "error");
                 return;
             }
 
@@ -297,13 +297,13 @@
             const user = users[userKey];
 
             if (!user) {
-                showMessage(loginMessage, "קיין חשבון ניט געפונען פאר דעם נאָמען.", "error");
+                showMessage(loginMessage, "איך טרעף נישט קיין חשבון מיט דעם נאמען.", "error");
                 return;
             }
 
             const incomingHash = await hashPassword(passwordInput.value);
             if (incomingHash !== user.passwordHash) {
-                showMessage(loginMessage, "פאַלשער פּאַראָל.", "error");
+                showMessage(loginMessage, "דער פאסווארד איז נישט ריכטיג.", "error");
                 return;
             }
 

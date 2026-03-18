@@ -60,7 +60,7 @@
 
     <section class="community-section">
         <div class="community-wrap">
-            <h1>קהילה רעקארדס</h1>
+            <h1>קהילה (נאר פאר מיטגלידער)</h1>
             <div id="community-grid" class="community-grid"></div>
         </div>
     </section>
@@ -69,7 +69,7 @@
         <div
             class="container-fluid d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center gap-2 py-3">
             <p class="site-footer-text">&copy; 2026 וואס הייסט</p>
-            <p class="site-footer-text">קהילה | רעקארדס | צוזאמען</p>
+            <p class="site-footer-text">קהילה | מיטגלידער | צוזאמען</p>
         </div>
     </footer>
 
@@ -78,7 +78,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="communityRecordModalLabel">Records</h4>
+                    <h4 class="modal-title" id="communityRecordModalLabel">רעקארדס</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -96,6 +96,10 @@
         const STORAGE_KEY = "vosHeistUsers";
         const SESSION_KEY = "vosHeistCurrentUser";
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
+
+        if (!currentUserKey) {
+            window.location.href = "nafshi.html";
+        }
 
         function loadUsers() {
             try {
@@ -130,14 +134,14 @@
             const entries = Object.entries(users).filter(([key]) => key !== currentUserKey);
 
             if (!entries.length) {
-                grid.innerHTML = '<div class="community-card"><p class="community-meta">נאך קיינער איז נישט דא מיט רעקארדס.</p></div>';
+                grid.innerHTML = '<div class="community-card"><p class="community-meta">נאכנישט קיין מיטגלידער מיט רעקארדס.</p></div>';
                 return;
             }
 
             grid.innerHTML = entries.map(([key, user]) => {
                 const stats = summarize(user);
                 const nickname = user.nickname || user.displayName || key;
-                return `<article class="community-card"><p class="community-name">${escapeHtml(nickname)}</p><p class="community-meta">מצוות: ${stats.mitzvah} | עבירות: ${stats.aveirah} | סך הכל: ${stats.total}</p><button class="btn btn-outline-primary btn-sm js-view-user" data-user-key="${escapeHtml(key)}">View Records</button></article>`;
+                return `<article class="community-card"><p class="community-name">${escapeHtml(nickname)}</p><p class="community-meta">מצוות: ${stats.mitzvah} | עבירות: ${stats.aveirah} | סך הכל: ${stats.total}</p><button class="btn btn-outline-primary btn-sm js-view-user" data-user-key="${escapeHtml(key)}">זע רעקארדס</button></article>`;
             }).join("");
 
             grid.querySelectorAll(".js-view-user").forEach((button) => {
@@ -158,10 +162,10 @@
             const records = Array.isArray(user.records) ? [...user.records].reverse() : [];
             const list = document.getElementById("community-record-list");
             const title = document.getElementById("communityRecordModalLabel");
-            title.textContent = `${nickname} - Records`;
+            title.textContent = `${nickname} - רעקארדס`;
 
             if (!records.length) {
-                list.innerHTML = '<li class="record-empty">קיין רעקארדס נאך נישט.</li>';
+                list.innerHTML = '<li class="record-empty">נאכנישט קיין רעקארדס.</li>';
             } else {
                 list.innerHTML = records.map((record) => {
                     const label = record.type === "mitzvah" ? "מצוה" : "עבירה";
