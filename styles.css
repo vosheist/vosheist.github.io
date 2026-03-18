@@ -66,7 +66,7 @@ body {
     color: var(--logo-blue-deep);
     font-weight: 700;
     text-decoration: none;
-    font-size: clamp(1.8rem, 2.8vw, 2.55rem);
+    font-size: clamp(1.5rem, 2.25vw, 2.1rem);
     line-height: 1;
     letter-spacing: 0.03em;
     display: inline-flex;
@@ -98,7 +98,7 @@ body {
 }
 
 #my-navbar .brand-tes {
-    font-size: 1.72em;
+    font-size: 1.56em;
     line-height: 0.72;
     color: inherit;
     margin-right: -0.03em;
@@ -107,8 +107,8 @@ body {
 #my-navbar .brand-marks {
     position: relative;
     display: inline-block;
-    width: 1.28em;
-    height: 1.72em;
+    width: 1.14em;
+    height: 1.48em;
     margin-right: 0.04em;
     margin-bottom: 0.08em;
     color: inherit;
@@ -117,27 +117,27 @@ body {
 #my-navbar .brand-mark {
     position: absolute;
     display: block;
-    font-size: 0.5em;
+    font-size: 0.44em;
     line-height: 1;
     color: inherit;
     transform-origin: center;
 }
 
 #my-navbar .brand-mark-one {
-    right: 0.9em;
+    right: 0.82em;
     bottom: 0.02em;
     transform: rotate(-16deg);
 }
 
 #my-navbar .brand-mark-two {
-    right: 0.48em;
-    bottom: 0.72em;
+    right: 0.42em;
+    bottom: 0.62em;
     transform: rotate(10deg) scale(1.04);
 }
 
 #my-navbar .brand-mark-three {
     right: 0.04em;
-    bottom: 1.42em;
+    bottom: 1.22em;
     transform: rotate(22deg) scale(0.94);
 }
 
