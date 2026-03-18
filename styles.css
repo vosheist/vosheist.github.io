@@ -62,11 +62,54 @@ body {
 }
 
 #my-navbar .navbar-brand {
-    font-family: 'Rubik Marker Hatch', cursive;
+    font-family: 'Gveret Levin', sans-serif;
     color: var(--logo-blue-deep);
     font-weight: 700;
     text-decoration: none;
-    font-size: 1.55rem;
+    font-size: clamp(1.8rem, 2.8vw, 2.55rem);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+#my-navbar .brand-lockup {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.02em;
+}
+
+#my-navbar .brand-words {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 0.74;
+    margin-bottom: 0.06em;
+}
+
+#my-navbar .brand-vos {
+    font-size: 0.62em;
+    margin-right: 0.22em;
+}
+
+#my-navbar .brand-heist {
+    font-size: 0.88em;
+}
+
+#my-navbar .brand-tes {
+    font-size: 1.72em;
+    line-height: 0.72;
+    color: #704f38;
+    margin-right: -0.03em;
+}
+
+#my-navbar .brand-marks {
+    font-size: 0.78em;
+    line-height: 1;
+    letter-spacing: -0.08em;
+    color: #704f38;
+    margin-bottom: 0.36em;
+    margin-right: -0.02em;
 }
 
 #my-navbar .navbar-brand:hover,
