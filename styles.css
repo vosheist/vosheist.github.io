@@ -327,6 +327,10 @@ body {
     border-radius: 14px;
     padding: 1.2rem;
     text-align: right;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+    animation: pricing-fade-up 0.55s ease both;
 }
 
 .pricing-card-featured {
@@ -334,11 +338,55 @@ body {
     box-shadow: 0 8px 22px rgba(47, 81, 101, 0.12);
 }
 
+.pricing-card:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 26px rgba(47, 81, 101, 0.16);
+}
+
+.pricing-card.is-selected {
+    border-color: #3f8d5a;
+    box-shadow: 0 0 0 3px rgba(63, 141, 90, 0.2), 0 14px 28px rgba(47, 81, 101, 0.2);
+    background: linear-gradient(180deg, #fffdf9 0%, #f3fbf6 100%);
+}
+
+.pricing-card.is-selected::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px rgba(63, 141, 90, 0.28);
+}
+
+.pricing-badge {
+    position: absolute;
+    left: 0.9rem;
+    top: 0.85rem;
+    margin: 0;
+    background: #704f38;
+    color: #fff7ef;
+    border-radius: 999px;
+    padding: 0.2rem 0.62rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+}
+
 .pricing-plan {
     margin: 0;
     color: #704f38;
     font-family: "Playpen Sans Hebrew", sans-serif;
     font-size: 0.98rem;
+}
+
+.pricing-name {
+    margin: 0.2rem 0 0;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+    font-size: 1.2rem;
 }
 
 .pricing-price {
@@ -367,6 +415,25 @@ body {
 
 .pricing-btn {
     margin-top: 1rem;
+}
+
+.pricing-selected-note {
+    margin: 0.6rem 0 0;
+    color: #2f7d4d;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+@keyframes pricing-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .modal-content {
@@ -705,7 +772,18 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .pricing-badge {
+        top: 0.7rem;
+    }
+
     #my-navbar .account-shortcut {
         display: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pricing-card {
+        animation: none;
+        transition: none;
     }
 }

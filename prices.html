@@ -68,26 +68,35 @@
         <div class="pricing-wrap">
             <h2>קלייב א פלאן</h2>
             <div class="pricing-grid">
-                <article class="pricing-card">
-                    <p class="pricing-plan">פלאן 1</p>
+                <article class="pricing-card js-plan-card" data-plan="starter" aria-selected="false">
+                    <p class="pricing-plan">Starter</p>
+                    <h3 class="pricing-name">התחלה פלאן</h3>
                     <p class="pricing-price">$9<span>/month</span></p>
                     <ul class="pricing-features">
                         <li>פערזענליכע טרעקער</li>
                         <li>טעגליכע רעקארדס</li>
                         <li>קהילה צוטריט</li>
                     </ul>
-                    <a href="nafshi.html" class="btn auth-btn pricing-btn">נעם דעם פלאן</a>
+                    <button type="button" class="btn btn-outline-primary pricing-btn js-select-plan"
+                        data-plan="starter">קלייב דעם פלאן</button>
+                    <p class="pricing-selected-note" hidden>דער פלאן איז אויסגעקליבן</p>
+                    <a href="nafshi.html" class="btn auth-btn pricing-btn">גיי ווייטער</a>
                 </article>
 
-                <article class="pricing-card pricing-card-featured">
-                    <p class="pricing-plan">פלאן 2</p>
+                <article class="pricing-card pricing-card-featured js-plan-card" data-plan="pro" aria-selected="false">
+                    <p class="pricing-badge">פאפולער</p>
+                    <p class="pricing-plan">Pro</p>
+                    <h3 class="pricing-name">מלא פלאן</h3>
                     <p class="pricing-price">$19<span>/month</span></p>
                     <ul class="pricing-features">
                         <li>אלעס פון פלאן 1</li>
                         <li>פולע היסטאריע און גראַפס</li>
                         <li>בעסערע קהילה אויפטואונגען</li>
                     </ul>
-                    <a href="nafshi.html" class="btn auth-btn pricing-btn">נעם דעם פלאן</a>
+                    <button type="button" class="btn btn-outline-primary pricing-btn js-select-plan"
+                        data-plan="pro">קלייב דעם פלאן</button>
+                    <p class="pricing-selected-note" hidden>דער פלאן איז אויסגעקליבן</p>
+                    <a href="nafshi.html" class="btn auth-btn pricing-btn">גיי ווייטער</a>
                 </article>
             </div>
         </div>
@@ -104,6 +113,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <script>
+        const PLAN_STORAGE_KEY = "vosHeistSelectedPlan";
+        const planCards = Array.from(document.querySelectorAll(".js-plan-card"));
+        const planButtons = Array.from(document.querySelectorAll(".js-select-plan"));
+
+        function setSelectedPlan(planKey) {
+            planCards.forEach((card) => {
+                const isSelected = card.dataset.plan === planKey;
+                card.classList.toggle("is-selected", isSelected);
+                card.setAttribute("aria-selected", String(isSelected));
+                const note = card.querySelector(".pricing-selected-note");
+                if (note) {
+                    note.hidden = !isSelected;
+                }
+            });
+
+            localStorage.setItem(PLAN_STORAGE_KEY, planKey);
+        }
+
+        planButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                setSelectedPlan(button.dataset.plan);
+            });
+        });
+
+        const savedPlan = localStorage.getItem(PLAN_STORAGE_KEY);
+        if (savedPlan && planCards.some((card) => card.dataset.plan === savedPlan)) {
+            setSelectedPlan(savedPlan);
+        }
+    </script>
 </body>
 
 </html>
