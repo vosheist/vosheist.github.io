@@ -107,38 +107,38 @@ body {
 #my-navbar .brand-marks {
     position: relative;
     display: inline-block;
-    width: 1.2em;
-    height: 1.15em;
-    margin-right: -0.04em;
-    margin-bottom: 0.3em;
+    width: 0.98em;
+    height: 0.92em;
+    margin-right: 0.02em;
+    margin-bottom: 0.22em;
     color: inherit;
 }
 
 #my-navbar .brand-mark {
     position: absolute;
     display: block;
-    font-size: 0.62em;
+    font-size: 0.5em;
     line-height: 1;
     color: inherit;
     transform-origin: center;
 }
 
 #my-navbar .brand-mark-one {
-    right: 0.8em;
-    bottom: 0.05em;
-    transform: rotate(-22deg);
+    right: 0.58em;
+    bottom: 0.04em;
+    transform: rotate(-16deg);
 }
 
 #my-navbar .brand-mark-two {
-    right: 0.42em;
-    bottom: 0.42em;
-    transform: rotate(14deg);
+    right: 0.3em;
+    bottom: 0.28em;
+    transform: rotate(10deg) scale(1.04);
 }
 
 #my-navbar .brand-mark-three {
     right: 0.02em;
-    bottom: 0.76em;
-    transform: rotate(29deg);
+    bottom: 0.54em;
+    transform: rotate(22deg) scale(0.94);
 }
 
 #my-navbar .navbar-brand:hover,
