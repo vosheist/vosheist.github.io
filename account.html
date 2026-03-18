@@ -180,7 +180,9 @@
                 <form id="mitzvah-form">
                     <div class="modal-body">
                         <label for="mitzvah-title" class="form-label">קורצע קעפל</label>
-                        <input id="mitzvah-title" class="form-control" type="text" required>
+                        <input id="mitzvah-title" class="form-control" type="text" list="mitzvah-title-suggestions"
+                            placeholder="ביישפיל: געגעבן צדקה / געהאלפן א חבר / געזאגט תהילים" required>
+                        <datalist id="mitzvah-title-suggestions"></datalist>
 
                         <label for="mitzvah-details" class="form-label mt-2">פרטים</label>
                         <textarea id="mitzvah-details" class="form-control" rows="3"></textarea>
@@ -224,7 +226,9 @@
                 <form id="aveirah-form">
                     <div class="modal-body">
                         <label for="aveirah-title" class="form-label">קורצע קעפל</label>
-                        <input id="aveirah-title" class="form-control" type="text" required>
+                        <input id="aveirah-title" class="form-control" type="text" list="aveirah-title-suggestions"
+                            placeholder="ביישפיל: לשון הרע / כעס / נישט געזאגט אמת" required>
+                        <datalist id="aveirah-title-suggestions"></datalist>
 
                         <label for="aveirah-details" class="form-label mt-2">פרטים</label>
                         <textarea id="aveirah-details" class="form-control" rows="3"></textarea>
@@ -369,6 +373,67 @@
         const mitzvahForm = document.getElementById("mitzvah-form");
         const aveirahForm = document.getElementById("aveirah-form");
         const profileForm = document.getElementById("profile-form");
+        const mitzvahTitleInput = document.getElementById("mitzvah-title");
+        const aveirahTitleInput = document.getElementById("aveirah-title");
+        const mitzvahTitleSuggestions = document.getElementById("mitzvah-title-suggestions");
+        const aveirahTitleSuggestions = document.getElementById("aveirah-title-suggestions");
+
+        const MITZVAH_TITLE_LIBRARY = [
+            "געגעבן צדקה", "געהאלפן א חבר", "געזאגט תהילים", "געלערנט תורה", "מתפלל געווען בכוונה",
+            "כיבוד אב ואם", "באזוכט א חולה", "טרייסט איינער", "מחילה געבעטן", "מחילה געגעבן",
+            "געמאכט קידוש", "הכנסת אורחים", "מחזק געווען א חבר", "פארשפרייט שלום", "געזאגט א ברכה",
+            "אויף צייט צום מנין", "שבת געהאלטן", "געלייגט תפילין", "אמן געענטפערט", "נישט געשעמט איינער",
+            "געגעבן א גוט ווארט", "מסייע געווען אין שטוב", "צוריקגעגעבן אבידה", "געמאכט חסד", "נישט גערעדט לשון הרע",
+            "donated to charity", "helped someone", "prayed with focus", "learned torah", "honored parents"
+        ];
+
+        const AVEIRAH_TITLE_LIBRARY = [
+            "לשון הרע", "רכילות", "כעס", "גערעדט שלעכט", "געזאגט א ליגנט",
+            "שקר", "באשעמט איינער", "מחלוקת אנגעמאכט", "נישט מכבד געווען עלטערן", "גזל",
+            "ביטול תורה", "געשריגן אויף איינער", "אויסגעשפאט איינער", "נישט געזאגט ברכה", "שנאה געהאלטן",
+            "נישט געהאלטן ווארט", "געקוקט אויף אסור", "שבת פארשוואכט", "געפירט זיך בגאוה", "אומר אמת נישט",
+            "lied", "gossip", "got angry", "hurt someone", "insulted someone", "wasted time"
+        ];
+
+        function getRelevantSuggestions(library, query) {
+            const text = query.trim().toLowerCase();
+            if (!text) {
+                return library.slice(0, 14);
+            }
+
+            const startsWith = [];
+            const includes = [];
+            library.forEach((item) => {
+                const normalized = item.toLowerCase();
+                if (normalized.startsWith(text)) {
+                    startsWith.push(item);
+                    return;
+                }
+                if (normalized.includes(text)) {
+                    includes.push(item);
+                }
+            });
+
+            return [...startsWith, ...includes].slice(0, 14);
+        }
+
+        function renderTitleSuggestions(datalistElement, suggestions) {
+            datalistElement.innerHTML = "";
+            suggestions.forEach((item) => {
+                const option = document.createElement("option");
+                option.value = item;
+                datalistElement.appendChild(option);
+            });
+        }
+
+        function bindTitleAutocomplete(inputElement, datalistElement, library) {
+            const update = () => {
+                renderTitleSuggestions(datalistElement, getRelevantSuggestions(library, inputElement.value));
+            };
+            inputElement.addEventListener("input", update);
+            inputElement.addEventListener("focus", update);
+            update();
+        }
 
         function syncProfileHeader() {
             const nickname = currentUser.nickname || currentUser.displayName;
@@ -742,6 +807,8 @@
         });
 
         setDefaultDates();
+        bindTitleAutocomplete(mitzvahTitleInput, mitzvahTitleSuggestions, MITZVAH_TITLE_LIBRARY);
+        bindTitleAutocomplete(aveirahTitleInput, aveirahTitleSuggestions, AVEIRAH_TITLE_LIBRARY);
         renderRecords();
 
         document.getElementById("logout-btn").addEventListener("click", () => {
