@@ -63,7 +63,8 @@
         <div class="account-shell">
             <header class="account-hero-panel">
                 <h1>מיין חשבון</h1>
-                <p class="account-sub">ברוך הבא, <span id="account-name">...</span> (<span id="account-nickname">...</span>)</p>
+                <p class="account-sub">ברוך הבא, <span id="account-name">...</span> (<span
+                        id="account-nickname">...</span>)</p>
                 <p class="account-note">דא קענסטו פירן דיין טאג מיט א קלארע בליק אויף מצוות און עבירות.</p>
             </header>
 
@@ -75,7 +76,8 @@
                                 id="profile-login-name">-</span></p>
                         <p class="small text-secondary mb-1"><strong>Display Name:</strong> <span
                                 id="profile-display-name">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>פען נאמען:</strong> <span id="profile-nickname">-</span>
+                        <p class="small text-secondary mb-1"><strong>פען נאמען:</strong> <span
+                                id="profile-nickname">-</span>
                         </p>
                         <button id="open-profile-modal-btn" class="btn btn-outline-primary btn-sm" type="button"
                             data-bs-toggle="modal" data-bs-target="#profileModal">Edit Profile</button>
@@ -85,11 +87,13 @@
                         <h2 class="account-panel-title">קיצור סטאטוס</h2>
                         <div class="tracker-summary row g-2 mt-1">
                             <div class="col-12">
-                                <div class="summary-pill mitzvah-pill text-center">מצוות: <span id="mitzvah-count">0</span>
+                                <div class="summary-pill mitzvah-pill text-center">מצוות: <span
+                                        id="mitzvah-count">0</span>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="summary-pill aveirah-pill text-center">עבירות: <span id="aveirah-count">0</span>
+                                <div class="summary-pill aveirah-pill text-center">עבירות: <span
+                                        id="aveirah-count">0</span>
                                 </div>
                             </div>
                         </div>
@@ -102,8 +106,8 @@
                     <h2 class="tracker-title">מצוות און עבירות טרעקער</h2>
                     <div
                         class="tracker-actions d-flex flex-column flex-sm-row justify-content-start align-items-stretch gap-2 mt-2">
-                        <button id="open-mitzvah-modal-btn" class="btn auth-btn px-4" type="button" data-bs-toggle="modal"
-                            data-bs-target="#mitzvahModal">+ מצוה</button>
+                        <button id="open-mitzvah-modal-btn" class="btn auth-btn px-4" type="button"
+                            data-bs-toggle="modal" data-bs-target="#mitzvahModal">+ מצוה</button>
                         <button id="open-aveirah-modal-btn" class="btn btn-outline-danger px-4" type="button"
                             data-bs-toggle="modal" data-bs-target="#aveirahModal">+ עבירה</button>
                     </div>
@@ -528,11 +532,9 @@
                 };
             });
 
-            const maxValue = Math.max(...stats.map((s) => Math.max(s.mitzvah, s.aveirah)), 1);
             periodChart.innerHTML = stats.map((stat) => {
-                const mitzvahWidth = (stat.mitzvah / maxValue) * 100;
-                const aveirahWidth = (stat.aveirah / maxValue) * 100;
-                return `<div class="period-row"><div class="period-label">${stat.label}</div><div class="period-bars"><div class="period-bar mitzvah-bar" style="width:${mitzvahWidth}%">${stat.mitzvah}</div><div class="period-bar aveirah-bar" style="width:${aveirahWidth}%">${stat.aveirah}</div></div></div>`;
+                const total = stat.mitzvah + stat.aveirah;
+                return `<article class="period-card"><p class="period-title">${stat.label}</p><div class="period-counts"><div class="period-count mitzvah-count"><span class="period-count-label">מצוות</span><strong>${stat.mitzvah}</strong></div><div class="period-count aveirah-count"><span class="period-count-label">עבירות</span><strong>${stat.aveirah}</strong></div></div><p class="period-total">סך הכל: ${total}</p></article>`;
             }).join("");
         }
 

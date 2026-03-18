@@ -568,47 +568,68 @@ body {
 }
 
 .period-chart {
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-}
-
-.period-row {
     display: grid;
-    grid-template-columns: 78px 1fr;
-    gap: 0.5rem;
-    align-items: center;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
 }
 
-.period-label {
-    font-size: 0.9rem;
+.period-card {
+    border: 1px solid #d8e1ea;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    padding: 0.65rem;
+}
+
+.period-title {
+    margin: 0 0 0.45rem;
+    font-size: 0.88rem;
+    color: #3f5b71;
+    font-weight: 700;
+    text-align: center;
+}
+
+.period-counts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+}
+
+.period-count {
+    border-radius: 10px;
+    padding: 0.4rem 0.45rem;
+    text-align: center;
+    border: 1px solid transparent;
+}
+
+.period-count-label {
+    display: block;
+    font-size: 0.72rem;
+    line-height: 1;
+    margin-bottom: 0.18rem;
+    color: #4f6578;
+}
+
+.period-count strong {
+    font-size: 1.15rem;
+    line-height: 1;
+    color: #23384a;
+}
+
+.mitzvah-count {
+    background: #f3f8ff;
+    border-color: #cfdff6;
+}
+
+.aveirah-count {
+    background: #fff8f2;
+    border-color: #f2dbc9;
+}
+
+.period-total {
+    margin: 0.5rem 0 0;
+    text-align: center;
     color: #5f7180;
-}
-
-.period-bars {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-}
-
-.period-bar {
-    min-height: 1.1rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    line-height: 1.1rem;
-    padding: 0 0.4rem;
-    text-align: left;
-    color: #ffffff;
-    width: 0;
-    transition: width 0.25s ease;
-}
-
-.period-bar.mitzvah-bar {
-    background: #4e8a66;
-}
-
-.period-bar.aveirah-bar {
-    background: #b2574b;
+    font-size: 0.8rem;
 }
 
 .summary-pill {
@@ -812,6 +833,10 @@ body {
 
     .account-hero-panel {
         padding: 1.05rem 1rem;
+    }
+
+    .period-chart {
+        grid-template-columns: 1fr;
     }
 
     .pricing-badge {
