@@ -27,7 +27,7 @@
                 shortcut.setAttribute("href", "account.html");
             } else {
                 shortcut.classList.add("d-none");
-                shortcut.setAttribute("href", "NAFSHI.HTML");
+                shortcut.setAttribute("href", "nafshi.html");
             }
         });
     }

@@ -30,7 +30,7 @@
                             <a class="nav-link" href="index.html">היים</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="NAFSHI.HTML">נפשי</a>
+                            <a class="nav-link" href="nafshi.html">נפשי</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="prices.html">פּרײזן</a>
@@ -320,7 +320,7 @@
         const currentUser = currentUserKey ? users[currentUserKey] : null;
 
         if (!currentUser) {
-            window.location.href = "NAFSHI.HTML";
+            window.location.href = "nafshi.html";
         } else {
             document.getElementById("account-name").textContent = currentUser.displayName;
             document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName;
@@ -695,7 +695,7 @@
 
         document.getElementById("logout-btn").addEventListener("click", () => {
             sessionStorage.removeItem(SESSION_KEY);
-            window.location.href = "NAFSHI.HTML";
+            window.location.href = "nafshi.html";
         });
     </script>
 </body>

@@ -22,7 +22,7 @@ A personal accountability and tracker application for recording mitzvot (good de
 ## Pages
 
 - `index.html` — Home page
-- `NAFSHI.HTML` — Login and signup
+- `nafshi.html` — Login and signup
 - `account.html` — User dashboard with tracker
 - `community.html` — Public community records
 - `prices.html` — Pricing/info page
