@@ -10,6 +10,7 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
+.VS/
 
 # Node / npm
 node_modules/
