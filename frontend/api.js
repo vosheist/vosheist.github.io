@@ -36,6 +36,11 @@
         getBaisMedrash: () => request("/api/bais-medrash"),
         addBaisMedrash: (post) => request("/api/bais-medrash", { method: "POST", body: JSON.stringify({ post }) }),
         getCoffeeRoom: () => request("/api/coffee-room"),
-        addCoffeeRoom: (message) => request("/api/coffee-room", { method: "POST", body: JSON.stringify({ message }) })
+        addCoffeeRoom: (message) => request("/api/coffee-room", { method: "POST", body: JSON.stringify({ message }) }),
+        getAdminOverview: (adminKey) => request("/api/admin/overview", {
+            headers: {
+                "x-admin-key": String(adminKey || "")
+            }
+        })
     };
 })();

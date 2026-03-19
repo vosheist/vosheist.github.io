@@ -10,6 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
+const ADMIN_ACCESS_KEY = String(process.env.ADMIN_ACCESS_KEY || "").trim();
 const LEGACY_STORE_PATH = path.join(__dirname, "data", "store.json");
 
 let mongoClient;
@@ -20,6 +21,32 @@ let coffeeRoomCollection;
 
 function normalizeName(name) {
     return String(name || "").trim().toLowerCase();
+}
+
+function sanitizeUserForClient(user) {
+    return {
+        displayName: user.displayName,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        nickname: user.nickname,
+        email: user.email,
+        passwordHash: user.passwordHash,
+        records: Array.isArray(user.records) ? user.records : [],
+        createdAt: user.createdAt || null
+    };
+}
+
+function requireAdmin(req, res, next) {
+    if (!ADMIN_ACCESS_KEY) {
+        return res.status(503).json({ error: "Admin access is not configured" });
+    }
+
+    const providedKey = String(req.get("x-admin-key") || "").trim();
+    if (!providedKey || providedKey !== ADMIN_ACCESS_KEY) {
+        return res.status(401).json({ error: "Unauthorized admin access" });
+    }
+
+    return next();
 }
 
 async function connectMongo() {
@@ -386,6 +413,40 @@ app.get("/api/coffee-room", async (req, res) => {
         return rest;
     });
     return res.json({ success: true, messages: normalizedMessages });
+});
+
+app.get("/api/admin/overview", requireAdmin, async (req, res) => {
+    const userDocs = await usersCollection.find({}).sort({ createdAt: -1 }).toArray();
+    const posts = await baisMedrashCollection.find({}).sort({ createdAt: -1 }).toArray();
+    const messages = await coffeeRoomCollection.find({}).sort({ createdAt: -1 }).toArray();
+
+    const users = userDocs.map((doc) => ({
+        key: doc.userKey,
+        user: sanitizeUserForClient(doc)
+    }));
+
+    const baisMedrashPosts = posts.map((post) => {
+        const { _id, ...rest } = post;
+        return rest;
+    });
+
+    const coffeeRoomMessages = messages.map((message) => {
+        const { _id, ...rest } = message;
+        return rest;
+    });
+
+    return res.json({
+        success: true,
+        totals: {
+            users: users.length,
+            records: users.reduce((sum, entry) => sum + (Array.isArray(entry.user.records) ? entry.user.records.length : 0), 0),
+            baisMedrashPosts: baisMedrashPosts.length,
+            coffeeRoomMessages: coffeeRoomMessages.length
+        },
+        users,
+        baisMedrashPosts,
+        coffeeRoomMessages
+    });
 });
 
 app.post("/api/coffee-room", async (req, res) => {

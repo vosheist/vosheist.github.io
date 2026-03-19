@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vos Heist | Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #f7f0e7 0%, #f0f4fb 45%, #ecf8ef 100%);
+            color: #203043;
+        }
+
+        .admin-shell {
+            width: min(1200px, 100%);
+            margin: 0 auto;
+            padding: 1.5rem 1rem 2.5rem;
+        }
+
+        .admin-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(32, 48, 67, 0.12);
+            border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(32, 48, 67, 0.08);
+        }
+
+        .stat-card {
+            border-radius: 12px;
+            padding: 0.8rem;
+            border: 1px solid rgba(32, 48, 67, 0.12);
+            background: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #556576;
+            margin-bottom: 0.15rem;
+        }
+
+        .stat-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .table-wrap {
+            max-height: 420px;
+            overflow: auto;
+        }
+
+        .mono {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.86rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="admin-shell">
+        <header class="mb-3">
+            <h1 class="h3 mb-1">Admin Dashboard</h1>
+            <p class="text-secondary mb-0">View all members, profile details, records, and chat activity.</p>
+        </header>
+
+        <section class="admin-card p-3 mb-3">
+            <form id="admin-access-form" class="row g-2 align-items-end">
+                <div class="col-md-8">
+                    <label for="admin-key" class="form-label mb-1">Admin access key</label>
+                    <input id="admin-key" class="form-control" type="password" autocomplete="off" required>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <button class="btn btn-primary" type="submit">Load dashboard</button>
+                </div>
+            </form>
+            <p id="admin-message" class="small mt-2 mb-0" aria-live="polite"></p>
+        </section>
+
+        <section id="admin-content" class="d-none">
+            <div class="row g-2 mb-3">
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <p class="stat-label">Members</p>
+                        <p id="stat-users" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <p class="stat-label">Total records</p>
+                        <p id="stat-records" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <p class="stat-label">Bais Medrash posts</p>
+                        <p id="stat-bais" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <p class="stat-label">Coffee Room messages</p>
+                        <p id="stat-coffee" class="stat-value">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card p-3 mb-3">
+                <h2 class="h5 mb-2">Members & Details</h2>
+                <div class="table-wrap">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Nickname</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Records</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-card p-3 mb-3">
+                <h2 class="h5 mb-2">All Records</h2>
+                <div class="table-wrap">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Type</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-card p-3 mb-3">
+                <h2 class="h5 mb-2">Bais Medrash Posts</h2>
+                <div class="table-wrap">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nickname</th>
+                                <th>Limud</th>
+                                <th>Style</th>
+                                <th>Time</th>
+                                <th>Length</th>
+                                <th>Posted</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bais-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-card p-3">
+                <h2 class="h5 mb-2">Coffee Room Messages</h2>
+                <div class="table-wrap">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nickname</th>
+                                <th>Message</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coffee-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script>
+        const accessForm = document.getElementById("admin-access-form");
+        const accessInput = document.getElementById("admin-key");
+        const messageEl = document.getElementById("admin-message");
+        const contentEl = document.getElementById("admin-content");
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#39;");
+        }
+
+        function formatDate(value) {
+            if (!value) {
+                return "-";
+            }
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return escapeHtml(value);
+            }
+
+            return escapeHtml(date.toLocaleString());
+        }
+
+        function setMessage(text, isError) {
+            messageEl.textContent = text;
+            messageEl.className = `small mt-2 mb-0 ${isError ? "text-danger" : "text-success"}`;
+        }
+
+        function renderMembers(users) {
+            const tableBody = document.getElementById("members-table-body");
+            if (!users.length) {
+                tableBody.innerHTML = "<tr><td colspan=\"5\" class=\"text-secondary\">No members found.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = users.map(({ user }) => {
+                const count = Array.isArray(user.records) ? user.records.length : 0;
+                return `<tr><td>${escapeHtml(user.displayName)}</td><td>${escapeHtml(user.nickname)}</td><td>${escapeHtml(user.email)}</td><td>${formatDate(user.createdAt)}</td><td>${count}</td></tr>`;
+            }).join("");
+        }
+
+        function renderRecords(users) {
+            const rows = [];
+            users.forEach(({ user }) => {
+                const name = user.displayName || user.nickname || "-";
+                const records = Array.isArray(user.records) ? user.records : [];
+                records.forEach((record) => {
+                    rows.push({
+                        name,
+                        type: record.type || "-",
+                        title: record.title || record.text || "-",
+                        when: record.happenedOn || record.createdAt || "-",
+                        details: record.details || ""
+                    });
+                });
+            });
+
+            const tableBody = document.getElementById("records-table-body");
+            if (!rows.length) {
+                tableBody.innerHTML = "<tr><td colspan=\"5\" class=\"text-secondary\">No records found.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = rows.map((row) => `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.type)}</td><td>${escapeHtml(row.title)}</td><td>${formatDate(row.when)}</td><td class=\"mono\">${escapeHtml(row.details)}</td></tr>`).join("");
+        }
+
+        function renderBais(posts) {
+            const tableBody = document.getElementById("bais-table-body");
+            if (!posts.length) {
+                tableBody.innerHTML = "<tr><td colspan=\"6\" class=\"text-secondary\">No posts found.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = posts.map((post) => `<tr><td>${escapeHtml(post.nickname)}</td><td>${escapeHtml(post.limud)}</td><td>${escapeHtml(post.style)}</td><td>${escapeHtml(post.time)}</td><td>${escapeHtml(post.length)}</td><td>${formatDate(post.createdAt)}</td></tr>`).join("");
+        }
+
+        function renderCoffee(messages) {
+            const tableBody = document.getElementById("coffee-table-body");
+            if (!messages.length) {
+                tableBody.innerHTML = "<tr><td colspan=\"3\" class=\"text-secondary\">No messages found.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = messages.map((item) => `<tr><td>${escapeHtml(item.nickname)}</td><td class=\"mono\">${escapeHtml(item.message)}</td><td>${formatDate(item.createdAt)}</td></tr>`).join("");
+        }
+
+        accessForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            contentEl.classList.add("d-none");
+            setMessage("Loading admin data...", false);
+
+            try {
+                const payload = await window.vosHeistApi.getAdminOverview(accessInput.value);
+                const totals = payload.totals || {};
+                const users = Array.isArray(payload.users) ? payload.users : [];
+                const posts = Array.isArray(payload.baisMedrashPosts) ? payload.baisMedrashPosts : [];
+                const coffee = Array.isArray(payload.coffeeRoomMessages) ? payload.coffeeRoomMessages : [];
+
+                document.getElementById("stat-users").textContent = String(totals.users || users.length || 0);
+                document.getElementById("stat-records").textContent = String(totals.records || 0);
+                document.getElementById("stat-bais").textContent = String(totals.baisMedrashPosts || posts.length || 0);
+                document.getElementById("stat-coffee").textContent = String(totals.coffeeRoomMessages || coffee.length || 0);
+
+                renderMembers(users);
+                renderRecords(users);
+                renderBais(posts);
+                renderCoffee(coffee);
+
+                contentEl.classList.remove("d-none");
+                setMessage("Admin data loaded successfully.", false);
+            } catch (error) {
+                console.error(error);
+                const text = error && error.message ? error.message : "Failed to load admin data";
+                setMessage(text, true);
+            }
+        });
+    </script>
+</body>
+
+</html>
