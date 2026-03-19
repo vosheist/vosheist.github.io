@@ -1,0 +1,15 @@
+{
+  "users": {
+    "test user": {
+      "displayName": "Test User",
+      "firstname": "Test",
+      "lastname": "User",
+      "nickname": "testsync",
+      "email": "testsync@example.com",
+      "passwordHash": "hash1234",
+      "records": []
+    }
+  },
+  "baisMedrashPosts": [],
+  "coffeeRoomMessages": []
+}

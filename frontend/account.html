@@ -309,41 +309,15 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const STORAGE_KEY = "vosHeistUsers";
         const SESSION_KEY = "vosHeistCurrentUser";
-
-        function loadUsers() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : {};
-            } catch {
-                return {};
-            }
-        }
-
-        function saveUsers(nextUsers) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(nextUsers));
-        }
 
         function normalizeNickname(nickname) {
             return nickname.trim().toLowerCase();
-        }
-
-        function nicknameExists(usersMap, nickname, excludeUserKey) {
-            const target = normalizeNickname(nickname);
-            return Object.entries(usersMap).some(([key, user]) => {
-                if (excludeUserKey && key === excludeUserKey) {
-                    return false;
-                }
-                if (!user || typeof user.nickname !== "string") {
-                    return false;
-                }
-                return normalizeNickname(user.nickname) === target;
-            });
         }
 
         function escapeHtml(value) {
@@ -367,23 +341,7 @@
         }
 
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
-        const users = loadUsers();
-        const currentUser = currentUserKey ? users[currentUserKey] : null;
-
-        if (!currentUser) {
-            window.location.href = "nafshi.html";
-        } else {
-            document.getElementById("account-name").textContent = currentUser.displayName;
-            document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName;
-            document.getElementById("profile-login-name").textContent = currentUserKey;
-            document.getElementById("profile-firstname").textContent = currentUser.firstname || "-";
-            document.getElementById("profile-lastname").textContent = currentUser.lastname || "-";
-            document.getElementById("profile-nickname").textContent = currentUser.nickname || currentUser.displayName;
-            document.getElementById("profile-email").textContent = currentUser.email || "-";
-            if (!Array.isArray(currentUser.records)) {
-                currentUser.records = [];
-            }
-        }
+        let currentUser = null;
 
         const trackerMessage = document.getElementById("tracker-message");
         const recordList = document.getElementById("record-list");
@@ -556,14 +514,13 @@
             renderPeriodChart();
         }
 
-        function saveRecord(record) {
-            currentUser.records.push({
+        async function saveRecord(record) {
+            const response = await window.vosHeistApi.addRecord(currentUserKey, {
                 ...record,
                 createdAt: new Date().toISOString()
             });
 
-            users[currentUserKey] = currentUser;
-            saveUsers(users);
+            currentUser.records = Array.isArray(response.records) ? response.records : [];
             showTrackerMessage("איינטראג געראטעוועט.", "success");
             renderRecords();
         }
@@ -703,7 +660,7 @@
             document.getElementById("aveirah-date").value = today;
         }
 
-        mitzvahForm.addEventListener("submit", (event) => {
+        mitzvahForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             const title = document.getElementById("mitzvah-title").value.trim();
             const details = document.getElementById("mitzvah-details").value.trim();
@@ -737,7 +694,12 @@
                 recordPayload.fixed = false;
             }
 
-            saveRecord(recordPayload);
+            try {
+                await saveRecord(recordPayload);
+            } catch {
+                showModalMessage("mitzvah-modal-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
+                return;
+            }
 
             showModalMessage("mitzvah-modal-message", resolvedType === "mitzvah" ? "מצוה געשפייכערט." : "געשפייכערט אלס עבירה.", "success");
             setTimeout(() => {
@@ -749,7 +711,7 @@
             }, 500);
         });
 
-        aveirahForm.addEventListener("submit", (event) => {
+        aveirahForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             const title = document.getElementById("aveirah-title").value.trim();
             const details = document.getElementById("aveirah-details").value.trim();
@@ -784,7 +746,12 @@
                 recordPayload.effort = "מיטל";
             }
 
-            saveRecord(recordPayload);
+            try {
+                await saveRecord(recordPayload);
+            } catch {
+                showModalMessage("aveirah-modal-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
+                return;
+            }
 
             showModalMessage("aveirah-modal-message", resolvedType === "aveirah" ? "עבירה געשפייכערט." : "געשפייכערט אלס מצוה.", "success");
             setTimeout(() => {
@@ -844,12 +811,8 @@
                 return;
             }
 
-            if (nicknameExists(users, nicknameInput, currentUserKey)) {
-                showModalMessage("profile-message", "דער פען נאמען איז שוין פארנומען.", "error");
-                return;
-            }
-
             const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
+            let nextPasswordHash = null;
             if (wantsPasswordChange) {
                 if (!currentPassword) {
                     showModalMessage("profile-message", "כדי צו טוישן פאסווארד, שרייב דיין יעצטיגן פאסווארד.", "error");
@@ -870,16 +833,28 @@
                     return;
                 }
 
-                currentUser.passwordHash = await hashPassword(newPassword);
+                nextPasswordHash = await hashPassword(newPassword);
             }
 
-            currentUser.firstname = firstnameInput;
-            currentUser.lastname = lastnameInput;
-            currentUser.displayName = `${firstnameInput} ${lastnameInput}`.trim();
-            currentUser.nickname = nicknameInput;
-            currentUser.email = emailInput;
-            users[currentUserKey] = currentUser;
-            saveUsers(users);
+            try {
+                const updated = await window.vosHeistApi.updateProfile(currentUserKey, {
+                    firstname: firstnameInput,
+                    lastname: lastnameInput,
+                    nickname: nicknameInput,
+                    email: emailInput,
+                    passwordHash: nextPasswordHash
+                });
+                currentUser = updated.user;
+            } catch (error) {
+                const message = String(error.message || "").toLowerCase();
+                if (message.includes("nickname")) {
+                    showModalMessage("profile-message", "דער פען נאמען איז שוין פארנומען.", "error");
+                    return;
+                }
+                showModalMessage("profile-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
+                return;
+            }
+
             syncProfileHeader();
 
             showModalMessage("profile-message", "פרופיל איז אפדעיטעד.", "success");
@@ -890,10 +865,37 @@
             }, 600);
         });
 
-        setDefaultDates();
-        bindTitleAutocomplete(mitzvahTitleInput, mitzvahTitleSuggestions, MITZVAH_TITLE_LIBRARY);
-        bindTitleAutocomplete(aveirahTitleInput, aveirahTitleSuggestions, AVEIRAH_TITLE_LIBRARY);
-        renderRecords();
+        async function initializePage() {
+            if (!currentUserKey) {
+                window.location.href = "nafshi.html";
+                return;
+            }
+
+            try {
+                const response = await window.vosHeistApi.getUser(currentUserKey);
+                currentUser = response.user;
+            } catch {
+                sessionStorage.removeItem(SESSION_KEY);
+                window.location.href = "nafshi.html";
+                return;
+            }
+
+            if (!Array.isArray(currentUser.records)) {
+                currentUser.records = [];
+            }
+
+            document.getElementById("account-name").textContent = currentUser.displayName;
+            document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName;
+            document.getElementById("profile-login-name").textContent = currentUserKey;
+
+            syncProfileHeader();
+            setDefaultDates();
+            bindTitleAutocomplete(mitzvahTitleInput, mitzvahTitleSuggestions, MITZVAH_TITLE_LIBRARY);
+            bindTitleAutocomplete(aveirahTitleInput, aveirahTitleSuggestions, AVEIRAH_TITLE_LIBRARY);
+            renderRecords();
+        }
+
+        initializePage();
 
         document.getElementById("logout-btn").addEventListener("click", () => {
             sessionStorage.removeItem(SESSION_KEY);

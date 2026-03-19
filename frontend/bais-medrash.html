@@ -114,36 +114,12 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const STORAGE_KEY = "vosHeistUsers";
         const SESSION_KEY = "vosHeistCurrentUser";
-        const BAIS_MEDRASH_KEY = "vosHeistBaisMedrashPosts";
-
-        function loadUsers() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : {};
-            } catch {
-                return {};
-            }
-        }
-
-        function loadPosts() {
-            try {
-                const raw = localStorage.getItem(BAIS_MEDRASH_KEY);
-                const posts = raw ? JSON.parse(raw) : [];
-                return Array.isArray(posts) ? posts : [];
-            } catch {
-                return [];
-            }
-        }
-
-        function savePosts(posts) {
-            localStorage.setItem(BAIS_MEDRASH_KEY, JSON.stringify(posts));
-        }
 
         function escapeHtml(value) {
             return String(value)
@@ -154,8 +130,9 @@
                 .replaceAll("'", "&#39;");
         }
 
-        function renderPosts() {
-            const posts = loadPosts().reverse();
+        async function renderPosts() {
+            const response = await window.vosHeistApi.getBaisMedrash();
+            const posts = (response.posts || []).slice().reverse();
             const list = document.getElementById("bm-list");
 
             if (!posts.length) {
@@ -169,12 +146,18 @@
             }).join("");
         }
 
-        document.getElementById("chavrusa-form").addEventListener("submit", (event) => {
+        document.getElementById("chavrusa-form").addEventListener("submit", async (event) => {
             event.preventDefault();
             const message = document.getElementById("bm-message");
             const currentUserKey = sessionStorage.getItem(SESSION_KEY);
-            const users = loadUsers();
-            const currentUser = users[currentUserKey];
+            let currentUser = null;
+
+            try {
+                const userResponse = await window.vosHeistApi.getUser(currentUserKey);
+                currentUser = userResponse.user;
+            } catch {
+                currentUser = null;
+            }
 
             const time = document.getElementById("bm-time").value.trim();
             const length = document.getElementById("bm-length").value.trim();
@@ -188,25 +171,26 @@
                 return;
             }
 
-            const posts = loadPosts();
-            posts.push({
+            await window.vosHeistApi.addBaisMedrash({
                 nickname: currentUser.nickname || currentUser.displayName || "מיטגליד",
                 time,
                 length,
                 limud,
                 style,
-                notes,
-                createdAt: new Date().toISOString()
+                notes
             });
 
-            savePosts(posts);
             event.target.reset();
             message.textContent = "דיין פאוסט איז ארויפגעלייגט.";
             message.className = "auth-message success mt-2";
-            renderPosts();
+            await renderPosts();
         });
 
-        renderPosts();
+        renderPosts().catch((error) => {
+            console.error(error);
+            const list = document.getElementById("bm-list");
+            list.innerHTML = '<article class="community-card"><p class="community-meta">נישט געקענט לאודן די פאוסטס יעצט.</p></article>';
+        });
     </script>
 </body>
 

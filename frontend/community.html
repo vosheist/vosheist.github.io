@@ -96,25 +96,16 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const STORAGE_KEY = "vosHeistUsers";
         const SESSION_KEY = "vosHeistCurrentUser";
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
 
         if (!currentUserKey) {
             window.location.href = "nafshi.html";
-        }
-
-        function loadUsers() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : {};
-            } catch {
-                return {};
-            }
         }
 
         function escapeHtml(value) {
@@ -135,17 +126,24 @@
             };
         }
 
-        function renderCommunity() {
-            const users = loadUsers();
+        let communityUsers = {};
+
+        async function renderCommunity() {
+            const response = await window.vosHeistApi.getCommunity(currentUserKey);
             const grid = document.getElementById("community-grid");
-            const entries = Object.entries(users).filter(([key]) => key !== currentUserKey);
+            const entries = response.users || [];
+
+            communityUsers = {};
+            entries.forEach((entry) => {
+                communityUsers[entry.key] = entry.user;
+            });
 
             if (!entries.length) {
                 grid.innerHTML = '<div class="community-card"><p class="community-meta">נאכנישט קיין מיטגלידער מיט רעקארדס.</p></div>';
                 return;
             }
 
-            grid.innerHTML = entries.map(([key, user]) => {
+            grid.innerHTML = entries.map(({ key, user }) => {
                 const stats = summarize(user);
                 const nickname = user.nickname || user.displayName || key;
                 return `<article class="community-card"><p class="community-name">${escapeHtml(nickname)}</p><p class="community-meta">מצוות: ${stats.mitzvah} | עבירות: ${stats.aveirah} | סך הכל: ${stats.total}</p><button class="btn btn-outline-primary btn-sm js-view-user" data-user-key="${escapeHtml(key)}">זע רעקארדס</button></article>`;
@@ -159,8 +157,7 @@
         }
 
         function openUserRecords(userKey) {
-            const users = loadUsers();
-            const user = users[userKey];
+            const user = communityUsers[userKey];
             if (!user) {
                 return;
             }
@@ -188,7 +185,11 @@
             modal.show();
         }
 
-        renderCommunity();
+        renderCommunity().catch((error) => {
+            console.error(error);
+            const grid = document.getElementById("community-grid");
+            grid.innerHTML = '<div class="community-card"><p class="community-meta">נישט געקענט לאודן קהילה יעצט.</p></div>';
+        });
     </script>
 </body>
 

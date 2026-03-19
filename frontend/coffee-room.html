@@ -94,36 +94,12 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const STORAGE_KEY = "vosHeistUsers";
         const SESSION_KEY = "vosHeistCurrentUser";
-        const COFFEE_ROOM_KEY = "vosHeistCoffeeRoomMessages";
-
-        function loadUsers() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : {};
-            } catch {
-                return {};
-            }
-        }
-
-        function loadMessages() {
-            try {
-                const raw = localStorage.getItem(COFFEE_ROOM_KEY);
-                const messages = raw ? JSON.parse(raw) : [];
-                return Array.isArray(messages) ? messages : [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveMessages(messages) {
-            localStorage.setItem(COFFEE_ROOM_KEY, JSON.stringify(messages));
-        }
 
         function escapeHtml(value) {
             return String(value)
@@ -134,9 +110,10 @@
                 .replaceAll("'", "&#39;");
         }
 
-        function renderFeed() {
+        async function renderFeed() {
             const feed = document.getElementById("coffee-feed");
-            const messages = loadMessages().reverse();
+            const response = await window.vosHeistApi.getCoffeeRoom();
+            const messages = (response.messages || []).slice().reverse();
 
             if (!messages.length) {
                 feed.innerHTML = '<article class="community-card"><p class="community-meta">נאכנישט קיין מעסעדזשעס.</p></article>';
@@ -149,13 +126,18 @@
             }).join("");
         }
 
-        document.getElementById("coffee-form").addEventListener("submit", (event) => {
+        document.getElementById("coffee-form").addEventListener("submit", async (event) => {
             event.preventDefault();
 
             const status = document.getElementById("coffee-status");
             const currentUserKey = sessionStorage.getItem(SESSION_KEY);
-            const users = loadUsers();
-            const user = users[currentUserKey];
+            let user = null;
+            try {
+                const userResponse = await window.vosHeistApi.getUser(currentUserKey);
+                user = userResponse.user;
+            } catch {
+                user = null;
+            }
 
             const topic = document.getElementById("coffee-topic").value.trim();
             const message = document.getElementById("coffee-message").value.trim();
@@ -166,22 +148,23 @@
                 return;
             }
 
-            const allMessages = loadMessages();
-            allMessages.push({
+            await window.vosHeistApi.addCoffeeRoom({
                 nickname: user.nickname || user.displayName || "מיטגליד",
                 topic,
-                message,
-                createdAt: new Date().toISOString()
+                message
             });
 
-            saveMessages(allMessages);
             event.target.reset();
             status.textContent = "ארויפגעלייגט אין קאווע רום.";
             status.className = "auth-message success mt-2";
-            renderFeed();
+            await renderFeed();
         });
 
-        renderFeed();
+        renderFeed().catch((error) => {
+            console.error(error);
+            const feed = document.getElementById("coffee-feed");
+            feed.innerHTML = '<article class="community-card"><p class="community-meta">נישט געקענט לאודן מעסעדזשעס יעצט.</p></article>';
+        });
     </script>
 </body>
 

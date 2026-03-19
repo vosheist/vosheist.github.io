@@ -1,20 +1,6 @@
 (() => {
-    const STORAGE_KEY = "vosHeistUsers";
     const SESSION_KEY = "vosHeistCurrentUser";
     const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
-
-    function loadUsers() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            return raw ? JSON.parse(raw) : {};
-        } catch {
-            return {};
-        }
-    }
-
-    function saveUsers(users) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-    }
 
     function normalizeName(name) {
         return name.trim().toLowerCase();
@@ -22,21 +8,6 @@
 
     function normalizeNickname(nickname) {
         return nickname.trim().toLowerCase();
-    }
-
-    function nicknameExists(users, nickname, excludeUserKey) {
-        const target = normalizeNickname(nickname);
-        return Object.entries(users).some(([key, user]) => {
-            if (excludeUserKey && key === excludeUserKey) {
-                return false;
-            }
-
-            if (!user || typeof user.nickname !== "string") {
-                return false;
-            }
-
-            return normalizeNickname(user.nickname) === target;
-        });
     }
 
     async function hashPassword(password) {
@@ -150,18 +121,7 @@
                 return;
             }
 
-            const users = loadUsers();
-            if (users[userKey]) {
-                showMessage(createMessage, "דער נאמען איז שוין פארנומען.", "error");
-                return;
-            }
-
-            if (nicknameExists(users, nickname, null)) {
-                showMessage(createMessage, "דער פען נאמען איז שוין פארנומען.", "error");
-                return;
-            }
-
-            users[userKey] = {
+            const newUser = {
                 displayName,
                 firstname,
                 lastname,
@@ -171,17 +131,32 @@
                 passwordHash: await hashPassword(password)
             };
 
-            saveUsers(users);
-            const notification = await notifyOwnerOnSignup(users[userKey]);
+            try {
+                await window.vosHeistApi.signup(newUser);
+            } catch (error) {
+                const message = String(error.message || "").toLowerCase();
+                if (message.includes("nickname")) {
+                    showMessage(createMessage, "דער פען נאמען איז שוין פארנומען.", "error");
+                    return;
+                }
+                if (message.includes("exists") || message.includes("user")) {
+                    showMessage(createMessage, "דער נאמען איז שוין פארנומען.", "error");
+                    return;
+                }
+                showMessage(createMessage, "קאנעקשען פראבלעם. פרוביר נאכאמאל.", "error");
+                return;
+            }
+
+            const notification = await notifyOwnerOnSignup(newUser);
 
             try {
                 await fetch(SIGNUP_NOTIFY_ENDPOINT.replace("/notify-signup", "/welcome-email"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        email,
-                        firstname,
-                        lastname
+                        email: newUser.email,
+                        firstname: newUser.firstname,
+                        lastname: newUser.lastname
                     })
                 });
             } catch (err) {
@@ -229,22 +204,21 @@
             }
 
             const userKey = normalizeName(nameInput.value);
-            const users = loadUsers();
-            const user = users[userKey];
+            try {
+                const incomingHash = await hashPassword(passwordInput.value);
+                const loginResult = await window.vosHeistApi.login({
+                    name: nameInput.value,
+                    passwordHash: incomingHash
+                });
 
-            if (!user) {
-                showMessage(loginMessage, "איך טרעף נישט קיין חשבון מיט דעם נאמען.", "error");
+                const user = loginResult.user;
+                const backendUserKey = loginResult.userKey || userKey;
+                sessionStorage.setItem(SESSION_KEY, backendUserKey);
+                showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
+            } catch {
+                showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער פאסווארד איז נישט ריכטיג.", "error");
                 return;
             }
-
-            const incomingHash = await hashPassword(passwordInput.value);
-            if (incomingHash !== user.passwordHash) {
-                showMessage(loginMessage, "דער פאסווארד איז נישט ריכטיג.", "error");
-                return;
-            }
-
-            sessionStorage.setItem(SESSION_KEY, userKey);
-            showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
             setTimeout(() => {
                 window.location.href = "account.html";
             }, 400);
