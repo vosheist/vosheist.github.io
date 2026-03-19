@@ -149,7 +149,8 @@
                             אנדערע)</label>
                         <input id="profile-nickname-input" class="form-control" type="text" maxlength="24" required>
 
-                        <label for="profile-current-password" class="form-label mt-2">יעצטיגער פאסווארד (נאר אויב דו ווילסט
+                        <label for="profile-current-password" class="form-label mt-2">יעצטיגער פאסווארד (נאר אויב דו
+                            ווילסט
                             טוישן)</label>
                         <input id="profile-current-password" class="form-control" type="password">
 
@@ -379,20 +380,65 @@
         const aveirahTitleSuggestions = document.getElementById("aveirah-title-suggestions");
 
         const MITZVAH_TITLE_LIBRARY = [
+            // Yiddish
             "געגעבן צדקה", "געהאלפן א חבר", "געזאגט תהילים", "געלערנט תורה", "מתפלל געווען בכוונה",
             "כיבוד אב ואם", "באזוכט א חולה", "טרייסט איינער", "מחילה געבעטן", "מחילה געגעבן",
             "געמאכט קידוש", "הכנסת אורחים", "מחזק געווען א חבר", "פארשפרייט שלום", "געזאגט א ברכה",
             "אויף צייט צום מנין", "שבת געהאלטן", "געלייגט תפילין", "אמן געענטפערט", "נישט געשעמט איינער",
             "געגעבן א גוט ווארט", "מסייע געווען אין שטוב", "צוריקגעגעבן אבידה", "געמאכט חסד", "נישט גערעדט לשון הרע",
-            "donated to charity", "helped someone", "prayed with focus", "learned torah", "honored parents"
+            "גרייט מאכן פאר שבת", "אנגעצונדן שבת ליכט", "מקדש בית המדרש", "זיך מכין צום דאוונען",
+            "לערנען מיט א חברותא", "אראפגעשטעלט מחלוקת", "גאט גע׳דאנקט", "זיך גע׳חזרט אויפן לערנען",
+            "עוסק בצרכי ציבור", "שטילגעהאלטן א סידור", "מקיים געווען נדר", "ביסל שוויגן גע׳פראקטיסט",
+            "אנגעשריבן א גוטן ווארט אין טאגבוך", "אויפגעהויבן ספר תורה", "אויסגעהאלטן פון שלעכטס",
+            "גע׳טובל אין מקוה", "ליב מיטגעטיילט מיטן משפחה", "אראפגעלייגט סמארטפאן צום לערנען",
+            "הכנסת כלה מיטגעהאלפן", "א נייעם ניגון גע׳זונגען", "מצוות ציצית", "ספירת העומר געצייט",
+            "שמחת תורה מיטגעמאכט", "הלל אמר על כל נסי ה׳", "גע׳צינדל אין שנאה נישט",
+            "א ספר אנגעקויפט", "לימוד הלכה", "גע׳בענטשט נאכן עסן", "הפרשת חלה",
+            "ביטחון גע׳פראקטיסט", "א שיעור אנגע׳הערט", "שבת זמירות גע׳זונגען",
+            "ספר תהילים ענדיקן", "מזוזה אנגע׳רירט בכוונה", "בקשת מחילה פארן שלאפן",
+            "גע׳לייגט אינטרעסן ביי א חבר", "עבודת הבורא מיט שמחה",
+            // English
+            "donated to charity", "helped someone", "prayed with focus", "learned Torah", "honored parents",
+            "visited the sick", "made Kiddush", "welcomed a guest", "returned lost object", "gave encouragement",
+            "said blessings with kavana", "studied Mishnah", "went to minyan on time", "put on tefillin",
+            "answered amen", "kept Shabbos", "gave tzedakah anonymously", "made peace between friends",
+            "helped with household", "comforted a mourner", "forgave someone", "asked for forgiveness",
+            "recited Tehillim", "studied Halacha", "sang Shabbos zemiros", "helped prepare for Shabbos",
+            "disciplined myself from anger", "smiled at someone", "thanked Hashem", "learned with a chavrusa",
+            "trusted in Hashem", "lit Shabbos candles", "counted Sefiras HaOmer", "bentched after eating",
+            "said Modeh Ani with feeling", "learned mussar", "gave someone a compliment", "resisted temptation",
+            "put down phone to learn", "helped someone in need", "acted with humility", "supported a friend",
+            "made a hachlata to improve", "said bedtime Shema", "did an act of chesed", "helped carry something",
+            "listened to a shiur", "gave a good word", "spent quality time with family", "danced at a simcha"
         ];
 
         const AVEIRAH_TITLE_LIBRARY = [
+            // Yiddish
             "לשון הרע", "רכילות", "כעס", "גערעדט שלעכט", "געזאגט א ליגנט",
             "שקר", "באשעמט איינער", "מחלוקת אנגעמאכט", "נישט מכבד געווען עלטערן", "גזל",
             "ביטול תורה", "געשריגן אויף איינער", "אויסגעשפאט איינער", "נישט געזאגט ברכה", "שנאה געהאלטן",
             "נישט געהאלטן ווארט", "געקוקט אויף אסור", "שבת פארשוואכט", "געפירט זיך בגאוה", "אומר אמת נישט",
-            "lied", "gossip", "got angry", "hurt someone", "insulted someone", "wasted time"
+            "גענומען אן ערלויבנעס", "שוטה פאר א חבר", "קנאה", "גאוה", "עצבות אן אָרזאך",
+            "אויפגעהויבן א מחלוקת", "ווייט פון דאוונען", "שווענדן צייט", "נישט גוט צו עלטערן",
+            "נישט בא א חבר אנטשולדיקט", "גערעדט אין מיטן תפילה", "גע׳שמדט עצות", "קוקן אויף פארלייג",
+            "נישט חשוב גע׳ווייזט ספרים", "אנגעמאכט שטרייט אין שטוב", "עצות פאר גרינג גע׳האלטן",
+            "נישט אנגע׳קומען צו מנין", "זיך בא א חבר אויסגעלאפן", "נישט ענטפערן אויף שאלה",
+            "עצלות ביי לימוד תורה", "גענעסן אן א ברכה", "נישט אנגע׳הערט עצה", "גע׳שפאט אויף א קינד",
+            "פארגעסן צו בענטשן", "שקר גע׳ריידט צוליב נסיון", "נישט גע׳האלטן שבת",
+            "גע׳ריידט בשעת קריאת התורה", "נישט גע׳הולפן ווען מען האט דארפן",
+            // English
+            "lied", "gossip", "got angry", "hurt someone", "insulted someone", "wasted time",
+            "spoke during davening", "missed minyan", "spoke lashon hara", "embarrassed someone",
+            "was arrogant", "held a grudge", "took something without permission", "hit someone",
+            "violated Shabbos", "skipped brachos", "was jealous", "wasted food", "was ungrateful",
+            "caused a fight", "ignored someone in need", "cheated", "stole", "swore falsely",
+            "was lazy in learning", "spoke during krias hatorah", "made fun of someone",
+            "didn't keep my word", "looked at forbidden content", "was disrespectful to parents",
+            "spread rumors", "was cruel", "got frustrated quickly", "ignored a friend",
+            "didn't ask mechila", "was too proud to apologize", "hurt someone with words",
+            "complained excessively", "acted selfishly", "didn't show up when needed",
+            "wasted time on phone", "was dishonest in business", "spoke without thinking",
+            "didn't say thank you", "was cold to someone who needed warmth"
         ];
 
         function getRelevantSuggestions(library, query) {
