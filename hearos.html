@@ -67,26 +67,29 @@
                 <div class="col-md-8 col-lg-6">
                     <div class="card shadow-sm" style="border: 2px solid var(--logo-border); border-radius: 12px;">
                         <div class="card-body p-5">
-                            <h1 class="card-title text-center mb-4" style="font-family: 'Playpen Sans Hebrew', sans-serif; font-size: 2rem;">
+                            <h1 class="card-title text-center mb-4"
+                                style="font-family: 'Playpen Sans Hebrew', sans-serif; font-size: 2rem;">
                                 דיין הערה</h1>
-                            <p class="text-center text-secondary mb-4">האסט איר א האלב מיטל, שאלה, אָדער כל אנדערע? שרייב אונדז!</p>
+                            <p class="text-center text-secondary mb-4">האסט איר א האלב מיטל, שאלה, אָדער כל אנדערע?
+                                שרייב אונדז!</p>
 
                             <form id="feedback-form">
                                 <div class="mb-4">
                                     <label for="feedback-name" class="form-label fw-bold">דיין נאמען</label>
-                                    <input id="feedback-name" name="name" class="form-control form-control-lg" 
+                                    <input id="feedback-name" name="name" class="form-control form-control-lg"
                                         type="text" placeholder="לייג אריין דיין נאמען..." required>
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="feedback-email" class="form-label fw-bold">דיין יימייל (אפציונאל)</label>
-                                    <input id="feedback-email" name="email" class="form-control form-control-lg" 
+                                    <label for="feedback-email" class="form-label fw-bold">דיין יימייל
+                                        (אפציונאל)</label>
+                                    <input id="feedback-email" name="email" class="form-control form-control-lg"
                                         type="email" placeholder="דיין יימייל...">
                                 </div>
 
                                 <div class="mb-5">
                                     <label for="feedback-message" class="form-label fw-bold">הערה / פּרעפאָס</label>
-                                    <textarea id="feedback-message" name="message" class="form-control form-control-lg" 
+                                    <textarea id="feedback-message" name="message" class="form-control form-control-lg"
                                         rows="6" placeholder="שרייב דיין הערה דא..." required></textarea>
                                 </div>
 
@@ -94,7 +97,8 @@
                                     שיקן הערה
                                 </button>
 
-                                <p id="feedback-message-status" class="auth-message mt-3 text-center" aria-live="polite"></p>
+                                <p id="feedback-message-status" class="auth-message mt-3 text-center"
+                                    aria-live="polite"></p>
                             </form>
                         </div>
                     </div>
@@ -114,7 +118,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const FEEDBACK_ENDPOINT = ""; // Set this to your backend endpoint
+        const FEEDBACK_ENDPOINT = "http://localhost:3000/api/feedback"; // Backend feedback endpoint
 
         document.getElementById("feedback-form").addEventListener("submit", async (event) => {
             event.preventDefault();
@@ -168,7 +172,7 @@
                 // Success
                 statusEl.textContent = "תודה! דיין הערה איז געק אָנגענומען. מיר וועלן זיך אנקוקן.";
                 statusEl.className = "auth-message success mt-3 text-center";
-                
+
                 // Clear form
                 nameInput.value = "";
                 emailInput.value = "";

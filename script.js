@@ -32,9 +32,26 @@
         });
     }
 
+    function syncCommunityLinkVisibility() {
+        const communityLinks = document.querySelectorAll('a[href="community.html"]');
+        const isLoggedIn = Boolean(sessionStorage.getItem(SESSION_KEY));
+
+        communityLinks.forEach((link) => {
+            const listItem = link.closest("li");
+            if (listItem) {
+                if (isLoggedIn) {
+                    listItem.classList.remove("d-none");
+                } else {
+                    listItem.classList.add("d-none");
+                }
+            }
+        });
+    }
+
     window.addEventListener("scroll", syncNavbarScrollState, { passive: true });
     window.addEventListener("load", () => {
         syncNavbarScrollState();
         syncAccountShortcut();
+        syncCommunityLinkVisibility();
     });
 })();
