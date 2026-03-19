@@ -23,6 +23,14 @@ function normalizeName(name) {
     return String(name || "").trim().toLowerCase();
 }
 
+function normalizeEmail(email) {
+    return String(email || "").trim().toLowerCase();
+}
+
+function escapeRegex(value) {
+    return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function sanitizeUserForClient(user) {
     return {
         displayName: user.displayName,
@@ -61,6 +69,8 @@ async function connectMongo() {
     await usersCollection.createIndex({ userKey: 1 }, { unique: true });
     await usersCollection.createIndex({ nicknameKey: 1 }, { unique: true });
     await usersCollection.createIndex({ displayNameKey: 1 }, { unique: true });
+    await usersCollection.createIndex({ emailKey: 1 });
+    await usersCollection.createIndex({ firstnameKey: 1 });
 }
 
 async function migrateLegacyStoreIfNeeded() {
@@ -80,15 +90,19 @@ async function migrateLegacyStoreIfNeeded() {
         const userDocs = Object.entries(users).map(([userKey, user]) => {
             const displayName = String(user.displayName || `${user.firstname || ""} ${user.lastname || ""}`).trim();
             const nickname = String(user.nickname || displayName).trim();
+            const firstname = String(user.firstname || "").trim();
+            const email = String(user.email || "").trim();
             return {
                 userKey: normalizeName(userKey),
                 displayName,
                 displayNameKey: normalizeName(displayName),
-                firstname: String(user.firstname || "").trim(),
+                firstname,
+                firstnameKey: normalizeName(firstname),
                 lastname: String(user.lastname || "").trim(),
                 nickname,
                 nicknameKey: normalizeName(nickname),
-                email: String(user.email || "").trim(),
+                email,
+                emailKey: normalizeEmail(email),
                 passwordHash: String(user.passwordHash || ""),
                 records: Array.isArray(user.records) ? user.records : [],
                 createdAt: user.createdAt || new Date().toISOString()
@@ -183,10 +197,12 @@ app.post("/api/auth/signup", async (req, res) => {
         displayName,
         displayNameKey,
         firstname: String(firstname).trim(),
+        firstnameKey: normalizeName(firstname),
         lastname: String(lastname).trim(),
         nickname: String(nickname).trim(),
         nicknameKey,
         email: String(email).trim(),
+        emailKey: normalizeEmail(email),
         passwordHash,
         records: [],
         createdAt: new Date().toISOString()
@@ -210,14 +226,28 @@ app.post("/api/auth/signup", async (req, res) => {
 });
 
 app.post("/api/auth/login", async (req, res) => {
-    const { name, passwordHash } = req.body || {};
-    const userKey = normalizeName(name);
-    if (!userKey || !passwordHash) {
-        return res.status(400).json({ error: "Missing name or password" });
+    const { identifier, name, passwordHash } = req.body || {};
+    const rawIdentifier = String(identifier || name || "").trim();
+    const identifierKey = normalizeName(rawIdentifier);
+    const emailKey = normalizeEmail(rawIdentifier);
+    const exactIdentifier = new RegExp(`^${escapeRegex(rawIdentifier)}$`, "i");
+
+    if (!identifierKey || !passwordHash) {
+        return res.status(400).json({ error: "Missing login identifier or password" });
     }
 
     const user = await usersCollection.findOne({
-        $or: [{ userKey }, { displayNameKey: userKey }]
+        $or: [
+            { userKey: identifierKey },
+            { displayNameKey: identifierKey },
+            { nicknameKey: identifierKey },
+            { firstnameKey: identifierKey },
+            { emailKey },
+            { displayName: exactIdentifier },
+            { nickname: exactIdentifier },
+            { firstname: exactIdentifier },
+            { email: exactIdentifier }
+        ]
     });
     if (!user || user.passwordHash !== passwordHash) {
         return res.status(401).json({ error: "Invalid credentials" });
@@ -295,12 +325,14 @@ app.put("/api/users/:userKey/profile", async (req, res) => {
 
     const updateFields = {
         firstname: String(firstname).trim(),
+        firstnameKey: normalizeName(firstname),
         lastname: String(lastname).trim(),
         displayName: nextDisplayName,
         displayNameKey: nextDisplayNameKey,
         nickname: nextNickname,
         nicknameKey: nextNicknameKey,
-        email: String(email).trim()
+        email: String(email).trim(),
+        emailKey: normalizeEmail(email)
     };
 
     if (passwordHash) {

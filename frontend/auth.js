@@ -107,17 +107,17 @@
             }
 
             if (!email || !email.includes("@")) {
-                showMessage(createMessage, "לייג אריין א גילטיקן יימייל.", "error");
+                showMessage(createMessage, "לייג אריין א גילטיקן אימעיל.", "error");
                 return;
             }
 
             if (password.length < 4) {
-                showMessage(createMessage, "פּאַראָל דאַרף האָבן 4 אותיות אָדער מער.", "error");
+                showMessage(createMessage, "קאוד דארף האבן 4 אותיות אדער מער.", "error");
                 return;
             }
 
             if (password !== confirmInput.value) {
-                showMessage(createMessage, "ביידע פּאַראָלן דאַרפֿן זיין די זעלבע.", "error");
+                showMessage(createMessage, "ביידע קאודס דארפן זיין די זעלבע.", "error");
                 return;
             }
 
@@ -203,11 +203,13 @@
                 return;
             }
 
-            const userKey = normalizeName(nameInput.value);
+            const loginIdentifier = nameInput.value.trim();
+            const userKey = normalizeName(loginIdentifier);
             try {
                 const incomingHash = await hashPassword(passwordInput.value);
                 const loginResult = await window.vosHeistApi.login({
-                    name: nameInput.value,
+                    identifier: loginIdentifier,
+                    name: loginIdentifier,
                     passwordHash: incomingHash
                 });
 
@@ -216,7 +218,7 @@
                 sessionStorage.setItem(SESSION_KEY, backendUserKey);
                 showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
             } catch {
-                showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער פאסווארד איז נישט ריכטיג.", "error");
+                showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער קאוד איז נישט ריכטיג.", "error");
                 return;
             }
             setTimeout(() => {

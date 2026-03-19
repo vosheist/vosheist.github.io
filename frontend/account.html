@@ -55,7 +55,7 @@
                             <a class="nav-link" href="bais-medrash.html">בית מדרש</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="coffee-room.html">קאווע רום</a>
+                            <a class="nav-link" href="coffee-room.html">Caveh Tzimer</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="hearos.html">הערות</a>
@@ -83,14 +83,14 @@
                         <h2 class="account-panel-title">פרופיל</h2>
                         <p class="small text-secondary mb-1"><strong>לאָגין נאמען:</strong> <span
                                 id="profile-login-name">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>פֿאָר-נאָמען:</strong> <span
+                        <p class="small text-secondary mb-1"><strong>ערשטע נאמען:</strong> <span
                                 id="profile-firstname">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>לעצטער נאָמען:</strong> <span
+                        <p class="small text-secondary mb-1"><strong>לעצטע:</strong> <span
                                 id="profile-lastname">-</span></p>
                         <p class="small text-secondary mb-1"><strong>פען נאמען:</strong> <span
                                 id="profile-nickname">-</span>
                         </p>
-                        <p class="small text-secondary mb-1"><strong>יימייל:</strong> <span id="profile-email">-</span>
+                        <p class="small text-secondary mb-1"><strong>אימעיל:</strong> <span id="profile-email">-</span>
                         </p>
                         <button id="open-profile-modal-btn" class="btn btn-outline-primary btn-sm" type="button"
                             data-bs-toggle="modal" data-bs-target="#profileModal">טויש פרופיל</button>
@@ -153,28 +153,28 @@
                 </div>
                 <form id="profile-form">
                     <div class="modal-body">
-                        <label for="profile-firstname-input" class="form-label">פֿאָר-נאָמען</label>
+                        <label for="profile-firstname-input" class="form-label">ערשטע נאמען</label>
                         <input id="profile-firstname-input" class="form-control" type="text" required>
 
-                        <label for="profile-lastname-input" class="form-label mt-2">לעצטער נאָמען</label>
+                        <label for="profile-lastname-input" class="form-label mt-2">לעצטע</label>
                         <input id="profile-lastname-input" class="form-control" type="text" required>
 
                         <label for="profile-nickname-input" class="form-label mt-2">פען נאמען (זעהבאר פאר
                             אנדערע)</label>
                         <input id="profile-nickname-input" class="form-control" type="text" maxlength="24" required>
 
-                        <label for="profile-email-input" class="form-label mt-2">ימעיל</label>
+                        <label for="profile-email-input" class="form-label mt-2">אימעיל</label>
                         <input id="profile-email-input" class="form-control" type="email" required>
 
-                        <label for="profile-current-password" class="form-label mt-2">יעצטיגער פאסווארד (נאר אויב דו
+                        <label for="profile-current-password" class="form-label mt-2">יעצטיגער קאוד (נאר אויב דו
                             ווילסט
                             טוישן)</label>
                         <input id="profile-current-password" class="form-control" type="password">
 
-                        <label for="profile-new-password" class="form-label mt-2">נייער פאסווארד (אפּשאנעל)</label>
+                        <label for="profile-new-password" class="form-label mt-2">נייער קאוד (אפּשאנעל)</label>
                         <input id="profile-new-password" class="form-control" type="password" minlength="4">
 
-                        <label for="profile-confirm-password" class="form-label mt-2">באשטעטיג נייער פאסווארד</label>
+                        <label for="profile-confirm-password" class="form-label mt-2">באשטעטיג נייער קאוד</label>
                         <input id="profile-confirm-password" class="form-control" type="password" minlength="4">
 
                         <p id="profile-message" class="auth-message mt-2" aria-live="polite"></p>
@@ -792,12 +792,12 @@
             const confirmPassword = document.getElementById("profile-confirm-password").value;
 
             if (!firstnameInput || firstnameInput.length < 2) {
-                showModalMessage("profile-message", "פֿאָר-נאָמען דארף זיין כאטש 2 אותיות.", "error");
+                showModalMessage("profile-message", "ערשטע נאמען דארף זיין כאטש 2 אותיות.", "error");
                 return;
             }
 
             if (!lastnameInput || lastnameInput.length < 2) {
-                showModalMessage("profile-message", "לעצטער נאָמען דארף זיין כאטש 2 אותיות.", "error");
+                showModalMessage("profile-message", "לעצטע דארף זיין כאטש 2 אותיות.", "error");
                 return;
             }
 
@@ -807,7 +807,7 @@
             }
 
             if (!emailInput || !emailInput.includes("@")) {
-                showModalMessage("profile-message", "לייג אריין א גילטיקן יימייל.", "error");
+                showModalMessage("profile-message", "לייג אריין א גילטיקן אימעיל.", "error");
                 return;
             }
 
@@ -815,21 +815,21 @@
             let nextPasswordHash = null;
             if (wantsPasswordChange) {
                 if (!currentPassword) {
-                    showModalMessage("profile-message", "כדי צו טוישן פאסווארד, שרייב דיין יעצטיגן פאסווארד.", "error");
+                    showModalMessage("profile-message", "כדי צו טוישן קאוד, שרייב דיין יעצטיגן קאוד.", "error");
                     return;
                 }
                 if (newPassword.length < 4) {
-                    showModalMessage("profile-message", "דער נייער פאסווארד דארף זיין לענגער פון 4 אותיות.", "error");
+                    showModalMessage("profile-message", "דער נייער קאוד דארף זיין לענגער פון 4 אותיות.", "error");
                     return;
                 }
                 if (newPassword !== confirmPassword) {
-                    showModalMessage("profile-message", "די צוויי נייע פאסווארדן שטימען נישט.", "error");
+                    showModalMessage("profile-message", "די צוויי נייע קאודס שטימען נישט.", "error");
                     return;
                 }
 
                 const currentHash = await hashPassword(currentPassword);
                 if (currentHash !== currentUser.passwordHash) {
-                    showModalMessage("profile-message", "דער יעצטיגער פאסווארד איז נישט ריכטיג.", "error");
+                    showModalMessage("profile-message", "דער יעצטיגער קאוד איז נישט ריכטיג.", "error");
                     return;
                 }
 
