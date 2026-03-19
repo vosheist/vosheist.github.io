@@ -3,56 +3,99 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const fs = require("fs/promises");
 const path = require("path");
+const { MongoClient } = require("mongodb");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_PATH = path.join(__dirname, "data", "store.json");
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
+const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
+const LEGACY_STORE_PATH = path.join(__dirname, "data", "store.json");
 
-let writeQueue = Promise.resolve();
+let mongoClient;
+let db;
+let usersCollection;
+let baisMedrashCollection;
+let coffeeRoomCollection;
 
 function normalizeName(name) {
     return String(name || "").trim().toLowerCase();
 }
 
-function createEmptyStore() {
-    return {
-        users: {},
-        baisMedrashPosts: [],
-        coffeeRoomMessages: []
-    };
+async function connectMongo() {
+    mongoClient = new MongoClient(MONGODB_URI);
+    await mongoClient.connect();
+    db = mongoClient.db(MONGODB_DB_NAME);
+
+    usersCollection = db.collection("users");
+    baisMedrashCollection = db.collection("bais_medrash_posts");
+    coffeeRoomCollection = db.collection("coffee_room_messages");
+
+    await usersCollection.createIndex({ userKey: 1 }, { unique: true });
+    await usersCollection.createIndex({ nicknameKey: 1 }, { unique: true });
+    await usersCollection.createIndex({ displayNameKey: 1 }, { unique: true });
 }
 
-async function ensureStoreExists() {
-    try {
-        await fs.access(DB_PATH);
-    } catch {
-        await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-        await fs.writeFile(DB_PATH, JSON.stringify(createEmptyStore(), null, 2), "utf8");
+async function migrateLegacyStoreIfNeeded() {
+    const userCount = await usersCollection.countDocuments();
+    const baisCount = await baisMedrashCollection.countDocuments();
+    const coffeeCount = await coffeeRoomCollection.countDocuments();
+
+    if (userCount > 0 || baisCount > 0 || coffeeCount > 0) {
+        return;
     }
-}
 
-async function readStore() {
-    await ensureStoreExists();
-    const raw = await fs.readFile(DB_PATH, "utf8");
     try {
-        const parsed = JSON.parse(raw);
-        return {
-            users: parsed.users || {},
-            baisMedrashPosts: Array.isArray(parsed.baisMedrashPosts) ? parsed.baisMedrashPosts : [],
-            coffeeRoomMessages: Array.isArray(parsed.coffeeRoomMessages) ? parsed.coffeeRoomMessages : []
-        };
-    } catch {
-        return createEmptyStore();
-    }
-}
+        const legacyRaw = await fs.readFile(LEGACY_STORE_PATH, "utf8");
+        const legacy = JSON.parse(legacyRaw);
 
-async function writeStore(nextStore) {
-    writeQueue = writeQueue.then(async () => {
-        await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-        await fs.writeFile(DB_PATH, JSON.stringify(nextStore, null, 2), "utf8");
-    });
-    return writeQueue;
+        const users = legacy && legacy.users ? legacy.users : {};
+        const userDocs = Object.entries(users).map(([userKey, user]) => {
+            const displayName = String(user.displayName || `${user.firstname || ""} ${user.lastname || ""}`).trim();
+            const nickname = String(user.nickname || displayName).trim();
+            return {
+                userKey: normalizeName(userKey),
+                displayName,
+                displayNameKey: normalizeName(displayName),
+                firstname: String(user.firstname || "").trim(),
+                lastname: String(user.lastname || "").trim(),
+                nickname,
+                nicknameKey: normalizeName(nickname),
+                email: String(user.email || "").trim(),
+                passwordHash: String(user.passwordHash || ""),
+                records: Array.isArray(user.records) ? user.records : [],
+                createdAt: user.createdAt || new Date().toISOString()
+            };
+        });
+
+        const baisDocs = Array.isArray(legacy.baisMedrashPosts)
+            ? legacy.baisMedrashPosts.map((post) => ({
+                ...post,
+                createdAt: post.createdAt || new Date().toISOString()
+            }))
+            : [];
+
+        const coffeeDocs = Array.isArray(legacy.coffeeRoomMessages)
+            ? legacy.coffeeRoomMessages.map((message) => ({
+                ...message,
+                createdAt: message.createdAt || new Date().toISOString()
+            }))
+            : [];
+
+        if (userDocs.length) {
+            await usersCollection.insertMany(userDocs, { ordered: false });
+        }
+        if (baisDocs.length) {
+            await baisMedrashCollection.insertMany(baisDocs, { ordered: false });
+        }
+        if (coffeeDocs.length) {
+            await coffeeRoomCollection.insertMany(coffeeDocs, { ordered: false });
+        }
+
+        console.log("✓ Migrated legacy JSON store into MongoDB");
+    } catch {
+        console.log("ℹ No legacy store to migrate");
+    }
 }
 
 app.use(cors({
@@ -71,7 +114,8 @@ const transporter = nodemailer.createTransport({
 });
 
 app.get("/health", (req, res) => {
-    res.json({ status: "ok", message: "Backend is running" });
+    const dbConnected = Boolean(db);
+    res.json({ status: "ok", message: "Backend is running", db: dbConnected ? "connected" : "disconnected" });
 });
 
 app.post("/api/auth/signup", async (req, res) => {
@@ -91,28 +135,51 @@ app.post("/api/auth/signup", async (req, res) => {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const store = await readStore();
-    if (store.users[userKey]) {
+    const existingUser = await usersCollection.findOne({ userKey });
+    if (existingUser) {
         return res.status(409).json({ error: "User already exists" });
     }
 
-    const nicknameTaken = Object.values(store.users).some((user) => normalizeName(user.nickname) === nicknameKey);
+    const displayNameKey = normalizeName(displayName);
+    const displayNameTaken = await usersCollection.findOne({ displayNameKey });
+    if (displayNameTaken) {
+        return res.status(409).json({ error: "User already exists" });
+    }
+
+    const nicknameTaken = await usersCollection.findOne({ nicknameKey });
     if (nicknameTaken) {
         return res.status(409).json({ error: "Nickname already exists" });
     }
 
-    store.users[userKey] = {
+    const userDoc = {
+        userKey,
         displayName,
+        displayNameKey,
         firstname: String(firstname).trim(),
         lastname: String(lastname).trim(),
         nickname: String(nickname).trim(),
+        nicknameKey,
         email: String(email).trim(),
         passwordHash,
-        records: []
+        records: [],
+        createdAt: new Date().toISOString()
     };
 
-    await writeStore(store);
-    return res.json({ success: true, userKey, user: store.users[userKey] });
+    await usersCollection.insertOne(userDoc);
+
+    return res.json({
+        success: true,
+        userKey,
+        user: {
+            displayName: userDoc.displayName,
+            firstname: userDoc.firstname,
+            lastname: userDoc.lastname,
+            nickname: userDoc.nickname,
+            email: userDoc.email,
+            passwordHash: userDoc.passwordHash,
+            records: userDoc.records
+        }
+    });
 });
 
 app.post("/api/auth/login", async (req, res) => {
@@ -122,32 +189,54 @@ app.post("/api/auth/login", async (req, res) => {
         return res.status(400).json({ error: "Missing name or password" });
     }
 
-    const store = await readStore();
-    const user = store.users[userKey];
+    const user = await usersCollection.findOne({
+        $or: [{ userKey }, { displayNameKey: userKey }]
+    });
     if (!user || user.passwordHash !== passwordHash) {
         return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    return res.json({ success: true, userKey, user });
+    return res.json({
+        success: true,
+        userKey: user.userKey,
+        user: {
+            displayName: user.displayName,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            nickname: user.nickname,
+            email: user.email,
+            passwordHash: user.passwordHash,
+            records: Array.isArray(user.records) ? user.records : []
+        }
+    });
 });
 
 app.get("/api/users/:userKey", async (req, res) => {
     const userKey = normalizeName(req.params.userKey);
-    const store = await readStore();
-    const user = store.users[userKey];
+    const user = await usersCollection.findOne({ userKey });
     if (!user) {
         return res.status(404).json({ error: "User not found" });
     }
 
-    return res.json({ success: true, user });
+    return res.json({
+        success: true,
+        user: {
+            displayName: user.displayName,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            nickname: user.nickname,
+            email: user.email,
+            passwordHash: user.passwordHash,
+            records: Array.isArray(user.records) ? user.records : []
+        }
+    });
 });
 
 app.put("/api/users/:userKey/profile", async (req, res) => {
     const userKey = normalizeName(req.params.userKey);
     const { firstname, lastname, nickname, email, passwordHash } = req.body || {};
 
-    const store = await readStore();
-    const user = store.users[userKey];
+    const user = await usersCollection.findOne({ userKey });
     if (!user) {
         return res.status(404).json({ error: "User not found" });
     }
@@ -157,28 +246,60 @@ app.put("/api/users/:userKey/profile", async (req, res) => {
         return res.status(400).json({ error: "Missing profile fields" });
     }
 
-    const nicknameTaken = Object.entries(store.users).some(([key, value]) => key !== userKey && normalizeName(value.nickname) === normalizeName(nextNickname));
+    const nextDisplayName = `${String(firstname).trim()} ${String(lastname).trim()}`.trim();
+    const nextDisplayNameKey = normalizeName(nextDisplayName);
+    const nextNicknameKey = normalizeName(nextNickname);
+
+    const nicknameTaken = await usersCollection.findOne({
+        nicknameKey: nextNicknameKey,
+        userKey: { $ne: userKey }
+    });
     if (nicknameTaken) {
         return res.status(409).json({ error: "Nickname already exists" });
     }
 
-    user.firstname = String(firstname).trim();
-    user.lastname = String(lastname).trim();
-    user.displayName = `${user.firstname} ${user.lastname}`.trim();
-    user.nickname = nextNickname;
-    user.email = String(email).trim();
-    if (passwordHash) {
-        user.passwordHash = passwordHash;
+    const displayNameTaken = await usersCollection.findOne({
+        displayNameKey: nextDisplayNameKey,
+        userKey: { $ne: userKey }
+    });
+    if (displayNameTaken) {
+        return res.status(409).json({ error: "User already exists" });
     }
 
-    await writeStore(store);
-    return res.json({ success: true, user });
+    const updateFields = {
+        firstname: String(firstname).trim(),
+        lastname: String(lastname).trim(),
+        displayName: nextDisplayName,
+        displayNameKey: nextDisplayNameKey,
+        nickname: nextNickname,
+        nicknameKey: nextNicknameKey,
+        email: String(email).trim()
+    };
+
+    if (passwordHash) {
+        updateFields.passwordHash = passwordHash;
+    }
+
+    await usersCollection.updateOne({ userKey }, { $set: updateFields });
+    const updatedUser = await usersCollection.findOne({ userKey });
+
+    return res.json({
+        success: true,
+        user: {
+            displayName: updatedUser.displayName,
+            firstname: updatedUser.firstname,
+            lastname: updatedUser.lastname,
+            nickname: updatedUser.nickname,
+            email: updatedUser.email,
+            passwordHash: updatedUser.passwordHash,
+            records: Array.isArray(updatedUser.records) ? updatedUser.records : []
+        }
+    });
 });
 
 app.get("/api/users/:userKey/records", async (req, res) => {
     const userKey = normalizeName(req.params.userKey);
-    const store = await readStore();
-    const user = store.users[userKey];
+    const user = await usersCollection.findOne({ userKey }, { projection: { records: 1 } });
     if (!user) {
         return res.status(404).json({ error: "User not found" });
     }
@@ -194,39 +315,48 @@ app.post("/api/users/:userKey/records", async (req, res) => {
         return res.status(400).json({ error: "Invalid record payload" });
     }
 
-    const store = await readStore();
-    const user = store.users[userKey];
+    const user = await usersCollection.findOne({ userKey }, { projection: { records: 1 } });
     if (!user) {
         return res.status(404).json({ error: "User not found" });
     }
 
-    if (!Array.isArray(user.records)) {
-        user.records = [];
-    }
-
-    user.records.push({
+    const nextRecord = {
         ...record,
         createdAt: record.createdAt || new Date().toISOString()
-    });
+    };
 
-    await writeStore(store);
-    return res.json({ success: true, records: user.records });
+    await usersCollection.updateOne({ userKey }, { $push: { records: nextRecord } });
+    const updated = await usersCollection.findOne({ userKey }, { projection: { records: 1 } });
+    return res.json({ success: true, records: Array.isArray(updated.records) ? updated.records : [] });
 });
 
 app.get("/api/community", async (req, res) => {
     const excludeUserKey = normalizeName(req.query.exclude || "");
-    const store = await readStore();
+    const docs = await usersCollection.find({ userKey: { $ne: excludeUserKey } }).toArray();
 
-    const users = Object.entries(store.users)
-        .filter(([key]) => key !== excludeUserKey)
-        .map(([key, user]) => ({ key, user }));
+    const users = docs.map((doc) => ({
+        key: doc.userKey,
+        user: {
+            displayName: doc.displayName,
+            firstname: doc.firstname,
+            lastname: doc.lastname,
+            nickname: doc.nickname,
+            email: doc.email,
+            passwordHash: doc.passwordHash,
+            records: Array.isArray(doc.records) ? doc.records : []
+        }
+    }));
 
     return res.json({ success: true, users });
 });
 
 app.get("/api/bais-medrash", async (req, res) => {
-    const store = await readStore();
-    return res.json({ success: true, posts: store.baisMedrashPosts });
+    const posts = await baisMedrashCollection.find({}).toArray();
+    const normalizedPosts = posts.map((post) => {
+        const { _id, ...rest } = post;
+        return rest;
+    });
+    return res.json({ success: true, posts: normalizedPosts });
 });
 
 app.post("/api/bais-medrash", async (req, res) => {
@@ -235,18 +365,27 @@ app.post("/api/bais-medrash", async (req, res) => {
         return res.status(400).json({ error: "Invalid post payload" });
     }
 
-    const store = await readStore();
-    store.baisMedrashPosts.push({
+    const nextPost = {
         ...post,
         createdAt: post.createdAt || new Date().toISOString()
+    };
+
+    await baisMedrashCollection.insertOne(nextPost);
+    const posts = await baisMedrashCollection.find({}).toArray();
+    const normalizedPosts = posts.map((item) => {
+        const { _id, ...rest } = item;
+        return rest;
     });
-    await writeStore(store);
-    return res.json({ success: true, posts: store.baisMedrashPosts });
+    return res.json({ success: true, posts: normalizedPosts });
 });
 
 app.get("/api/coffee-room", async (req, res) => {
-    const store = await readStore();
-    return res.json({ success: true, messages: store.coffeeRoomMessages });
+    const messages = await coffeeRoomCollection.find({}).toArray();
+    const normalizedMessages = messages.map((message) => {
+        const { _id, ...rest } = message;
+        return rest;
+    });
+    return res.json({ success: true, messages: normalizedMessages });
 });
 
 app.post("/api/coffee-room", async (req, res) => {
@@ -255,13 +394,18 @@ app.post("/api/coffee-room", async (req, res) => {
         return res.status(400).json({ error: "Invalid message payload" });
     }
 
-    const store = await readStore();
-    store.coffeeRoomMessages.push({
+    const nextMessage = {
         ...message,
         createdAt: message.createdAt || new Date().toISOString()
+    };
+
+    await coffeeRoomCollection.insertOne(nextMessage);
+    const messages = await coffeeRoomCollection.find({}).toArray();
+    const normalizedMessages = messages.map((item) => {
+        const { _id, ...rest } = item;
+        return rest;
     });
-    await writeStore(store);
-    return res.json({ success: true, messages: store.coffeeRoomMessages });
+    return res.json({ success: true, messages: normalizedMessages });
 });
 
 app.post("/api/feedback", async (req, res) => {
@@ -367,14 +511,25 @@ app.post("/api/welcome-email", async (req, res) => {
     }
 });
 
-app.listen(PORT, async () => {
-    await ensureStoreExists();
-    console.log(`✓ Vos Heist Backend running on http://localhost:${PORT}`);
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-        console.log("✓ Email service configured");
-    } else {
-        console.warn("⚠ Email service NOT configured - set EMAIL_USER and EMAIL_PASSWORD in .env");
+async function startServer() {
+    try {
+        await connectMongo();
+        await migrateLegacyStoreIfNeeded();
+
+        app.listen(PORT, () => {
+            console.log(`✓ Vos Heist Backend running on http://localhost:${PORT}`);
+            console.log(`✓ MongoDB connected: ${MONGODB_DB_NAME}`);
+            if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+                console.log("✓ Email service configured");
+            } else {
+                console.warn("⚠ Email service NOT configured - set EMAIL_USER and EMAIL_PASSWORD in .env");
+            }
+            console.log("✓ Endpoints: auth, users, records, community, bais-medrash, coffee-room");
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error.message);
+        process.exit(1);
     }
-    console.log("✓ Persistent store: backend/data/store.json");
-    console.log("✓ Endpoints: auth, users, records, community, bais-medrash, coffee-room");
-});
+}
+
+startServer();
