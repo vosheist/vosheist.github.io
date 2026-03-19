@@ -1,0 +1,988 @@
+:root {
+    --nav-height: 76px;
+    --logo-cream: #fef9c8;
+    --logo-peach: #fde7d6;
+    --logo-blue: #a5c7e2;
+    --logo-blue-deep: #2f5165;
+    --logo-sage: #b2d0ac;
+    --logo-sage-deep: #87ad80;
+    --logo-border: #d3dcdb;
+}
+
+body {
+    margin: 0;
+    padding-top: var(--nav-height);
+}
+
+#my-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+}
+
+#my-navbar .navbar {
+    display: flex;
+    align-items: center;
+    min-height: var(--nav-height);
+    background-color: rgba(165, 199, 226, 0.96);
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#my-navbar.nav-scrolled .navbar {
+    background-color: rgba(165, 199, 226, 0.18);
+    box-shadow: 0 6px 18px rgba(47, 81, 101, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+#my-navbar .container-fluid {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+#my-navbar .navbar-collapse {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+#my-navbar .nav-link {
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+    font-size: 1.2rem;
+}
+
+#my-navbar .nav-link.active {
+    color: #704f38;
+    font-weight: 700;
+}
+
+#my-navbar .navbar-brand {
+    font-family: 'Gveret Levin', sans-serif;
+    color: var(--logo-blue-deep);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: clamp(1.5rem, 2.25vw, 2.1rem);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+#my-navbar .brand-lockup {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.02em;
+    color: inherit;
+}
+
+#my-navbar .brand-words {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 0.74;
+    margin-bottom: 0.06em;
+}
+
+#my-navbar .brand-vos {
+    font-size: 0.62em;
+    margin-right: 0.22em;
+}
+
+#my-navbar .brand-heist {
+    font-size: 0.88em;
+}
+
+#my-navbar .brand-tes {
+    font-size: 1.56em;
+    line-height: 0.72;
+    color: inherit;
+    margin-right: -0.03em;
+}
+
+#my-navbar .brand-marks {
+    position: relative;
+    display: inline-block;
+    width: 1.14em;
+    height: 1.48em;
+    margin-right: 0.04em;
+    margin-bottom: 0.08em;
+    color: inherit;
+}
+
+#my-navbar .brand-mark {
+    position: absolute;
+    display: block;
+    font-size: 0.44em;
+    line-height: 1;
+    color: inherit;
+    transform-origin: center;
+}
+
+#my-navbar .brand-mark-one {
+    right: 0.82em;
+    bottom: 0.02em;
+    transform: rotate(-16deg);
+}
+
+#my-navbar .brand-mark-two {
+    right: 0.42em;
+    bottom: 0.62em;
+    transform: rotate(10deg) scale(1.04);
+}
+
+#my-navbar .brand-mark-three {
+    right: 0.04em;
+    bottom: 1.22em;
+    transform: rotate(22deg) scale(0.94);
+}
+
+#my-navbar .navbar-brand:hover,
+#my-navbar .navbar-brand:focus {
+    color: #4b6e84;
+}
+
+#my-navbar .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+#my-navbar .account-shortcut {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    background-color: rgba(254, 249, 200, 0.72);
+    border: 1px solid rgba(47, 81, 101, 0.25);
+    color: var(--logo-blue-deep);
+    font-size: 1.05rem;
+}
+
+#my-navbar .account-shortcut.active {
+    color: #704f38;
+    font-weight: 700;
+}
+
+#my-navbar .account-shortcut:hover,
+#my-navbar .account-shortcut:focus {
+    background-color: rgba(254, 249, 200, 0.9);
+}
+
+.hero {
+    margin: 0;
+    min-height: calc(100vh - var(--nav-height));
+    display: grid;
+    grid-template-columns: 45% 55%;
+    align-items: stretch;
+    background: linear-gradient(to right, transparent 45%, var(--logo-peach) 45%);
+}
+
+.hero-title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.hero h1 {
+    font-family: 'Rubik Marker Hatch', cursive;
+    font-size: clamp(3rem, 7vw, 7rem);
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+    color: #704f38;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0;
+}
+
+.auth-section {
+    padding: 2.5rem 1rem 3rem;
+    background: linear-gradient(180deg, var(--logo-cream) 0%, #fff7ef 100%);
+}
+
+.auth-wrap {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+}
+
+.auth-wrap h2 {
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    color: var(--logo-blue-deep);
+    margin: 0 0 1.25rem;
+    text-align: center;
+}
+
+.auth-card {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.auth-card h3 {
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+    margin: 0 0 0.2rem;
+}
+
+.auth-single {
+    width: min(520px, 100%);
+    margin: 0 auto;
+}
+
+.auth-switch-text {
+    margin: 0.4rem 0 0;
+    color: #5f7180;
+    text-align: center;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+}
+
+.auth-switch-btn {
+    border-color: var(--logo-blue);
+    color: var(--logo-blue-deep);
+}
+
+.auth-switch-btn:hover,
+.auth-switch-btn:focus {
+    background-color: var(--logo-blue);
+    color: var(--logo-blue-deep);
+    border-color: var(--logo-blue);
+}
+
+.auth-btn {
+    margin-top: 0.4rem;
+    background-color: var(--logo-sage);
+    border-color: var(--logo-sage);
+    color: #1f3a2a;
+}
+
+.auth-btn:hover,
+.auth-btn:focus {
+    background-color: var(--logo-sage-deep);
+    border-color: var(--logo-sage-deep);
+    color: #122218;
+}
+
+.auth-message {
+    min-height: 1.2rem;
+    margin: 0.25rem 0 0;
+    font-size: 0.95rem;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+}
+
+.auth-message.error {
+    color: #af1f3f;
+}
+
+.auth-message.success {
+    color: #25643a;
+}
+
+.pricing-section {
+    padding: 2.2rem 1rem 3rem;
+    background: linear-gradient(180deg, var(--logo-cream) 0%, #fff7ef 100%);
+}
+
+.pricing-wrap {
+    width: min(980px, 100%);
+    margin: 0 auto;
+}
+
+.pricing-wrap h2 {
+    margin: 0 0 1.2rem;
+    text-align: center;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.pricing-card {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: right;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+    animation: pricing-fade-up 0.55s ease both;
+}
+
+.pricing-card-featured {
+    border-color: #9bbfe0;
+    box-shadow: 0 8px 22px rgba(47, 81, 101, 0.12);
+}
+
+.pricing-card:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 26px rgba(47, 81, 101, 0.16);
+}
+
+.pricing-card.is-selected {
+    border-color: #3f8d5a;
+    box-shadow: 0 0 0 3px rgba(63, 141, 90, 0.2), 0 14px 28px rgba(47, 81, 101, 0.2);
+    background: linear-gradient(180deg, #fffdf9 0%, #f3fbf6 100%);
+}
+
+.pricing-card.is-selected::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px rgba(63, 141, 90, 0.28);
+}
+
+.pricing-badge {
+    position: absolute;
+    left: 0.9rem;
+    top: 0.85rem;
+    margin: 0;
+    background: #704f38;
+    color: #fff7ef;
+    border-radius: 999px;
+    padding: 0.2rem 0.62rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+}
+
+.pricing-plan {
+    margin: 0;
+    color: #704f38;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-size: 0.98rem;
+}
+
+.pricing-name {
+    margin: 0.2rem 0 0;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+    font-size: 1.2rem;
+}
+
+.pricing-price {
+    margin: 0.1rem 0 0.75rem;
+    color: var(--logo-blue-deep);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.pricing-price span {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #5f7180;
+    margin-right: 0.2rem;
+}
+
+.pricing-features {
+    margin: 0;
+    padding-right: 1.1rem;
+    color: #3b4e5f;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.pricing-btn {
+    margin-top: 1rem;
+}
+
+.pricing-selected-note {
+    margin: 0.6rem 0 0;
+    color: #2f7d4d;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+@keyframes pricing-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    border-radius: 14px;
+}
+
+.modal-title {
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+}
+
+.modal-header {
+    position: relative;
+    padding-left: 2.75rem;
+}
+
+.modal-header .btn-close {
+    position: absolute;
+    left: 0.85rem;
+    right: auto;
+    margin: 0;
+}
+
+.account-section {
+    min-height: calc(100vh - var(--nav-height));
+    padding: 2.2rem 1rem 3rem;
+    background:
+        radial-gradient(circle at 92% 16%, rgba(165, 199, 226, 0.22) 0%, rgba(165, 199, 226, 0) 40%),
+        radial-gradient(circle at 14% 78%, rgba(178, 208, 172, 0.24) 0%, rgba(178, 208, 172, 0) 42%),
+        linear-gradient(180deg, var(--logo-cream) 0%, #fff7ef 100%);
+}
+
+.account-shell {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+}
+
+.account-hero-panel {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 16px;
+    padding: 1.25rem 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.account-hero-panel h1 {
+    margin: 0 0 0.45rem;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+}
+
+.account-sub {
+    margin: 0;
+    font-size: 1.08rem;
+    color: #5f7180;
+}
+
+.account-note {
+    margin: 0.45rem 0 0;
+    color: #704f38;
+}
+
+.account-dashboard {
+    display: grid;
+    grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.account-sidebar {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.account-panel {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 14px;
+}
+
+.account-panel-title {
+    margin: 0 0 0.6rem;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+    font-size: 1.02rem;
+}
+
+.profile-panel {
+    margin: 0;
+    padding: 0.95rem 1rem;
+    background: linear-gradient(180deg, #fffefb 0%, #fff8ef 100%);
+    text-align: right;
+}
+
+.tracker-summary-wrap {
+    padding: 0.9rem 1rem;
+}
+
+#open-profile-modal-btn {
+    margin-top: 0.55rem;
+}
+
+.tracker-wrap {
+    margin: 0;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fffdf9 0%, #fffbf2 100%);
+    text-align: right;
+}
+
+.tracker-title {
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem;
+}
+
+.tracker-actions .btn {
+    min-width: 170px;
+    padding: 0.55rem 1.05rem;
+}
+
+.tracker-actions .auth-btn {
+    margin-top: 0;
+}
+
+.tracker-summary {
+    margin-top: 0.85rem;
+}
+
+.tracker-chart-wrap {
+    margin-top: 0.9rem;
+}
+
+.period-chart {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.period-card {
+    border: 1px solid #d8e1ea;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    padding: 0.65rem;
+}
+
+.period-title {
+    margin: 0 0 0.45rem;
+    font-size: 0.88rem;
+    color: #3f5b71;
+    font-weight: 700;
+    text-align: center;
+}
+
+.period-counts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+}
+
+.period-count {
+    border-radius: 10px;
+    padding: 0.4rem 0.45rem;
+    text-align: center;
+    border: 1px solid transparent;
+}
+
+.period-count-label {
+    display: block;
+    font-size: 0.72rem;
+    line-height: 1;
+    margin-bottom: 0.18rem;
+    color: #4f6578;
+}
+
+.period-count strong {
+    font-size: 1.15rem;
+    line-height: 1;
+    color: #23384a;
+}
+
+.mitzvah-count {
+    background: #f3f8ff;
+    border-color: #cfdff6;
+}
+
+.aveirah-count {
+    background: #fff8f2;
+    border-color: #f2dbc9;
+}
+
+.period-total {
+    margin: 0.5rem 0 0;
+    text-align: center;
+    color: #5f7180;
+    font-size: 0.8rem;
+}
+
+.summary-pill {
+    display: block;
+    width: 100%;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.95rem;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+}
+
+.mitzvah-pill {
+    background: #ddeeda;
+    color: #245837;
+}
+
+.aveirah-pill {
+    background: #f9ddd8;
+    color: #8b2f23;
+}
+
+.tracker-record-title {
+    margin: 0.85rem 0 0.4rem;
+    font-size: 1.05rem;
+    color: #704f38;
+}
+
+.record-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+#logout-btn {
+    margin-top: 0.15rem;
+}
+
+.record-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.45rem;
+    align-items: start;
+    border-radius: 8px;
+    padding: 0.45rem 0.55rem;
+    background: #fff;
+    border: 1px solid var(--logo-border);
+    font-size: 0.92rem;
+    width: 100%;
+    text-align: right;
+    cursor: pointer;
+}
+
+.record-item:hover,
+.record-item:focus {
+    background: #fef7eb;
+    border-color: #c3d7e8;
+}
+
+.record-label {
+    font-weight: 700;
+}
+
+.record-text {
+    overflow-wrap: anywhere;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+}
+
+.record-title {
+    font-weight: 600;
+}
+
+.record-detail {
+    color: #536572;
+}
+
+.record-meta {
+    color: #70808d;
+    font-size: 0.82rem;
+}
+
+.record-date {
+    color: #70808d;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.record-mitzvah .record-label {
+    color: #245837;
+}
+
+.record-aveirah .record-label {
+    color: #8b2f23;
+}
+
+.record-empty {
+    color: #5f7180;
+    font-style: italic;
+    padding: 0.4rem 0;
+}
+
+#aveirah-form .btn-outline-danger,
+#aveirah-form .btn-outline-danger:hover,
+#aveirah-form .btn-outline-danger:focus {
+    border-color: #8b2f23;
+    color: #8b2f23;
+}
+
+#aveirah-form .btn-outline-danger:hover,
+#aveirah-form .btn-outline-danger:focus {
+    background: #f9ddd8;
+}
+
+.community-section {
+    min-height: calc(100vh - var(--nav-height));
+    padding: 2rem 1rem;
+    background: linear-gradient(180deg, var(--logo-cream) 0%, #fff7ef 100%);
+}
+
+.community-wrap {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+}
+
+.community-wrap h1 {
+    margin: 0 0 1rem;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: var(--logo-blue-deep);
+}
+
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.8rem;
+}
+
+.community-card {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 12px;
+    padding: 0.9rem;
+}
+
+.community-name {
+    margin: 0;
+    font-weight: 700;
+    color: #2f5165;
+}
+
+.community-meta {
+    margin: 0.3rem 0 0.65rem;
+    color: #5f7180;
+    font-size: 0.9rem;
+}
+
+.members-home-shell {
+    min-height: calc(100vh - var(--nav-height));
+    display: grid;
+    grid-template-columns: 46% 54%;
+    direction: ltr;
+    background: linear-gradient(120deg, #f1ebe1 0%, #fff9f0 100%);
+}
+
+.members-home-image-pane {
+    overflow: hidden;
+    border-left: 1px solid rgba(47, 81, 101, 0.12);
+}
+
+.members-home-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.members-home-login-pane {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.2rem;
+}
+
+.members-home-login-card {
+    width: min(560px, 100%);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(47, 81, 101, 0.12);
+}
+
+.members-home-title {
+    margin: 0;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: #2f5165;
+    font-size: clamp(1.35rem, 3.2vw, 2rem);
+}
+
+.members-home-subtitle {
+    margin: 0.45rem 0 0.9rem;
+    color: #5f7180;
+    font-size: 0.98rem;
+}
+
+.members-home-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.login-center-section {
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.4rem 1rem 2.2rem;
+    background: radial-gradient(circle at 16% 20%, #fff5de 0%, transparent 44%),
+        radial-gradient(circle at 84% 86%, #e4eff9 0%, transparent 42%),
+        linear-gradient(180deg, #fdf8ee 0%, #fffdf9 100%);
+}
+
+.login-center-wrap {
+    width: min(560px, 100%);
+    text-align: center;
+}
+
+.login-center-wrap h1 {
+    margin: 0;
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: #2f5165;
+}
+
+.login-center-wrap p {
+    margin: 0.45rem 0 0.85rem;
+    color: #5f7180;
+}
+
+.member-board-section {
+    min-height: calc(100vh - var(--nav-height));
+    padding: 2rem 1rem;
+    background: linear-gradient(180deg, var(--logo-cream) 0%, #fff7ef 100%);
+}
+
+.member-board-wrap {
+    width: min(980px, 100%);
+    margin: 0 auto;
+}
+
+.member-board-wrap h1 {
+    margin: 0;
+    color: var(--logo-blue-deep);
+    font-family: "Playpen Sans Hebrew", sans-serif;
+}
+
+.member-board-sub {
+    margin: 0.5rem 0 1rem;
+    color: #5f7180;
+}
+
+.member-board-form {
+    border-radius: 14px;
+}
+
+.member-board-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.8rem;
+}
+
+.member-board-meta {
+    margin: 0.28rem 0;
+    color: #475f70;
+    line-height: 1.45;
+}
+
+.site-footer {
+    margin-top: 0;
+    border-top: 1px solid var(--logo-border);
+    background: #f8f2e8;
+}
+
+.site-footer-text {
+    font-family: "Playpen Sans Hebrew", sans-serif;
+    color: #5f7180;
+    font-size: 0.92rem;
+}
+
+@media (max-width: 992px) {
+    .hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        background: var(--logo-peach);
+    }
+
+    .hero-title-wrap {
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .hero-image {
+        max-height: 70vh;
+    }
+
+    .auth-single {
+        width: 100%;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .members-home-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .members-home-image-pane {
+        max-height: 40vh;
+        border-left: 0;
+        border-bottom: 1px solid rgba(47, 81, 101, 0.12);
+    }
+
+    .members-home-login-pane {
+        padding-top: 1.2rem;
+    }
+
+    .account-hero-panel {
+        padding: 1.05rem 1rem;
+    }
+
+    .period-chart {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-badge {
+        top: 0.7rem;
+    }
+
+    #my-navbar .account-shortcut {
+        display: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pricing-card {
+        animation: none;
+        transition: none;
+    }
+}

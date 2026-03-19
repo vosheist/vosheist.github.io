@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>וואס הייסט | בית מדרש</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@100..800&family=Rubik+80s+Fade&family=Rubik+Marker+Hatch&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="my-navbar">
+        <nav class="navbar navbar-expand-lg rtl-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html" aria-label="וואס הייסט???">
+                    <span class="brand-lockup" aria-hidden="true">
+                        <span class="brand-words">
+                            <span class="brand-vos">וואס</span>
+                            <span class="brand-heist">הייס</span>
+                        </span>
+                        <span class="brand-tes">ט</span>
+                        <span class="brand-marks">
+                            <span class="brand-mark brand-mark-one">?</span>
+                            <span class="brand-mark brand-mark-two">?</span>
+                            <span class="brand-mark brand-mark-three">?</span>
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">היים</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="nafshi.html">נפשי</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prices.html">פּרײזן</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="community.html">קהילה</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="bais-medrash.html">בית מדרש</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="coffee-room.html">קאווע רום</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="hearos.html">הערות</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="nafshi.html">חשבון</a>
+            </div>
+        </nav>
+    </div>
+
+    <section class="member-board-section">
+        <div class="member-board-wrap">
+            <h1>בית מדרש - געפין א חברותא</h1>
+            <p class="member-board-sub">לייג אריין דיין סדר, און אנדערע קענען דיר טרעפן צו לערנען.</p>
+
+            <form id="chavrusa-form" class="auth-card member-board-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="bm-time" class="form-label">צייט</label>
+                        <input id="bm-time" class="form-control" type="text" placeholder="ביישפיל: 8:00-9:00 פארנאכט" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bm-length" class="form-label">לענג</label>
+                        <input id="bm-length" class="form-control" type="text" placeholder="ביישפיל: 45 מינוט" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bm-limud" class="form-label">לימוד</label>
+                        <input id="bm-limud" class="form-control" type="text" placeholder="ביישפיל: גמרא, הלכה, מוסר" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bm-style" class="form-label">רצופות/נישט רצופות</label>
+                        <select id="bm-style" class="form-select" required>
+                            <option value="">קלייב...</option>
+                            <option value="רצופות">רצופות</option>
+                            <option value="נישט רצופות">נישט רצופות</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="bm-notes" class="form-label">נאטיצן</label>
+                        <textarea id="bm-notes" class="form-control" rows="3" placeholder="וואס דו זוכסט אין א חברותא..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn auth-btn mt-3">פאוסטען חברותא בעקשה</button>
+                <p id="bm-message" class="auth-message mt-2" aria-live="polite"></p>
+            </form>
+
+            <div id="bm-list" class="member-board-list mt-3"></div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
+            <p class="site-footer-text">&copy; 2026 וואס הייסט</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        const STORAGE_KEY = "vosHeistUsers";
+        const SESSION_KEY = "vosHeistCurrentUser";
+        const BAIS_MEDRASH_KEY = "vosHeistBaisMedrashPosts";
+
+        function loadUsers() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch {
+                return {};
+            }
+        }
+
+        function loadPosts() {
+            try {
+                const raw = localStorage.getItem(BAIS_MEDRASH_KEY);
+                const posts = raw ? JSON.parse(raw) : [];
+                return Array.isArray(posts) ? posts : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function savePosts(posts) {
+            localStorage.setItem(BAIS_MEDRASH_KEY, JSON.stringify(posts));
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#39;");
+        }
+
+        function renderPosts() {
+            const posts = loadPosts().reverse();
+            const list = document.getElementById("bm-list");
+
+            if (!posts.length) {
+                list.innerHTML = '<article class="community-card"><p class="community-meta">נאכנישט קיין חברותא פאוסטס.</p></article>';
+                return;
+            }
+
+            list.innerHTML = posts.map((post) => {
+                const notes = post.notes ? `<p class="member-board-meta"><strong>נאטיצן:</strong> ${escapeHtml(post.notes)}</p>` : "";
+                return `<article class="community-card"><p class="community-name">${escapeHtml(post.nickname)}</p><p class="member-board-meta"><strong>צייט:</strong> ${escapeHtml(post.time)}</p><p class="member-board-meta"><strong>לענג:</strong> ${escapeHtml(post.length)}</p><p class="member-board-meta"><strong>לימוד:</strong> ${escapeHtml(post.limud)}</p><p class="member-board-meta"><strong>סטייל:</strong> ${escapeHtml(post.style)}</p>${notes}</article>`;
+            }).join("");
+        }
+
+        document.getElementById("chavrusa-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const message = document.getElementById("bm-message");
+            const currentUserKey = sessionStorage.getItem(SESSION_KEY);
+            const users = loadUsers();
+            const currentUser = users[currentUserKey];
+
+            const time = document.getElementById("bm-time").value.trim();
+            const length = document.getElementById("bm-length").value.trim();
+            const limud = document.getElementById("bm-limud").value.trim();
+            const style = document.getElementById("bm-style").value;
+            const notes = document.getElementById("bm-notes").value.trim();
+
+            if (!currentUser || !time || !length || !limud || !style) {
+                message.textContent = "ביטע פיל אויס אלע פעלדער.";
+                message.className = "auth-message error mt-2";
+                return;
+            }
+
+            const posts = loadPosts();
+            posts.push({
+                nickname: currentUser.nickname || currentUser.displayName || "מיטגליד",
+                time,
+                length,
+                limud,
+                style,
+                notes,
+                createdAt: new Date().toISOString()
+            });
+
+            savePosts(posts);
+            event.target.reset();
+            message.textContent = "דיין פאוסט איז ארויפגעלייגט.";
+            message.className = "auth-message success mt-2";
+            renderPosts();
+        });
+
+        renderPosts();
+    </script>
+</body>
+
+</html>

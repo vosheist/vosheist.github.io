@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>וואס הייסט | קאווע רום</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@100..800&family=Rubik+80s+Fade&family=Rubik+Marker+Hatch&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="my-navbar">
+        <nav class="navbar navbar-expand-lg rtl-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html" aria-label="וואס הייסט???">
+                    <span class="brand-lockup" aria-hidden="true">
+                        <span class="brand-words">
+                            <span class="brand-vos">וואס</span>
+                            <span class="brand-heist">הייס</span>
+                        </span>
+                        <span class="brand-tes">ט</span>
+                        <span class="brand-marks">
+                            <span class="brand-mark brand-mark-one">?</span>
+                            <span class="brand-mark brand-mark-two">?</span>
+                            <span class="brand-mark brand-mark-three">?</span>
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">היים</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="nafshi.html">נפשי</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prices.html">פּרײזן</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="community.html">קהילה</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="bais-medrash.html">בית מדרש</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="coffee-room.html">קאווע רום</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="hearos.html">הערות</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="nafshi.html">חשבון</a>
+            </div>
+        </nav>
+    </div>
+
+    <section class="member-board-section">
+        <div class="member-board-wrap">
+            <h1>קאווע רום - סתם שמועסן</h1>
+            <p class="member-board-sub">א פלאץ פאר קליינע מחשבות, חיזוק, און א פשוט'ן שמועס.</p>
+
+            <form id="coffee-form" class="auth-card member-board-form">
+                <label for="coffee-topic" class="form-label">טעמע (אפשאנעל)</label>
+                <input id="coffee-topic" class="form-control" type="text" placeholder="ביישפיל: חיזוק פאר היינט">
+
+                <label for="coffee-message" class="form-label mt-2">דיין מעסעדזש</label>
+                <textarea id="coffee-message" class="form-control" rows="3" placeholder="שרייב עפעס פיין..." required></textarea>
+
+                <button type="submit" class="btn auth-btn mt-3">שיק אריין</button>
+                <p id="coffee-status" class="auth-message mt-2" aria-live="polite"></p>
+            </form>
+
+            <div id="coffee-feed" class="member-board-list mt-3"></div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
+            <p class="site-footer-text">&copy; 2026 וואס הייסט</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        const STORAGE_KEY = "vosHeistUsers";
+        const SESSION_KEY = "vosHeistCurrentUser";
+        const COFFEE_ROOM_KEY = "vosHeistCoffeeRoomMessages";
+
+        function loadUsers() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch {
+                return {};
+            }
+        }
+
+        function loadMessages() {
+            try {
+                const raw = localStorage.getItem(COFFEE_ROOM_KEY);
+                const messages = raw ? JSON.parse(raw) : [];
+                return Array.isArray(messages) ? messages : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveMessages(messages) {
+            localStorage.setItem(COFFEE_ROOM_KEY, JSON.stringify(messages));
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#39;");
+        }
+
+        function renderFeed() {
+            const feed = document.getElementById("coffee-feed");
+            const messages = loadMessages().reverse();
+
+            if (!messages.length) {
+                feed.innerHTML = '<article class="community-card"><p class="community-meta">נאכנישט קיין מעסעדזשעס.</p></article>';
+                return;
+            }
+
+            feed.innerHTML = messages.map((entry) => {
+                const topic = entry.topic ? `<p class="member-board-meta"><strong>טעמע:</strong> ${escapeHtml(entry.topic)}</p>` : "";
+                return `<article class="community-card"><p class="community-name">${escapeHtml(entry.nickname)}</p>${topic}<p class="member-board-meta">${escapeHtml(entry.message)}</p></article>`;
+            }).join("");
+        }
+
+        document.getElementById("coffee-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const status = document.getElementById("coffee-status");
+            const currentUserKey = sessionStorage.getItem(SESSION_KEY);
+            const users = loadUsers();
+            const user = users[currentUserKey];
+
+            const topic = document.getElementById("coffee-topic").value.trim();
+            const message = document.getElementById("coffee-message").value.trim();
+
+            if (!user || !message) {
+                status.textContent = "לייג אריין א מעסעדזש.";
+                status.className = "auth-message error mt-2";
+                return;
+            }
+
+            const allMessages = loadMessages();
+            allMessages.push({
+                nickname: user.nickname || user.displayName || "מיטגליד",
+                topic,
+                message,
+                createdAt: new Date().toISOString()
+            });
+
+            saveMessages(allMessages);
+            event.target.reset();
+            status.textContent = "ארויפגעלייגט אין קאווע רום.";
+            status.className = "auth-message success mt-2";
+            renderFeed();
+        });
+
+        renderFeed();
+    </script>
+</body>
+
+</html>

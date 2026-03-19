@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>וואס הייסט | היים</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@100..800&family=Rubik+80s+Fade&family=Rubik+Marker+Hatch&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="my-navbar">
+        <nav class="navbar navbar-expand-lg rtl-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html" aria-label="וואס הייסט???">
+                    <span class="brand-lockup" aria-hidden="true">
+                        <span class="brand-words">
+                            <span class="brand-vos">וואס</span>
+                            <span class="brand-heist">הייס</span>
+                        </span>
+                        <span class="brand-tes">ט</span>
+                        <span class="brand-marks">
+                            <span class="brand-mark brand-mark-one">?</span>
+                            <span class="brand-mark brand-mark-two">?</span>
+                            <span class="brand-mark brand-mark-three">?</span>
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="index.html">היים</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="nafshi.html">נפשי</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prices.html">פּרײזן</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="community.html">קהילה</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="bais-medrash.html">בית מדרש</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="coffee-room.html">קאווע רום</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="hearos.html">הערות</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="nafshi.html">חשבון</a>
+            </div>
+        </nav>
+    </div>
+    <section class="members-home-shell">
+        <div class="members-home-image-pane">
+            <img src="../public/images/logo.png" alt="Vos Heist Logo" class="members-home-image">
+        </div>
+        <div class="members-home-login-pane">
+            <div class="members-home-login-card auth-card auth-single">
+                <h1 class="members-home-title">ברוכים הבאים צו וואס הייסט</h1>
+                <p class="members-home-subtitle">נאר מיטגלידער האבן פולע צוטריט. לאָג אריין אדער שאף א חשבון.</p>
+                <form id="login-form" class="members-home-form">
+                    <label for="login-name" class="form-label">נאָמען</label>
+                    <input id="login-name" name="name" class="form-control" type="text" required>
+                    <label for="login-password" class="form-label">פּאַראָל</label>
+                    <input id="login-password" name="password" class="form-control" type="password" required>
+                    <button type="submit" class="btn btn-primary auth-btn w-100">אַרײַנגיין</button>
+                    <p class="auth-switch-text">האסט נישט קיין חשבון?</p>
+                    <button type="button" class="btn btn-outline-secondary auth-switch-btn w-100" data-bs-toggle="modal"
+                        data-bs-target="#createAccountModal">שאַף אַ נײַעם חשבון</button>
+                    <p id="login-message" class="auth-message" aria-live="polite"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="createAccountModal" tabindex="-1" aria-labelledby="createAccountModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="createAccountModalLabel">שאַף אַ נײַעם חשבון</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="create-account-form">
+                    <div class="modal-body">
+                        <label for="create-firstname" class="form-label">פֿאָר-נאָמען</label>
+                        <input id="create-firstname" name="firstname" class="form-control" type="text" required>
+                        <label for="create-lastname" class="form-label mt-2">לעצטער נאָמען</label>
+                        <input id="create-lastname" name="lastname" class="form-control" type="text" required>
+                        <label for="create-nickname" class="form-label mt-2">פען נאמען (זעהבאר פאר אנדערע)</label>
+                        <input id="create-nickname" name="nickname" class="form-control" type="text" maxlength="24"
+                            required>
+                        <label for="create-email" class="form-label mt-2">ימעיל</label>
+                        <input id="create-email" name="email" class="form-control" type="email" required>
+                        <label for="create-password" class="form-label mt-2">פּאַראָל</label>
+                        <input id="create-password" name="password" class="form-control" type="password" minlength="4"
+                            required>
+                        <label for="create-password-confirm" class="form-label mt-2">באַשטעטיק פּאַראָל</label>
+                        <input id="create-password-confirm" name="passwordConfirm" class="form-control" type="password"
+                            minlength="4" required>
+                        <p id="create-message" class="auth-message mt-2" aria-live="polite"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">פארמאכן</button>
+                        <button type="submit" class="btn btn-primary auth-btn">שאַפֿן חשבון</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
+            <p class="site-footer-text">&copy; 2026 וואס הייסט</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
