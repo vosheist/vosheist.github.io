@@ -287,7 +287,7 @@
 
             saveUsers(users);
             const notification = await notifyOwnerOnSignup(users[userKey]);
-            
+
             // Send welcome email to new user
             try {
                 await fetch(SIGNUP_NOTIFY_ENDPOINT.replace('/notify-signup', '/welcome-email'), {
@@ -302,7 +302,7 @@
             } catch (err) {
                 console.warn("Welcome email failed:", err);
             }
-            
+
             showMessage(createMessage, "חשבון געשאַפֿן. דו קענסט יעצט לאָג אַריין.", "success");
             if (!notification.sent && notification.reason !== "missing-endpoint") {
                 console.warn("Signup created, but owner notification failed:", notification.reason);
