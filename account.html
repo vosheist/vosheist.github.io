@@ -51,6 +51,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="community.html">קהילה</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="hearos.html">הערות</a>
+                        </li>
                     </ul>
                 </div>
                 <a class="nav-link account-shortcut js-account-shortcut active" aria-current="page"
@@ -74,13 +77,14 @@
                         <h2 class="account-panel-title">פרופיל</h2>
                         <p class="small text-secondary mb-1"><strong>לאָגין נאמען:</strong> <span
                                 id="profile-login-name">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>ווייז-נאמען:</strong> <span
-                                id="profile-display-name">-</span></p>
+                        <p class="small text-secondary mb-1"><strong>פֿאָר-נאָמען:</strong> <span
+                                id="profile-firstname">-</span></p>
+                        <p class="small text-secondary mb-1"><strong>לעצטער נאָמען:</strong> <span
+                                id="profile-lastname">-</span></p>
                         <p class="small text-secondary mb-1"><strong>פען נאמען:</strong> <span
                                 id="profile-nickname">-</span>
                         </p>
-                        <p class="small text-secondary mb-1"><strong>יימייל:</strong> <span
-                                id="profile-email">-</span>
+                        <p class="small text-secondary mb-1"><strong>יימייל:</strong> <span id="profile-email">-</span>
                         </p>
                         <button id="open-profile-modal-btn" class="btn btn-outline-primary btn-sm" type="button"
                             data-bs-toggle="modal" data-bs-target="#profileModal">טויש פרופיל</button>
@@ -129,10 +133,8 @@
     </section>
 
     <footer class="site-footer">
-        <div
-            class="container-fluid d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center gap-2 py-3">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
             <p class="site-footer-text">&copy; 2026 וואס הייסט</p>
-            <p class="site-footer-text">נפשי | קהילה | טרעקער</p>
         </div>
     </footer>
 
@@ -145,8 +147,11 @@
                 </div>
                 <form id="profile-form">
                     <div class="modal-body">
-                        <label for="profile-display-input" class="form-label">ווייז-נאמען</label>
-                        <input id="profile-display-input" class="form-control" type="text" required>
+                        <label for="profile-firstname-input" class="form-label">פֿאָר-נאָמען</label>
+                        <input id="profile-firstname-input" class="form-control" type="text" required>
+
+                        <label for="profile-lastname-input" class="form-label mt-2">לעצטער נאָמען</label>
+                        <input id="profile-lastname-input" class="form-control" type="text" required>
 
                         <label for="profile-nickname-input" class="form-label mt-2">פען נאמען (זעהבאר פאר
                             אנדערע)</label>
@@ -365,7 +370,8 @@
             document.getElementById("account-name").textContent = currentUser.displayName;
             document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName;
             document.getElementById("profile-login-name").textContent = currentUserKey;
-            document.getElementById("profile-display-name").textContent = currentUser.displayName;
+            document.getElementById("profile-firstname").textContent = currentUser.firstname || "-";
+            document.getElementById("profile-lastname").textContent = currentUser.lastname || "-";
             document.getElementById("profile-nickname").textContent = currentUser.nickname || currentUser.displayName;
             document.getElementById("profile-email").textContent = currentUser.email || "-";
             if (!Array.isArray(currentUser.records)) {
@@ -492,7 +498,8 @@
             const nickname = currentUser.nickname || currentUser.displayName;
             document.getElementById("account-name").textContent = currentUser.displayName;
             document.getElementById("account-nickname").textContent = nickname;
-            document.getElementById("profile-display-name").textContent = currentUser.displayName;
+            document.getElementById("profile-firstname").textContent = currentUser.firstname || "-";
+            document.getElementById("profile-lastname").textContent = currentUser.lastname || "-";
             document.getElementById("profile-nickname").textContent = nickname;
             document.getElementById("profile-email").textContent = currentUser.email || "-";
         }
@@ -565,7 +572,8 @@
         }
 
         function openProfileWithCurrentData() {
-            document.getElementById("profile-display-input").value = currentUser.displayName || "";
+            document.getElementById("profile-firstname-input").value = currentUser.firstname || "";
+            document.getElementById("profile-lastname-input").value = currentUser.lastname || "";
             document.getElementById("profile-nickname-input").value = currentUser.nickname || currentUser.displayName || "";
             document.getElementById("profile-email-input").value = currentUser.email || "";
             document.getElementById("profile-current-password").value = "";
@@ -802,15 +810,21 @@
         profileForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            const displayInput = document.getElementById("profile-display-input").value.trim();
+            const firstnameInput = document.getElementById("profile-firstname-input").value.trim();
+            const lastnameInput = document.getElementById("profile-lastname-input").value.trim();
             const nicknameInput = document.getElementById("profile-nickname-input").value.trim();
             const emailInput = document.getElementById("profile-email-input").value.trim();
             const currentPassword = document.getElementById("profile-current-password").value;
             const newPassword = document.getElementById("profile-new-password").value;
             const confirmPassword = document.getElementById("profile-confirm-password").value;
 
-            if (!displayInput || displayInput.length < 2) {
-                showModalMessage("profile-message", "ווייז-נאמען דארף זיין כאטש 2 אותיות.", "error");
+            if (!firstnameInput || firstnameInput.length < 2) {
+                showModalMessage("profile-message", "פֿאָר-נאָמען דארף זיין כאטש 2 אותיות.", "error");
+                return;
+            }
+
+            if (!lastnameInput || lastnameInput.length < 2) {
+                showModalMessage("profile-message", "לעצטער נאָמען דארף זיין כאטש 2 אותיות.", "error");
                 return;
             }
 
@@ -853,7 +867,9 @@
                 currentUser.passwordHash = await hashPassword(newPassword);
             }
 
-            currentUser.displayName = displayInput;
+            currentUser.firstname = firstnameInput;
+            currentUser.lastname = lastnameInput;
+            currentUser.displayName = `${firstnameInput} ${lastnameInput}`.trim();
             currentUser.nickname = nicknameInput;
             currentUser.email = emailInput;
             users[currentUserKey] = currentUser;

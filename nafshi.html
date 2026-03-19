@@ -51,6 +51,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="community.html">קהילה</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="hearos.html">הערות</a>
+                        </li>
                     </ul>
                 </div>
                 <a class="nav-link account-shortcut js-account-shortcut d-none" href="nafshi.html">חשבון</a>
@@ -91,8 +94,10 @@
                 </div>
                 <form id="create-account-form">
                     <div class="modal-body">
-                        <label for="create-name" class="form-label">נאָמען</label>
-                        <input id="create-name" name="name" class="form-control" type="text" required>
+                        <label for="create-firstname" class="form-label">פֿאָר-נאָמען</label>
+                        <input id="create-firstname" name="firstname" class="form-control" type="text" required>
+                        <label for="create-lastname" class="form-label mt-2">לעצטער נאָמען</label>
+                        <input id="create-lastname" name="lastname" class="form-control" type="text" required>
                         <label for="create-nickname" class="form-label mt-2">פען נאמען (זעהבאר פאר אנדערע)</label>
                         <input id="create-nickname" name="nickname" class="form-control" type="text" maxlength="24"
                             required>
@@ -116,10 +121,8 @@
     </div>
 
     <footer class="site-footer">
-        <div
-            class="container-fluid d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center gap-2 py-3">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
             <p class="site-footer-text">&copy; 2026 וואס הייסט</p>
-            <p class="site-footer-text">נפשי | לאָגין | חשבון</p>
         </div>
     </footer>
 
@@ -221,20 +224,23 @@
         document.getElementById("create-account-form").addEventListener("submit", async (event) => {
             event.preventDefault();
             const createMessage = document.getElementById("create-message");
-            const nameInput = document.getElementById("create-name");
+            const firstnameInput = document.getElementById("create-firstname");
+            const lastnameInput = document.getElementById("create-lastname");
             const nicknameInput = document.getElementById("create-nickname");
             const emailInput = document.getElementById("create-email");
             const passwordInput = document.getElementById("create-password");
             const confirmInput = document.getElementById("create-password-confirm");
 
-            const name = nameInput.value;
+            const firstname = firstnameInput.value.trim();
+            const lastname = lastnameInput.value.trim();
+            const displayName = `${firstname} ${lastname}`.trim();
             const nickname = nicknameInput.value.trim();
             const email = emailInput.value.trim();
             const password = passwordInput.value;
-            const userKey = normalizeName(name);
+            const userKey = normalizeName(displayName);
 
             if (!userKey) {
-                showMessage(createMessage, "לייג אריין א נאמען.", "error");
+                showMessage(createMessage, "לייג אריין אלע נאמען פעלדער.", "error");
                 return;
             }
 
@@ -270,7 +276,9 @@
             }
 
             users[userKey] = {
-                displayName: name.trim(),
+                displayName: displayName,
+                firstname: firstname,
+                lastname: lastname,
                 nickname,
                 email,
                 records: [],
@@ -283,7 +291,8 @@
             if (!notification.sent && notification.reason !== "missing-endpoint") {
                 console.warn("Signup created, but owner notification failed:", notification.reason);
             }
-            nameInput.value = "";
+            firstnameInput.value = "";
+            lastnameInput.value = "";
             nicknameInput.value = "";
             emailInput.value = "";
             passwordInput.value = "";
