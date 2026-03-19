@@ -79,6 +79,9 @@
                         <p class="small text-secondary mb-1"><strong>פען נאמען:</strong> <span
                                 id="profile-nickname">-</span>
                         </p>
+                        <p class="small text-secondary mb-1"><strong>יימייל:</strong> <span
+                                id="profile-email">-</span>
+                        </p>
                         <button id="open-profile-modal-btn" class="btn btn-outline-primary btn-sm" type="button"
                             data-bs-toggle="modal" data-bs-target="#profileModal">טויש פרופיל</button>
                     </div>
@@ -148,6 +151,9 @@
                         <label for="profile-nickname-input" class="form-label mt-2">פען נאמען (זעהבאר פאר
                             אנדערע)</label>
                         <input id="profile-nickname-input" class="form-control" type="text" maxlength="24" required>
+
+                        <label for="profile-email-input" class="form-label mt-2">ימעיל</label>
+                        <input id="profile-email-input" class="form-control" type="email" required>
 
                         <label for="profile-current-password" class="form-label mt-2">יעצטיגער פאסווארד (נאר אויב דו
                             ווילסט
@@ -361,6 +367,7 @@
             document.getElementById("profile-login-name").textContent = currentUserKey;
             document.getElementById("profile-display-name").textContent = currentUser.displayName;
             document.getElementById("profile-nickname").textContent = currentUser.nickname || currentUser.displayName;
+            document.getElementById("profile-email").textContent = currentUser.email || "-";
             if (!Array.isArray(currentUser.records)) {
                 currentUser.records = [];
             }
@@ -487,6 +494,7 @@
             document.getElementById("account-nickname").textContent = nickname;
             document.getElementById("profile-display-name").textContent = currentUser.displayName;
             document.getElementById("profile-nickname").textContent = nickname;
+            document.getElementById("profile-email").textContent = currentUser.email || "-";
         }
 
         function showTrackerMessage(text, type) {
@@ -559,6 +567,7 @@
         function openProfileWithCurrentData() {
             document.getElementById("profile-display-input").value = currentUser.displayName || "";
             document.getElementById("profile-nickname-input").value = currentUser.nickname || currentUser.displayName || "";
+            document.getElementById("profile-email-input").value = currentUser.email || "";
             document.getElementById("profile-current-password").value = "";
             document.getElementById("profile-new-password").value = "";
             document.getElementById("profile-confirm-password").value = "";
@@ -795,6 +804,7 @@
 
             const displayInput = document.getElementById("profile-display-input").value.trim();
             const nicknameInput = document.getElementById("profile-nickname-input").value.trim();
+            const emailInput = document.getElementById("profile-email-input").value.trim();
             const currentPassword = document.getElementById("profile-current-password").value;
             const newPassword = document.getElementById("profile-new-password").value;
             const confirmPassword = document.getElementById("profile-confirm-password").value;
@@ -806,6 +816,11 @@
 
             if (!nicknameInput || nicknameInput.length < 2) {
                 showModalMessage("profile-message", "פען נאמען דארף זיין כאטש 2 אותיות.", "error");
+                return;
+            }
+
+            if (!emailInput || !emailInput.includes("@")) {
+                showModalMessage("profile-message", "לייג אריין א גילטיקן יימייל.", "error");
                 return;
             }
 
@@ -840,6 +855,7 @@
 
             currentUser.displayName = displayInput;
             currentUser.nickname = nicknameInput;
+            currentUser.email = emailInput;
             users[currentUserKey] = currentUser;
             saveUsers(users);
             syncProfileHeader();

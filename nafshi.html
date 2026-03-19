@@ -96,6 +96,8 @@
                         <label for="create-nickname" class="form-label mt-2">פען נאמען (זעהבאר פאר אנדערע)</label>
                         <input id="create-nickname" name="nickname" class="form-control" type="text" maxlength="24"
                             required>
+                        <label for="create-email" class="form-label mt-2">ימעיל</label>
+                        <input id="create-email" name="email" class="form-control" type="email" required>
                         <label for="create-password" class="form-label mt-2">פּאַראָל</label>
                         <input id="create-password" name="password" class="form-control" type="password" minlength="4"
                             required>
@@ -192,6 +194,7 @@
                 event: "new_signup",
                 displayName: newUser.displayName,
                 nickname: newUser.nickname,
+                email: newUser.email,
                 createdAt: new Date().toISOString(),
                 source: "vos-heist"
             };
@@ -220,11 +223,13 @@
             const createMessage = document.getElementById("create-message");
             const nameInput = document.getElementById("create-name");
             const nicknameInput = document.getElementById("create-nickname");
+            const emailInput = document.getElementById("create-email");
             const passwordInput = document.getElementById("create-password");
             const confirmInput = document.getElementById("create-password-confirm");
 
             const name = nameInput.value;
             const nickname = nicknameInput.value.trim();
+            const email = emailInput.value.trim();
             const password = passwordInput.value;
             const userKey = normalizeName(name);
 
@@ -235,6 +240,11 @@
 
             if (!nickname || nickname.length < 2) {
                 showMessage(createMessage, "לייג אריין א פען נאמען (מינימום 2 אותיות).", "error");
+                return;
+            }
+
+            if (!email || !email.includes("@")) {
+                showMessage(createMessage, "לייג אריין א גילטיקן יימייל.", "error");
                 return;
             }
 
@@ -262,6 +272,7 @@
             users[userKey] = {
                 displayName: name.trim(),
                 nickname,
+                email,
                 records: [],
                 passwordHash: await hashPassword(password)
             };
@@ -274,6 +285,7 @@
             }
             nameInput.value = "";
             nicknameInput.value = "";
+            emailInput.value = "";
             passwordInput.value = "";
             confirmInput.value = "";
 
