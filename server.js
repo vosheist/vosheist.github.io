@@ -63,14 +63,14 @@ app.post('/api/feedback', async (req, res) => {
         // Send email
         await transporter.sendMail(mailOptions);
 
-        res.json({ 
-            success: true, 
-            message: 'Feedback sent successfully' 
+        res.json({
+            success: true,
+            message: 'Feedback sent successfully'
         });
 
     } catch (error) {
         console.error('Email error:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to send feedback',
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
@@ -102,22 +102,83 @@ app.post('/api/notify-signup', async (req, res) => {
 
         await transporter.sendMail(mailOptions);
 
-        res.json({ 
-            success: true, 
-            message: 'Signup notification sent' 
+        res.json({
+            success: true,
+            message: 'Signup notification sent'
         });
 
     } catch (error) {
         console.error('Signup notification error:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to send notification',
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 });
 
+// Welcome email endpoint - sends confirmation to new user
+app.post('/api/welcome-email', async (req, res) => {
+    try {
+        const { email, firstname, lastname } = req.body;
+
+        if (!email || !firstname || !lastname) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const fullName = `${firstname} ${lastname}`.trim();
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'ברוכים הבאים צו וואס הייסט | Welcome to Vos Heist!',
+            html: `
+                <div style="font-family: Arial, sans-serif; text-align: right; direction: rtl; color: #333;">
+                    <h2 style="color: #2c3e50;">ברוכים הבאים, ${fullName}!</h2>
+                    <p>תודה על הירשמות! אתה עכשיו ממבר של <strong>וואס הייסט</strong>.</p>
+                    <hr>
+                    <h3 style="color: #34495e;">מה עכשיו?</h3>
+                    <ul>
+                        <li><strong>עלק לעקוב</strong> - גיע לחשבונך באתר וההתחל לעקוב אחרי מצוות וברכות שלך</li>
+                        <li><strong>הצטרף לקהילה</strong> - ראה מה עושים משתמשים אחרים</li>
+                        <li><strong>תן משוב</strong> - יש לך רעיון? שלח לנו הערה</li>
+                    </ul>
+                    <hr>
+                    <p style="margin-top: 20px;">
+                        <a href="http://localhost:3000" style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                            לך לחשבונך
+                        </a>
+                    </p>
+                    <p style="margin-top: 20px; font-size: 12px; color: #7f8c8d;">
+                        אם יש לך שאלות, כתוב לנו דרך עמוד ההערות.
+                    </p>
+                </div>
+            `,
+            replyTo: process.env.EMAIL_USER
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.json({ 
+            success: true, 
+            message: 'Welcome email sent successfully' 
+        });
+
+    } catch (error) {
+        console.error('Welcome email error:', error);
+        res.status(500).json({ 
+            error: 'Failed to send welcome email',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+// Start server
 app.listen(PORT, () => {
-    console.log(`✓ VOS HEIST Backend running on http://localhost:${PORT}`);
-    console.log(`✓ CORS enabled`);
-    console.log(`✓ Email service: ${process.env.EMAIL_USER || 'NOT CONFIGURED'}`);
+    console.log(`✓ Vos Heist Backend running on http://localhost:${PORT}`);
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+        console.log('✓ Email service configured');
+    } else {
+        console.warn('⚠ Email service NOT configured - set EMAIL_USER and EMAIL_PASSWORD in .env');
+    }
+    console.log('✓ CORS enabled for all origins');
+    console.log('✓ Endpoints: /health, /api/feedback, /api/notify-signup, /api/welcome-email');
 });
