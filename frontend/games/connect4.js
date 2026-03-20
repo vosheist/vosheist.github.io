@@ -39,7 +39,7 @@
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     if (board[r][c] !== token) continue;
-                    const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+                    const dirs = [[0, 1], [1, 0], [1, 1], [1, -1]];
                     for (const [dr, dc] of dirs) {
                         let ok = true;
                         for (let i = 1; i < 4; i++) {
