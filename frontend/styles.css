@@ -873,6 +873,101 @@ body {
     color: var(--logo-blue-deep);
 }
 
+.g2048-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.g2048-top {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.g2048-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    background: #d9e4ee;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.g2048-tile {
+    min-height: 52px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #2f5165;
+    background: #f4f8fb;
+}
+
+.g2048-0 {
+    background: #edf2f7;
+}
+
+.g2048-2 { background: #fff8e8; }
+.g2048-4 { background: #ffefcf; }
+.g2048-8 { background: #ffe0b2; }
+.g2048-16 { background: #ffd08d; }
+.g2048-32 { background: #ffc56c; }
+.g2048-64 { background: #ffb84d; }
+.g2048-128 { background: #f3d88a; }
+.g2048-256 { background: #ead16f; }
+.g2048-512 { background: #dfc655; }
+.g2048-1024 { background: #d5bc3d; }
+.g2048-2048 { background: #cdb430; color: #1f2e3b; }
+
+.mm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.mm-card {
+    min-height: 48px;
+    border: 1px solid var(--logo-border);
+    border-radius: 8px;
+    background: #f6fbff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2f5165;
+}
+
+.mm-card.is-open {
+    background: #fff4d8;
+}
+
+.rt-panel {
+    width: 100%;
+    min-height: 74px;
+    border-radius: 12px;
+    border: 1px solid var(--logo-border);
+    background: #f6fbff;
+    color: #2f5165;
+    font-weight: 700;
+}
+
+.rt-wait { background: #fff3e8; }
+.rt-ready { background: #dff7df; }
+.rt-good { background: #e7f7ff; }
+.rt-bad { background: #ffe6e6; }
+
+.qm-question {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2f5165;
+}
+
+.qm-input {
+    width: 120px;
+}
+
 /* Global responsive tweaks for very small screens (flip phones) */
 @media (max-width: 420px) {
     #my-navbar .navbar-nav {
@@ -893,6 +988,15 @@ body {
 
     .ng-input {
         width: 100%;
+    }
+
+    .qm-input {
+        width: 100%;
+    }
+
+    .g2048-tile {
+        min-height: 46px;
+        font-size: 0.95rem;
     }
 
     .ttt-cell {

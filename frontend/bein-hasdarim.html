@@ -71,6 +71,22 @@
                     <h3 class="game-title">Rock Paper Scissors</h3>
                     <div id="rps" class="game-root"></div>
                 </article>
+                <article class="game-card" id="game-2048-card">
+                    <h3 class="game-title">2048</h3>
+                    <div id="game-2048" class="game-root"></div>
+                </article>
+                <article class="game-card" id="memory-match-card">
+                    <h3 class="game-title">Memory Match</h3>
+                    <div id="memory-match" class="game-root"></div>
+                </article>
+                <article class="game-card" id="reaction-timer-card">
+                    <h3 class="game-title">Reaction Timer</h3>
+                    <div id="reaction-timer" class="game-root"></div>
+                </article>
+                <article class="game-card" id="quick-math-card">
+                    <h3 class="game-title">Quick Math</h3>
+                    <div id="quick-math" class="game-root"></div>
+                </article>
             </section>
         </div>
     </main>
@@ -84,6 +100,10 @@
     <script src="games/tictactoe.js"></script>
     <script src="games/number-guess.js"></script>
     <script src="games/rps.js"></script>
+    <script src="games/game2048.js"></script>
+    <script src="games/memory-match.js"></script>
+    <script src="games/reaction-timer.js"></script>
+    <script src="games/quick-math.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.TicTacToe && document.getElementById('tictactoe')) {
@@ -94,6 +114,18 @@
             }
             if (window.RpsGame && document.getElementById('rps')) {
                 window.RpsGame.init(document.getElementById('rps'));
+            }
+            if (window.Game2048 && document.getElementById('game-2048')) {
+                window.Game2048.init(document.getElementById('game-2048'));
+            }
+            if (window.MemoryMatchGame && document.getElementById('memory-match')) {
+                window.MemoryMatchGame.init(document.getElementById('memory-match'));
+            }
+            if (window.ReactionTimerGame && document.getElementById('reaction-timer')) {
+                window.ReactionTimerGame.init(document.getElementById('reaction-timer'));
+            }
+            if (window.QuickMathGame && document.getElementById('quick-math')) {
+                window.QuickMathGame.init(document.getElementById('quick-math'));
             }
         });
     </script>
