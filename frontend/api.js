@@ -30,8 +30,6 @@
         login: (body) => request("/api/auth/login", { method: "POST", body: JSON.stringify(body) }),
         getUser: (userKey) => request(`/api/users/${encodeURIComponent(userKey)}`),
         updateProfile: (userKey, body) => request(`/api/users/${encodeURIComponent(userKey)}/profile`, { method: "PUT", body: JSON.stringify(body) }),
-        getRecords: (userKey) => request(`/api/users/${encodeURIComponent(userKey)}/records`),
-        addRecord: (userKey, record) => request(`/api/users/${encodeURIComponent(userKey)}/records`, { method: "POST", body: JSON.stringify({ record }) }),
         getCommunity: (excludeUserKey) => request(`/api/community?exclude=${encodeURIComponent(excludeUserKey || "")}`),
         getBaisMedrash: () => request("/api/bais-medrash"),
         addBaisMedrash: (post) => request("/api/bais-medrash", { method: "POST", body: JSON.stringify({ post }) }),

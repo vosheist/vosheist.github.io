@@ -63,7 +63,7 @@
     <main class="admin-shell">
         <header class="mb-3">
             <h1 class="h3 mb-1">Admin Dashboard</h1>
-            <p class="text-secondary mb-0">View all members, profile details, records, and chat activity.</p>
+            <p class="text-secondary mb-0">View all members, profile details, and chat activity.</p>
         </header>
 
         <section class="admin-card p-3 mb-3">
@@ -85,12 +85,6 @@
                     <div class="stat-card">
                         <p class="stat-label">Members</p>
                         <p id="stat-users" class="stat-value">0</p>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="stat-card">
-                        <p class="stat-label">Total records</p>
-                        <p id="stat-records" class="stat-value">0</p>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
@@ -117,28 +111,10 @@
                                 <th>Nickname</th>
                                 <th>Email</th>
                                 <th>Joined</th>
-                                <th>Records</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody id="members-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="admin-card p-3 mb-3">
-                <h2 class="h5 mb-2">All Records</h2>
-                <div class="table-wrap">
-                    <table class="table table-sm align-middle">
-                        <thead>
-                            <tr>
-                                <th>Member</th>
-                                <th>Type</th>
-                                <th>Title</th>
-                                <th>Date</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody id="records-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -222,34 +198,8 @@
             }
 
             tableBody.innerHTML = users.map(({ user }) => {
-                const count = Array.isArray(user.records) ? user.records.length : 0;
-                return `<tr><td>${escapeHtml(user.displayName)}</td><td>${escapeHtml(user.nickname)}</td><td>${escapeHtml(user.email)}</td><td>${formatDate(user.createdAt)}</td><td>${count}</td></tr>`;
+                return `<tr><td>${escapeHtml(user.displayName)}</td><td>${escapeHtml(user.nickname)}</td><td>${escapeHtml(user.email)}</td><td>${formatDate(user.createdAt)}</td><td>Active</td></tr>`;
             }).join("");
-        }
-
-        function renderRecords(users) {
-            const rows = [];
-            users.forEach(({ user }) => {
-                const name = user.displayName || user.nickname || "-";
-                const records = Array.isArray(user.records) ? user.records : [];
-                records.forEach((record) => {
-                    rows.push({
-                        name,
-                        type: record.type || "-",
-                        title: record.title || record.text || "-",
-                        when: record.happenedOn || record.createdAt || "-",
-                        details: record.details || ""
-                    });
-                });
-            });
-
-            const tableBody = document.getElementById("records-table-body");
-            if (!rows.length) {
-                tableBody.innerHTML = "<tr><td colspan=\"5\" class=\"text-secondary\">No records found.</td></tr>";
-                return;
-            }
-
-            tableBody.innerHTML = rows.map((row) => `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.type)}</td><td>${escapeHtml(row.title)}</td><td>${formatDate(row.when)}</td><td class=\"mono\">${escapeHtml(row.details)}</td></tr>`).join("");
         }
 
         function renderBais(posts) {
@@ -285,12 +235,10 @@
                 const coffee = Array.isArray(payload.coffeeRoomMessages) ? payload.coffeeRoomMessages : [];
 
                 document.getElementById("stat-users").textContent = String(totals.users || users.length || 0);
-                document.getElementById("stat-records").textContent = String(totals.records || 0);
                 document.getElementById("stat-bais").textContent = String(totals.baisMedrashPosts || posts.length || 0);
                 document.getElementById("stat-coffee").textContent = String(totals.coffeeRoomMessages || coffee.length || 0);
 
                 renderMembers(users);
-                renderRecords(users);
                 renderBais(posts);
                 renderCoffee(coffee);
 

@@ -1,5 +1,5 @@
 /**
- * View test data from MongoDB
+ * View member test data from MongoDB
  * Run: node view-test-data.js
  */
 const { MongoClient } = require("mongodb");
@@ -23,7 +23,7 @@ async function viewTestData() {
         console.log(`\nTotal Members: ${users.length}`);
         console.log(`Total Records: ${users.reduce((sum, u) => sum + (u.records?.length || 0), 0)}\n`);
 
-        console.log("MEMBERS & THEIR MITZVOS/AVEIROS:\n" + "=".repeat(60));
+        console.log("MEMBERS SUMMARY:\n" + "=".repeat(60));
 
         users.forEach((user, idx) => {
             console.log(`\n${idx + 1}. ${user.displayName}`);
@@ -33,24 +33,11 @@ async function viewTestData() {
             console.log(`   Total Records: ${user.records?.length || 0}`);
 
             if (user.records && user.records.length > 0) {
-                const mitzvos = user.records.filter(r => r.type === "mitzvah");
-                const aveiros = user.records.filter(r => r.type === "aveira");
-
-                if (mitzvos.length > 0) {
-                    console.log(`\n   ✅ Mitzvos (${mitzvos.length}):`);
-                    mitzvos.forEach(m => {
-                        console.log(`      • ${m.title}`);
-                        console.log(`        (${new Date(m.createdAt).toLocaleDateString()})`);
-                    });
-                }
-
-                if (aveiros.length > 0) {
-                    console.log(`\n   ❌ Aveiros (${aveiros.length}):`);
-                    aveiros.forEach(a => {
-                        console.log(`      • ${a.title}`);
-                        console.log(`        (${new Date(a.createdAt).toLocaleDateString()})`);
-                    });
-                }
+                console.log(`\n   Recent Entries (${user.records.length}):`);
+                user.records.slice(0, 5).forEach((entry) => {
+                    console.log(`      • ${entry.title || "Entry"}`);
+                    console.log(`        (${new Date(entry.createdAt).toLocaleDateString()})`);
+                });
             }
         });
 
@@ -58,12 +45,12 @@ async function viewTestData() {
         console.log("\n💡 QUICK MONGODB QUERIES:\n");
         console.log("View single user with records:");
         console.log('  db.users.findOne({firstname: "Moshe"}, {projection: {records: 1, displayName: 1}})');
-        console.log("\nView only mitzvos:");
-        console.log('  db.users.aggregate([ {$unwind: "$records"}, {$match: {"records.type": "mitzvah"}}, {$project: {displayName: 1, title: "$records.title"}} ])');
+        console.log("\nView sample entries:");
+        console.log('  db.users.aggregate([ {$unwind: "$records"}, {$project: {displayName: 1, title: "$records.title"}} ])');
         console.log("\nView user by email:");
         console.log('  db.users.findOne({email: "moshe.cohen@example.com"})');
         console.log("\nAdd a record to a user:");
-        console.log('  db.users.updateOne({userKey: "moshe"}, {$push: {records: {type: "mitzvah", title: "New good deed", createdAt: new Date().toISOString()}}})');
+        console.log('  db.users.updateOne({userKey: "moshe"}, {$push: {records: {type: "activity", title: "New entry", createdAt: new Date().toISOString()}}})');
 
     } catch (error) {
         console.error("❌ Error:", error.message);

@@ -1,5 +1,5 @@
 /**
- * Seed test members with mitzvos and aveiros
+ * Seed test members with sample activity entries
  * Run: node seed-test-data.js
  */
 const { MongoClient } = require("mongodb");
@@ -8,7 +8,7 @@ require("dotenv").config();
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
 
-const mitzvos = [
+const activityNotes = [
     "Helped elderly neighbor with groceries",
     "Studied Torah for 30 minutes",
     "Donated to charity",
@@ -21,18 +21,6 @@ const mitzvos = [
     "Showed kindness to stranger"
 ];
 
-const aveiros = [
-    "Lost patience with family",
-    "Wasted time instead of learning",
-    "Spoke lashon hara",
-    "Complained about situation",
-    "Skipped tefillah",
-    "Was disrespectful to parent",
-    "Acted with pride",
-    "Engaged in idle gossip",
-    "Procrastinated on important task",
-    "Let anger get the better"
-];
 
 const testMembers = [
     {
@@ -94,22 +82,11 @@ async function seedTestData() {
             const emailKey = normalizeName(member.email);
             const firstnameKey = normalizeName(member.firstname);
 
-            // Generate random records (3-6 mitzvos, 2-4 aveiros)
-            const records = [];
-
-            const randomMitzvos = getRandomItems(mitzvos, 2 + Math.floor(Math.random() * 3));
-            randomMitzvos.forEach((title) => {
-                records.push({
-                    type: "mitzvah",
-                    title: title,
-                    createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
-                });
-            });
-
-            const randomAveiros = getRandomItems(aveiros, 2 + Math.floor(Math.random() * 2));
-            randomAveiros.forEach((title) => {
-                records.push({
-                    type: "aveira",
+            const activityLog = [];
+            const randomActivities = getRandomItems(activityNotes, 3 + Math.floor(Math.random() * 3));
+            randomActivities.forEach((title) => {
+                activityLog.push({
+                    type: "activity",
                     title: title,
                     createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
                 });
@@ -127,7 +104,7 @@ async function seedTestData() {
                 displayName: `${member.firstname} ${member.lastname}`,
                 email: member.email,
                 passwordHash: "$2b$10$test_hash_not_real", // Fake hash for demo
-                records: records,
+                records: activityLog,
                 createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
             };
 
@@ -139,7 +116,7 @@ async function seedTestData() {
             );
 
             console.log(`✅ ${member.firstname} ${member.lastname}`);
-            console.log(`   Mitzvos: ${randomMitzvos.length}, Aveiros: ${randomAveiros.length}`);
+            console.log(`   Activities: ${randomActivities.length}`);
             console.log();
         }
 

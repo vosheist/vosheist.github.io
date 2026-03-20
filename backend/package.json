@@ -1,7 +1,7 @@
 {
     "name": "vos-heist-backend",
     "version": "1.0.0",
-    "description": "Backend API for Vos Heist - Mitzvah tracker",
+    "description": "Backend API for Vos Heist member platform",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
@@ -9,7 +9,7 @@
     },
     "keywords": [
         "vos-heist",
-        "mitzvah",
+        "members",
         "yiddish"
     ],
     "author": "Vos Heist Team",

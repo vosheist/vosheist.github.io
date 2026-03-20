@@ -127,7 +127,6 @@
                 lastname,
                 nickname,
                 email,
-                records: [],
                 passwordHash: await hashPassword(password)
             };
 

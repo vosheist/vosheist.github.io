@@ -49,7 +49,6 @@ function sanitizeUserForClient(user) {
         nickname: user.nickname,
         email: user.email,
         passwordHash: user.passwordHash,
-        records: Array.isArray(user.records) ? user.records : [],
         createdAt: user.createdAt || null
     };
 }
@@ -214,7 +213,6 @@ app.post("/api/auth/signup", async (req, res) => {
         email: String(email).trim(),
         emailKey: normalizeEmail(email),
         passwordHash,
-        records: [],
         createdAt: new Date().toISOString()
     };
 
@@ -229,8 +227,7 @@ app.post("/api/auth/signup", async (req, res) => {
             lastname: userDoc.lastname,
             nickname: userDoc.nickname,
             email: userDoc.email,
-            passwordHash: userDoc.passwordHash,
-            records: userDoc.records
+            passwordHash: userDoc.passwordHash
         }
     });
 });
@@ -272,8 +269,7 @@ app.post("/api/auth/login", async (req, res) => {
             lastname: user.lastname,
             nickname: user.nickname,
             email: user.email,
-            passwordHash: user.passwordHash,
-            records: Array.isArray(user.records) ? user.records : []
+            passwordHash: user.passwordHash
         }
     });
 });
@@ -293,8 +289,7 @@ app.get("/api/users/:userKey", async (req, res) => {
             lastname: user.lastname,
             nickname: user.nickname,
             email: user.email,
-            passwordHash: user.passwordHash,
-            records: Array.isArray(user.records) ? user.records : []
+            passwordHash: user.passwordHash
         }
     });
 });
@@ -360,43 +355,9 @@ app.put("/api/users/:userKey/profile", async (req, res) => {
             lastname: updatedUser.lastname,
             nickname: updatedUser.nickname,
             email: updatedUser.email,
-            passwordHash: updatedUser.passwordHash,
-            records: Array.isArray(updatedUser.records) ? updatedUser.records : []
+            passwordHash: updatedUser.passwordHash
         }
     });
-});
-
-app.get("/api/users/:userKey/records", async (req, res) => {
-    const userKey = normalizeName(req.params.userKey);
-    const user = await usersCollection.findOne({ userKey }, { projection: { records: 1 } });
-    if (!user) {
-        return res.status(404).json({ error: "User not found" });
-    }
-
-    return res.json({ success: true, records: Array.isArray(user.records) ? user.records : [] });
-});
-
-app.post("/api/users/:userKey/records", async (req, res) => {
-    const userKey = normalizeName(req.params.userKey);
-    const { record } = req.body || {};
-
-    if (!record || !record.type || !record.title) {
-        return res.status(400).json({ error: "Invalid record payload" });
-    }
-
-    const user = await usersCollection.findOne({ userKey }, { projection: { records: 1 } });
-    if (!user) {
-        return res.status(404).json({ error: "User not found" });
-    }
-
-    const nextRecord = {
-        ...record,
-        createdAt: record.createdAt || new Date().toISOString()
-    };
-
-    await usersCollection.updateOne({ userKey }, { $push: { records: nextRecord } });
-    const updated = await usersCollection.findOne({ userKey }, { projection: { records: 1 } });
-    return res.json({ success: true, records: Array.isArray(updated.records) ? updated.records : [] });
 });
 
 app.get("/api/community", async (req, res) => {
@@ -411,8 +372,7 @@ app.get("/api/community", async (req, res) => {
             lastname: doc.lastname,
             nickname: doc.nickname,
             email: doc.email,
-            passwordHash: doc.passwordHash,
-            records: Array.isArray(doc.records) ? doc.records : []
+            passwordHash: doc.passwordHash
         }
     }));
 
@@ -481,7 +441,6 @@ app.get("/api/admin/overview", requireAdmin, async (req, res) => {
         success: true,
         totals: {
             users: users.length,
-            records: users.reduce((sum, entry) => sum + (Array.isArray(entry.user.records) ? entry.user.records.length : 0), 0),
             baisMedrashPosts: baisMedrashPosts.length,
             coffeeRoomMessages: coffeeRoomMessages.length
         },
@@ -629,7 +588,7 @@ app.post("/api/welcome-email", async (req, res) => {
                             <p style="margin:0 0 12px; font-size:15px; line-height:1.7;">After you log in, you will be able to:</p>
                             <ul style="margin:0 0 24px; padding-left:20px; color:#385066; line-height:1.8;">
                                 <li>View and update your account details</li>
-                                <li>Track mitzvah and aveirah records</li>
+                                <li>Manage your account details</li>
                                 <li>See the member community</li>
                                 <li>Use the Bais Medrash and Caveh Tzimer pages</li>
                             </ul>
@@ -665,7 +624,7 @@ async function startServer() {
             } else {
                 console.warn("⚠ Email service NOT configured - set EMAIL_USER and EMAIL_PASSWORD in .env");
             }
-            console.log("✓ Endpoints: auth, users, records, community, bais-medrash, coffee-room");
+            console.log("✓ Endpoints: auth, users, community, bais-medrash, coffee-room");
         });
     } catch (error) {
         console.error("Failed to start server:", error.message);

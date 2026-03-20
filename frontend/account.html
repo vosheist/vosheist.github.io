@@ -39,20 +39,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <!-- Removed: Home link from navbar (page kept) -->
-                        <!-- Removed: Nafshi / Prices links from navbar (pages kept) -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="community.html">קהילה</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="bais-medrash.html">בית מדרש</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="coffee-room.html">קאווע צימער</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="hearos.html">הערות</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="community.html">קהילה</a></li>
+                        <li class="nav-item"><a class="nav-link" href="bais-medrash.html">בית מדרש</a></li>
+                        <li class="nav-item"><a class="nav-link" href="coffee-room.html">קאווע צימער</a></li>
+                        <li class="nav-item"><a class="nav-link" href="bein-hasdarim.html">בין הסדרים</a></li>
+                        <li class="nav-item"><a class="nav-link" href="hearos.html">הערות</a></li>
                     </ul>
                 </div>
                 <a class="nav-link account-shortcut js-account-shortcut active" aria-current="page"
@@ -62,70 +53,37 @@
     </div>
 
     <section class="account-section">
-        <div class="account-shell">
-            <header class="account-hero-panel">
-                <h1>מיין חשבון</h1>
-                <p class="account-sub">ברוך הבא, <span id="account-name">...</span> (<span
-                        id="account-nickname">...</span>)</p>
-                <p class="account-note">דא קענסטו פירן דיין טאג מיט א קלארע בליק אויף מצוות און עבירות.</p>
-            </header>
+        <div class="container py-3">
+            <div class="account-shell">
+                <header class="account-hero-panel mb-3">
+                    <h1 class="mb-1">מיין חשבון</h1>
+                    <p class="account-sub mb-0">ברוך הבא, <span id="account-name">...</span> (<span
+                            id="account-nickname">...</span>)</p>
+                </header>
 
-            <div class="account-dashboard">
-                <aside class="account-sidebar">
-                    <div class="profile-panel account-panel">
-                        <h2 class="account-panel-title">פרופיל</h2>
-                        <p class="small text-secondary mb-1"><strong>לאָגין נאמען:</strong> <span
-                                id="profile-login-name">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>ערשטע נאמען:</strong> <span
-                                id="profile-firstname">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>לעצטע נאמען:</strong> <span
-                                id="profile-lastname">-</span></p>
-                        <p class="small text-secondary mb-1"><strong>פען נאמען:</strong> <span
-                                id="profile-nickname">-</span>
-                        </p>
-                        <p class="small text-secondary mb-1"><strong>אימעיל:</strong> <span id="profile-email">-</span>
-                        </p>
-                        <button id="open-profile-modal-btn" class="btn btn-outline-primary btn-sm" type="button"
-                            data-bs-toggle="modal" data-bs-target="#profileModal">טויש פרופיל</button>
-                    </div>
-
-                    <div class="account-panel tracker-summary-wrap">
-                        <h2 class="account-panel-title">קיצור סטאטוס</h2>
-                        <div class="tracker-summary row g-2 mt-1">
-                            <div class="col-12">
-                                <div class="summary-pill mitzvah-pill text-center">מצוות: <span
-                                        id="mitzvah-count">0</span>
-                                </div>
+                <div class="row g-3">
+                    <div class="col-12 col-lg-8">
+                        <div class="account-panel p-3 h-100">
+                            <h2 class="account-panel-title mb-3">פרופיל דעטאלן</h2>
+                            <div class="row g-2 small text-secondary">
+                                <div class="col-12 col-sm-6"><strong>לאָגין נאמען:</strong> <span
+                                        id="profile-login-name">-</span></div>
+                                <div class="col-12 col-sm-6"><strong>ערשטע נאמען:</strong> <span
+                                        id="profile-firstname">-</span></div>
+                                <div class="col-12 col-sm-6"><strong>לעצטע נאמען:</strong> <span
+                                        id="profile-lastname">-</span></div>
+                                <div class="col-12 col-sm-6"><strong>פען נאמען:</strong> <span
+                                        id="profile-nickname">-</span></div>
+                                <div class="col-12"><strong>אימעיל:</strong> <span id="profile-email">-</span></div>
                             </div>
-                            <div class="col-12">
-                                <div class="summary-pill aveirah-pill text-center">עבירות: <span
-                                        id="aveirah-count">0</span>
-                                </div>
+                            <div class="d-flex gap-2 mt-3 flex-wrap">
+                                <button id="open-profile-modal-btn" class="btn btn-outline-primary" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#profileModal">טויש פרופיל</button>
+                                <button id="logout-btn" class="btn auth-btn">לאָג ארויס</button>
                             </div>
+                            <p id="profile-inline-message" class="auth-message mt-2" aria-live="polite"></p>
                         </div>
                     </div>
-
-                    <button id="logout-btn" class="btn auth-btn w-100">לאָג ארויס</button>
-                </aside>
-
-                <div class="tracker-wrap account-panel p-3">
-                    <h2 class="tracker-title">מצוות און עבירות טרעקער</h2>
-                    <div
-                        class="tracker-actions d-flex flex-column flex-sm-row justify-content-start align-items-stretch gap-2 mt-2">
-                        <button id="open-mitzvah-modal-btn" class="btn auth-btn px-4" type="button"
-                            data-bs-toggle="modal" data-bs-target="#mitzvahModal">+ מצוה</button>
-                        <button id="open-aveirah-modal-btn" class="btn btn-outline-danger px-4" type="button"
-                            data-bs-toggle="modal" data-bs-target="#aveirahModal">+ עבירה</button>
-                    </div>
-                    <p id="tracker-message" class="auth-message" aria-live="polite"></p>
-
-                    <div class="tracker-chart-wrap mt-3 p-3 border rounded-3 bg-white">
-                        <h3 class="tracker-record-title">סטאטוס לויט צייט</h3>
-                        <div id="period-chart" class="period-chart"></div>
-                    </div>
-
-                    <h3 class="tracker-record-title mt-3">דיין רעקארדס</h3>
-                    <ul id="record-list" class="record-list mt-2"></ul>
                 </div>
             </div>
         </div>
@@ -152,16 +110,13 @@
                         <label for="profile-lastname-input" class="form-label mt-2">לעצטע נאמען</label>
                         <input id="profile-lastname-input" class="form-control" type="text" required>
 
-                        <label for="profile-nickname-input" class="form-label mt-2">פען נאמען (זעהבאר פאר
-                            אנדערע)</label>
+                        <label for="profile-nickname-input" class="form-label mt-2">פען נאמען</label>
                         <input id="profile-nickname-input" class="form-control" type="text" maxlength="24" required>
 
                         <label for="profile-email-input" class="form-label mt-2">אימעיל</label>
                         <input id="profile-email-input" class="form-control" type="email" required>
 
-                        <label for="profile-current-password" class="form-label mt-2">יעצטיגער קאוד (נאר אויב דו
-                            ווילסט
-                            טוישן)</label>
+                        <label for="profile-current-password" class="form-label mt-2">יעצטיגער קאוד (נאר אויב דו ווילסט טוישן)</label>
                         <input id="profile-current-password" class="form-control" type="password">
 
                         <label for="profile-new-password" class="form-label mt-2">נייער קאוד (אפּשאנעל)</label>
@@ -181,126 +136,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="mitzvahModal" tabindex="-1" aria-labelledby="mitzvahModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="mitzvahModalLabel">נייע מצוה</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="mitzvah-form">
-                    <div class="modal-body">
-                        <label for="mitzvah-title" class="form-label">קורצע קעפל</label>
-                        <input id="mitzvah-title" class="form-control" type="text" list="mitzvah-title-suggestions"
-                            placeholder="ביישפיל: געגעבן צדקה / געהאלפן א חבר / געזאגט תהילים" required>
-                        <datalist id="mitzvah-title-suggestions"></datalist>
-
-                        <label for="mitzvah-details" class="form-label mt-2">פרטים</label>
-                        <textarea id="mitzvah-details" class="form-control" rows="3"></textarea>
-
-                        <label for="mitzvah-category" class="form-label mt-2">קאטעגאריע</label>
-                        <select id="mitzvah-category" class="form-select" required>
-                            <option value="">קלייב...</option>
-                            <option value="בין אדם לחברו">בין אדם לחברו</option>
-                            <option value="בין אדם למקום">בין אדם למקום</option>
-                            <option value="לימוד תורה">לימוד תורה</option>
-                            <option value="אחר">אחר</option>
-                        </select>
-
-                        <label for="mitzvah-effort" class="form-label mt-2">ווי שטארק איז געווען די השתדלות?</label>
-                        <select id="mitzvah-effort" class="form-select" required>
-                            <option value="קליין">קליין</option>
-                            <option value="מיטל" selected>מיטל</option>
-                            <option value="גרויס">גרויס</option>
-                        </select>
-
-                        <label for="mitzvah-date" class="form-label mt-2">דאטום</label>
-                        <input id="mitzvah-date" class="form-control" type="date" required>
-                        <p id="mitzvah-modal-message" class="auth-message mt-2" aria-live="polite"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">פארמאכן</button>
-                        <button type="submit" class="btn auth-btn">היט מצוה</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="aveirahModal" tabindex="-1" aria-labelledby="aveirahModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="aveirahModalLabel">נייע עבירה</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="aveirah-form">
-                    <div class="modal-body">
-                        <label for="aveirah-title" class="form-label">קורצע קעפל</label>
-                        <input id="aveirah-title" class="form-control" type="text" list="aveirah-title-suggestions"
-                            placeholder="ביישפיל: לשון הרע / כעס / נישט געזאגט אמת" required>
-                        <datalist id="aveirah-title-suggestions"></datalist>
-
-                        <label for="aveirah-details" class="form-label mt-2">פרטים</label>
-                        <textarea id="aveirah-details" class="form-control" rows="3"></textarea>
-
-                        <label for="aveirah-category" class="form-label mt-2">קאטעגאריע</label>
-                        <select id="aveirah-category" class="form-select" required>
-                            <option value="">קלייב...</option>
-                            <option value="דיבור">דיבור</option>
-                            <option value="התנהגות">התנהגות</option>
-                            <option value="בין אדם לחברו">בין אדם לחברו</option>
-                            <option value="בין אדם למקום">בין אדם למקום</option>
-                            <option value="אחר">אחר</option>
-                        </select>
-
-                        <label for="aveirah-severity" class="form-label mt-2">חומרה (1-5)</label>
-                        <select id="aveirah-severity" class="form-select" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3" selected>3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" value="yes" id="aveirah-fixed">
-                            <label class="form-check-label" for="aveirah-fixed">האב איך עס שוין פאררעכט?</label>
-                        </div>
-
-                        <label for="aveirah-date" class="form-label mt-2">דאטום</label>
-                        <input id="aveirah-date" class="form-control" type="date" required>
-                        <p id="aveirah-modal-message" class="auth-message mt-2" aria-live="polite"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">פארמאכן</button>
-                        <button type="submit" class="btn btn-outline-danger">היט עבירה</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="recordDetailModal" tabindex="-1" aria-labelledby="recordDetailModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="recordDetailModalLabel">פרטים פון רעקארד</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-1"><strong>סארט:</strong> <span id="detail-type">-</span></p>
-                    <p class="mb-1"><strong>קעפל:</strong> <span id="detail-title">-</span></p>
-                    <p class="mb-1"><strong>פרטים:</strong> <span id="detail-details">-</span></p>
-                    <p class="mb-1"><strong>קאטעגאריע:</strong> <span id="detail-category">-</span></p>
-                    <p class="mb-1"><strong>נאך:</strong> <span id="detail-meta">-</span></p>
-                    <p class="mb-0"><strong>דאטום:</strong> <span id="detail-date">-</span></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="script.js"></script>
     <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -308,19 +143,8 @@
         crossorigin="anonymous"></script>
     <script>
         const SESSION_KEY = "vosHeistCurrentUser";
-
-        function normalizeNickname(nickname) {
-            return nickname.trim().toLowerCase();
-        }
-
-        function escapeHtml(value) {
-            return value
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#39;");
-        }
+        const currentUserKey = sessionStorage.getItem(SESSION_KEY);
+        let currentUser = null;
 
         async function hashPassword(password) {
             if (window.crypto && window.crypto.subtle) {
@@ -333,496 +157,66 @@
             return password;
         }
 
-        const currentUserKey = sessionStorage.getItem(SESSION_KEY);
-        let currentUser = null;
-
-        const trackerMessage = document.getElementById("tracker-message");
-        const recordList = document.getElementById("record-list");
-        const mitzvahCount = document.getElementById("mitzvah-count");
-        const aveirahCount = document.getElementById("aveirah-count");
-        const periodChart = document.getElementById("period-chart");
-        const mitzvahForm = document.getElementById("mitzvah-form");
-        const aveirahForm = document.getElementById("aveirah-form");
-        const profileForm = document.getElementById("profile-form");
-        const mitzvahTitleInput = document.getElementById("mitzvah-title");
-        const aveirahTitleInput = document.getElementById("aveirah-title");
-        const mitzvahTitleSuggestions = document.getElementById("mitzvah-title-suggestions");
-        const aveirahTitleSuggestions = document.getElementById("aveirah-title-suggestions");
-
-        const MITZVAH_TITLE_LIBRARY = [
-            // Yiddish
-            "געגעבן צדקה", "געהאלפן א חבר", "געזאגט תהילים", "געלערנט תורה", "מתפלל געווען בכוונה",
-            "כיבוד אב ואם", "באזוכט א חולה", "טרייסט איינער", "מחילה געבעטן", "מחילה געגעבן",
-            "געמאכט קידוש", "הכנסת אורחים", "מחזק געווען א חבר", "פארשפרייט שלום", "געזאגט א ברכה",
-            "אויף צייט צום מנין", "שבת געהאלטן", "געלייגט תפילין", "אמן געענטפערט", "נישט געשעמט איינער",
-            "געגעבן א גוט ווארט", "מסייע געווען אין שטוב", "צוריקגעגעבן אבידה", "געמאכט חסד", "נישט גערעדט לשון הרע",
-            "גרייט מאכן פאר שבת", "אנגעצונדן שבת ליכט", "מקדש בית המדרש", "זיך מכין צום דאוונען",
-            "לערנען מיט א חברותא", "אראפגעשטעלט מחלוקת", "גאט גע׳דאנקט", "זיך גע׳חזרט אויפן לערנען",
-            "עוסק בצרכי ציבור", "שטילגעהאלטן א סידור", "מקיים געווען נדר", "ביסל שוויגן גע׳פראקטיסט",
-            "אנגעשריבן א גוטן ווארט אין טאגבוך", "אויפגעהויבן ספר תורה", "אויסגעהאלטן פון שלעכטס",
-            "גע׳טובל אין מקוה", "ליב מיטגעטיילט מיטן משפחה", "אראפגעלייגט סמארטפאן צום לערנען",
-            "הכנסת כלה מיטגעהאלפן", "א נייעם ניגון גע׳זונגען", "מצוות ציצית", "ספירת העומר געצייט",
-            "שמחת תורה מיטגעמאכט", "הלל אמר על כל נסי ה׳", "גע׳צינדל אין שנאה נישט",
-            "א ספר אנגעקויפט", "לימוד הלכה", "גע׳בענטשט נאכן עסן", "הפרשת חלה",
-            "ביטחון גע׳פראקטיסט", "א שיעור אנגע׳הערט", "שבת זמירות גע׳זונגען",
-            "ספר תהילים ענדיקן", "מזוזה אנגע׳רירט בכוונה", "בקשת מחילה פארן שלאפן",
-            "גע׳לייגט אינטרעסן ביי א חבר", "עבודת הבורא מיט שמחה",
-            // English
-            "donated to charity", "helped someone", "prayed with focus", "learned Torah", "honored parents",
-            "visited the sick", "made Kiddush", "welcomed a guest", "returned lost object", "gave encouragement",
-            "said blessings with kavana", "studied Mishnah", "went to minyan on time", "put on tefillin",
-            "answered amen", "kept Shabbos", "gave tzedakah anonymously", "made peace between friends",
-            "helped with household", "comforted a mourner", "forgave someone", "asked for forgiveness",
-            "recited Tehillim", "studied Halacha", "sang Shabbos zemiros", "helped prepare for Shabbos",
-            "disciplined myself from anger", "smiled at someone", "thanked Hashem", "learned with a chavrusa",
-            "trusted in Hashem", "lit Shabbos candles", "counted Sefiras HaOmer", "bentched after eating",
-            "said Modeh Ani with feeling", "learned mussar", "gave someone a compliment", "resisted temptation",
-            "put down phone to learn", "helped someone in need", "acted with humility", "supported a friend",
-            "made a hachlata to improve", "said bedtime Shema", "did an act of chesed", "helped carry something",
-            "listened to a shiur", "gave a good word", "spent quality time with family", "danced at a simcha"
-        ];
-
-        const AVEIRAH_TITLE_LIBRARY = [
-            // Yiddish
-            "לשון הרע", "רכילות", "כעס", "גערעדט שלעכט", "געזאגט א ליגנט",
-            "שקר", "באשעמט איינער", "מחלוקת אנגעמאכט", "נישט מכבד געווען עלטערן", "גזל",
-            "ביטול תורה", "געשריגן אויף איינער", "אויסגעשפאט איינער", "נישט געזאגט ברכה", "שנאה געהאלטן",
-            "נישט געהאלטן ווארט", "געקוקט אויף אסור", "שבת פארשוואכט", "געפירט זיך בגאוה", "אומר אמת נישט",
-            "גענומען אן ערלויבנעס", "שוטה פאר א חבר", "קנאה", "גאוה", "עצבות אן אָרזאך",
-            "אויפגעהויבן א מחלוקת", "ווייט פון דאוונען", "שווענדן צייט", "נישט גוט צו עלטערן",
-            "נישט בא א חבר אנטשולדיקט", "גערעדט אין מיטן תפילה", "גע׳שמדט עצות", "קוקן אויף פארלייג",
-            "נישט חשוב גע׳ווייזט ספרים", "אנגעמאכט שטרייט אין שטוב", "עצות פאר גרינג גע׳האלטן",
-            "נישט אנגע׳קומען צו מנין", "זיך בא א חבר אויסגעלאפן", "נישט ענטפערן אויף שאלה",
-            "עצלות ביי לימוד תורה", "גענעסן אן א ברכה", "נישט אנגע׳הערט עצה", "גע׳שפאט אויף א קינד",
-            "פארגעסן צו בענטשן", "שקר גע׳ריידט צוליב נסיון", "נישט גע׳האלטן שבת",
-            "גע׳ריידט בשעת קריאת התורה", "נישט גע׳הולפן ווען מען האט דארפן",
-            // English
-            "lied", "gossip", "got angry", "hurt someone", "insulted someone", "wasted time",
-            "spoke during davening", "missed minyan", "spoke lashon hara", "embarrassed someone",
-            "was arrogant", "held a grudge", "took something without permission", "hit someone",
-            "violated Shabbos", "skipped brachos", "was jealous", "wasted food", "was ungrateful",
-            "caused a fight", "ignored someone in need", "cheated", "stole", "swore falsely",
-            "was lazy in learning", "spoke during krias hatorah", "made fun of someone",
-            "didn't keep my word", "looked at forbidden content", "was disrespectful to parents",
-            "spread rumors", "was cruel", "got frustrated quickly", "ignored a friend",
-            "didn't ask mechila", "was too proud to apologize", "hurt someone with words",
-            "complained excessively", "acted selfishly", "didn't show up when needed",
-            "wasted time on phone", "was dishonest in business", "spoke without thinking",
-            "didn't say thank you", "was cold to someone who needed warmth"
-        ];
-
-        function getRelevantSuggestions(library, query) {
-            const text = query.trim().toLowerCase();
-            if (!text) {
-                return library.slice(0, 14);
+        function showMessage(id, text, type) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.classList.remove("error", "success");
+            if (type) {
+                el.classList.add(type);
             }
-
-            const startsWith = [];
-            const includes = [];
-            library.forEach((item) => {
-                const normalized = item.toLowerCase();
-                if (normalized.startsWith(text)) {
-                    startsWith.push(item);
-                    return;
-                }
-                if (normalized.includes(text)) {
-                    includes.push(item);
-                }
-            });
-
-            return [...startsWith, ...includes].slice(0, 14);
         }
 
-        function renderTitleSuggestions(datalistElement, suggestions) {
-            datalistElement.innerHTML = "";
-            suggestions.forEach((item) => {
-                const option = document.createElement("option");
-                option.value = item;
-                datalistElement.appendChild(option);
-            });
-        }
-
-        function bindTitleAutocomplete(inputElement, datalistElement, library) {
-            const update = () => {
-                renderTitleSuggestions(datalistElement, getRelevantSuggestions(library, inputElement.value));
-            };
-            inputElement.addEventListener("input", update);
-            inputElement.addEventListener("focus", update);
-            update();
-        }
-
-        function syncProfileHeader() {
-            const nickname = currentUser.nickname || currentUser.displayName;
-            document.getElementById("account-name").textContent = currentUser.displayName;
-            document.getElementById("account-nickname").textContent = nickname;
+        function fillProfileView() {
+            document.getElementById("account-name").textContent = currentUser.displayName || "-";
+            document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName || "-";
+            document.getElementById("profile-login-name").textContent = currentUserKey || "-";
             document.getElementById("profile-firstname").textContent = currentUser.firstname || "-";
             document.getElementById("profile-lastname").textContent = currentUser.lastname || "-";
-            document.getElementById("profile-nickname").textContent = nickname;
+            document.getElementById("profile-nickname").textContent = currentUser.nickname || "-";
             document.getElementById("profile-email").textContent = currentUser.email || "-";
-        }
-
-        function showTrackerMessage(text, type) {
-            trackerMessage.textContent = text;
-            trackerMessage.classList.remove("error", "success");
-            if (type) {
-                trackerMessage.classList.add(type);
-            }
-        }
-
-        function renderRecords() {
-            const records = Array.isArray(currentUser.records) ? currentUser.records : [];
-            const mitzvos = records.filter((record) => record.type === "mitzvah").length;
-            const aveiros = records.filter((record) => record.type === "aveirah").length;
-
-            mitzvahCount.textContent = String(mitzvos);
-            aveirahCount.textContent = String(aveiros);
-
-            if (!records.length) {
-                recordList.innerHTML = '<li class="record-empty">קיין רעקארדס נאך נישט.</li>';
-                renderPeriodChart();
-                return;
-            }
-
-            const itemsHtml = records
-                .map((record, index) => ({ record, index }))
-                .reverse()
-                .map(({ record, index }) => {
-                    const recordDate = new Date(record.createdAt).toLocaleString();
-                    const label = record.type === "mitzvah" ? "מצוה" : "עבירה";
-                    const itemClass = record.type === "mitzvah" ? "record-mitzvah" : "record-aveirah";
-                    const title = escapeHtml(record.title || record.text || "-");
-                    const detail = record.details ? `<span class="record-detail">${escapeHtml(record.details)}</span>` : "";
-                    const metaParts = [];
-                    if (record.category) metaParts.push(`קאטעגאריע: ${escapeHtml(record.category)}`);
-                    if (record.effort) metaParts.push(`השתדלות: ${escapeHtml(record.effort)}`);
-                    if (record.severity) metaParts.push(`חומרה: ${escapeHtml(String(record.severity))}`);
-                    if (record.fixed === true) metaParts.push("פאררעכט: יא");
-                    const meta = metaParts.length ? `<span class="record-meta">${metaParts.join(" | ")}</span>` : "";
-                    const when = record.happenedOn ? escapeHtml(record.happenedOn) : recordDate;
-                    return `<li><button type="button" class="record-item ${itemClass} js-record-item" data-record-index="${index}"><span class="record-label">${label}</span><span class="record-text"><span class="record-title">${title}</span>${detail}${meta}</span><span class="record-date">${when}</span></button></li>`;
-                })
-                .join("");
-
-            recordList.innerHTML = itemsHtml;
-            renderPeriodChart();
-        }
-
-        async function saveRecord(record) {
-            const response = await window.vosHeistApi.addRecord(currentUserKey, {
-                ...record,
-                createdAt: new Date().toISOString()
-            });
-
-            currentUser.records = Array.isArray(response.records) ? response.records : [];
-            showTrackerMessage("איינטראג געראטעוועט.", "success");
-            renderRecords();
-        }
-
-        function showModalMessage(elementId, text, type) {
-            const target = document.getElementById(elementId);
-            target.textContent = text;
-            target.classList.remove("error", "success");
-            if (type) {
-                target.classList.add(type);
-            }
         }
 
         function openProfileWithCurrentData() {
             document.getElementById("profile-firstname-input").value = currentUser.firstname || "";
             document.getElementById("profile-lastname-input").value = currentUser.lastname || "";
-            document.getElementById("profile-nickname-input").value = currentUser.nickname || currentUser.displayName || "";
+            document.getElementById("profile-nickname-input").value = currentUser.nickname || "";
             document.getElementById("profile-email-input").value = currentUser.email || "";
             document.getElementById("profile-current-password").value = "";
             document.getElementById("profile-new-password").value = "";
             document.getElementById("profile-confirm-password").value = "";
-            showModalMessage("profile-message", "", null);
+            showMessage("profile-message", "", null);
         }
 
-        function detectTypeFromText(text) {
-            const normalized = text.toLowerCase();
-            const mitzvahWords = [
-                "help", "helped", "donate", "donated", "kind", "kindness", "pray", "prayed", "learn", "learned", "mitzvah", "charity",
-                "respect", "honor", "honoured", "tehillim", "thanks", "shared", "gave", "forgave", "apologized",
-                "חסד", "מצוה", "תפילה", "לימוד", "כיבוד", "מחילה", "צדקה", "געהאלפן", "געלערנט", "געזאגט תודה"
-            ];
-            const aveirahWords = [
-                "lie", "lied", "anger", "angry", "stole", "steal", "lashon", "hate", "aveirah", "sin", "gossip", "curse", "cheat", "hurt",
-                "עבירה", "לשון", "כעס", "שקר", "גנב", "שנאה", "רכילות", "לשון הרע", "גערעדט שלעכט", "געקריגט"
-            ];
-            let mitzvahScore = 0;
-            let aveirahScore = 0;
+        document.getElementById("open-profile-modal-btn").addEventListener("click", openProfileWithCurrentData);
 
-            mitzvahWords.forEach((word) => {
-                if (normalized.includes(word)) mitzvahScore += 1;
-            });
-            aveirahWords.forEach((word) => {
-                if (normalized.includes(word)) aveirahScore += 1;
-            });
-
-            if (mitzvahScore === 0 && aveirahScore === 0) {
-                return "unknown";
-            }
-            return mitzvahScore >= aveirahScore ? "mitzvah" : "aveirah";
-        }
-
-        function resolveTypeForSave(expectedType, text, modalMessageId, allowFallbackToExpected = false) {
-            const detected = detectTypeFromText(text);
-            if (detected === "unknown") {
-                return expectedType;
-            }
-
-            if (detected !== expectedType) {
-                const label = detected === "mitzvah" ? "מצוה" : "עבירה";
-                const shouldSwitch = window.confirm(`ס׳קוקט אויס ווי ${label}. ווילסטו עס ראטעווען אלס ${label}?`);
-                if (!shouldSwitch) {
-                    if (allowFallbackToExpected) {
-                        showModalMessage(modalMessageId, "געראטעוועט אין יעצטיגע פארעם.", "success");
-                        return expectedType;
-                    }
-                    showModalMessage(modalMessageId, "געבליבן אין יעצטיגע פארעם. דו קענסט ענדערן און נאכאמאל ראטעווען.", "error");
-                    return null;
-                }
-                return detected;
-            }
-
-            return expectedType;
-        }
-
-        function toDateOnly(record) {
-            const source = record.happenedOn || record.createdAt;
-            const date = new Date(source);
-            if (Number.isNaN(date.getTime())) {
-                return null;
-            }
-            return date;
-        }
-
-        function renderPeriodChart() {
-            const records = Array.isArray(currentUser.records) ? currentUser.records : [];
-            const now = new Date();
-            const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const startWeek = new Date(startToday);
-            startWeek.setDate(startWeek.getDate() - 6);
-            const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
-            const periods = [
-                { key: "today", label: "היינט", from: startToday },
-                { key: "week", label: "די וואך", from: startWeek },
-                { key: "month", label: "דעם חודש", from: startMonth }
-            ];
-
-            const stats = periods.map((period) => {
-                const periodRecords = records.filter((record) => {
-                    const d = toDateOnly(record);
-                    return d && d >= period.from;
-                });
-                return {
-                    label: period.label,
-                    mitzvah: periodRecords.filter((r) => r.type === "mitzvah").length,
-                    aveirah: periodRecords.filter((r) => r.type === "aveirah").length
-                };
-            });
-
-            periodChart.innerHTML = stats.map((stat) => {
-                const total = stat.mitzvah + stat.aveirah;
-                return `<article class="period-card"><p class="period-title">${stat.label}</p><div class="period-counts"><div class="period-count mitzvah-count"><span class="period-count-label">מצוות</span><strong>${stat.mitzvah}</strong></div><div class="period-count aveirah-count"><span class="period-count-label">עבירות</span><strong>${stat.aveirah}</strong></div></div><p class="period-total">סך הכל: ${total}</p></article>`;
-            }).join("");
-        }
-
-        function showRecordDetails(record) {
-            document.getElementById("detail-type").textContent = record.type === "mitzvah" ? "מצוה" : "עבירה";
-            document.getElementById("detail-title").textContent = record.title || "-";
-            document.getElementById("detail-details").textContent = record.details || "-";
-            document.getElementById("detail-category").textContent = record.category || "-";
-
-            const metaParts = [];
-            if (record.effort) metaParts.push(`השתדלות: ${record.effort}`);
-            if (record.severity) metaParts.push(`חומרה: ${record.severity}`);
-            if (record.fixed === true) metaParts.push("פאררעכט: יא");
-            if (record.fixed === false && record.type === "aveirah") metaParts.push("פאררעכט: נאך נישט");
-            document.getElementById("detail-meta").textContent = metaParts.length ? metaParts.join(" | ") : "-";
-
-            document.getElementById("detail-date").textContent = record.happenedOn || new Date(record.createdAt).toLocaleString();
-            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("recordDetailModal"));
-            modal.show();
-        }
-
-        function setDefaultDates() {
-            const today = new Date().toISOString().split("T")[0];
-            document.getElementById("mitzvah-date").value = today;
-            document.getElementById("aveirah-date").value = today;
-        }
-
-        mitzvahForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const title = document.getElementById("mitzvah-title").value.trim();
-            const details = document.getElementById("mitzvah-details").value.trim();
-            const category = document.getElementById("mitzvah-category").value;
-            const effort = document.getElementById("mitzvah-effort").value;
-            const happenedOn = document.getElementById("mitzvah-date").value;
-
-            if (!title || !category || !happenedOn) {
-                showModalMessage("mitzvah-modal-message", "ביטע פול אויס אלע פעלדער.", "error");
-                return;
-            }
-
-            const combinedText = `${title} ${details || ""}`;
-            const resolvedType = resolveTypeForSave("mitzvah", combinedText, "mitzvah-modal-message");
-            if (!resolvedType) {
-                return;
-            }
-
-            const recordPayload = {
-                type: resolvedType,
-                title,
-                details,
-                category,
-                happenedOn
-            };
-
-            if (resolvedType === "mitzvah") {
-                recordPayload.effort = effort;
-            } else {
-                recordPayload.severity = "3";
-                recordPayload.fixed = false;
-            }
-
-            try {
-                await saveRecord(recordPayload);
-            } catch {
-                showModalMessage("mitzvah-modal-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
-                return;
-            }
-
-            showModalMessage("mitzvah-modal-message", resolvedType === "mitzvah" ? "מצוה געשפייכערט." : "געשפייכערט אלס עבירה.", "success");
-            setTimeout(() => {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("mitzvahModal"));
-                modal.hide();
-                mitzvahForm.reset();
-                setDefaultDates();
-                showModalMessage("mitzvah-modal-message", "", null);
-            }, 500);
-        });
-
-        aveirahForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const title = document.getElementById("aveirah-title").value.trim();
-            const details = document.getElementById("aveirah-details").value.trim();
-            const category = document.getElementById("aveirah-category").value;
-            const severity = document.getElementById("aveirah-severity").value;
-            const fixed = document.getElementById("aveirah-fixed").checked;
-            const happenedOn = document.getElementById("aveirah-date").value;
-
-            if (!title || !category || !happenedOn) {
-                showModalMessage("aveirah-modal-message", "ביטע פול אויס אלע פעלדער.", "error");
-                return;
-            }
-
-            const combinedText = `${title} ${details || ""}`;
-            const resolvedType = resolveTypeForSave("aveirah", combinedText, "aveirah-modal-message", true);
-            if (!resolvedType) {
-                return;
-            }
-
-            const recordPayload = {
-                type: resolvedType,
-                title,
-                details,
-                category,
-                happenedOn
-            };
-
-            if (resolvedType === "aveirah") {
-                recordPayload.severity = severity;
-                recordPayload.fixed = fixed;
-            } else {
-                recordPayload.effort = "מיטל";
-            }
-
-            try {
-                await saveRecord(recordPayload);
-            } catch {
-                showModalMessage("aveirah-modal-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
-                return;
-            }
-
-            showModalMessage("aveirah-modal-message", resolvedType === "aveirah" ? "עבירה געשפייכערט." : "געשפייכערט אלס מצוה.", "success");
-            setTimeout(() => {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("aveirahModal"));
-                modal.hide();
-                aveirahForm.reset();
-                setDefaultDates();
-                showModalMessage("aveirah-modal-message", "", null);
-            }, 500);
-        });
-
-        recordList.addEventListener("click", (event) => {
-            const trigger = event.target.closest(".js-record-item");
-            if (!trigger) {
-                return;
-            }
-
-            const recordIndex = Number(trigger.getAttribute("data-record-index"));
-            const record = currentUser.records[recordIndex];
-            if (record) {
-                showRecordDetails(record);
-            }
-        });
-
-        document.getElementById("open-profile-modal-btn").addEventListener("click", () => {
-            openProfileWithCurrentData();
-        });
-
-        profileForm.addEventListener("submit", async (event) => {
+        document.getElementById("profile-form").addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            const firstnameInput = document.getElementById("profile-firstname-input").value.trim();
-            const lastnameInput = document.getElementById("profile-lastname-input").value.trim();
-            const nicknameInput = document.getElementById("profile-nickname-input").value.trim();
-            const emailInput = document.getElementById("profile-email-input").value.trim();
+            const firstname = document.getElementById("profile-firstname-input").value.trim();
+            const lastname = document.getElementById("profile-lastname-input").value.trim();
+            const nickname = document.getElementById("profile-nickname-input").value.trim();
+            const email = document.getElementById("profile-email-input").value.trim();
             const currentPassword = document.getElementById("profile-current-password").value;
             const newPassword = document.getElementById("profile-new-password").value;
             const confirmPassword = document.getElementById("profile-confirm-password").value;
 
-            if (!firstnameInput || firstnameInput.length < 2) {
-                showModalMessage("profile-message", "ערשטע נאמען דארף זיין כאטש 2 אותיות.", "error");
+            if (!firstname || !lastname || !nickname || !email) {
+                showMessage("profile-message", "ביטע פול אויס אלע פעלדער.", "error");
                 return;
             }
 
-            if (!lastnameInput || lastnameInput.length < 2) {
-                showModalMessage("profile-message", "לעצטע נאמען דארף זיין כאטש 2 אותיות.", "error");
-                return;
-            }
-
-            if (!nicknameInput || nicknameInput.length < 2) {
-                showModalMessage("profile-message", "פען נאמען דארף זיין כאטש 2 אותיות.", "error");
-                return;
-            }
-
-            if (!emailInput || !emailInput.includes("@")) {
-                showModalMessage("profile-message", "לייג אריין א גילטיקן אימעיל.", "error");
-                return;
-            }
-
-            const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
             let nextPasswordHash = null;
+            const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
+
             if (wantsPasswordChange) {
-                if (!currentPassword) {
-                    showModalMessage("profile-message", "כדי צו טוישן קאוד, שרייב דיין יעצטיגן קאוד.", "error");
-                    return;
-                }
-                if (newPassword.length < 4) {
-                    showModalMessage("profile-message", "דער נייער קאוד דארף זיין לענגער פון 4 אותיות.", "error");
-                    return;
-                }
-                if (newPassword !== confirmPassword) {
-                    showModalMessage("profile-message", "די צוויי נייע קאודס שטימען נישט.", "error");
+                if (!currentPassword || newPassword.length < 4 || newPassword !== confirmPassword) {
+                    showMessage("profile-message", "קאוד ענדערונג איז נישט גילטיג.", "error");
                     return;
                 }
 
                 const currentHash = await hashPassword(currentPassword);
                 if (currentHash !== currentUser.passwordHash) {
-                    showModalMessage("profile-message", "דער יעצטיגער קאוד איז נישט ריכטיג.", "error");
+                    showMessage("profile-message", "דער יעצטיגער קאוד איז נישט ריכטיג.", "error");
                     return;
                 }
 
@@ -831,31 +225,34 @@
 
             try {
                 const updated = await window.vosHeistApi.updateProfile(currentUserKey, {
-                    firstname: firstnameInput,
-                    lastname: lastnameInput,
-                    nickname: nicknameInput,
-                    email: emailInput,
+                    firstname,
+                    lastname,
+                    nickname,
+                    email,
                     passwordHash: nextPasswordHash
                 });
                 currentUser = updated.user;
+                fillProfileView();
+                showMessage("profile-message", "פרופיל איז אפדעיטעד.", "success");
+                showMessage("profile-inline-message", "פרופיל איז אפדעיטעד.", "success");
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("profileModal"));
+                    modal.hide();
+                    showMessage("profile-message", "", null);
+                }, 600);
             } catch (error) {
-                const message = String(error.message || "").toLowerCase();
-                if (message.includes("nickname")) {
-                    showModalMessage("profile-message", "דער פען נאמען איז שוין פארנומען.", "error");
+                const msg = String(error.message || "").toLowerCase();
+                if (msg.includes("nickname")) {
+                    showMessage("profile-message", "דער פען נאמען איז שוין פארנומען.", "error");
                     return;
                 }
-                showModalMessage("profile-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
-                return;
+                showMessage("profile-message", "קען נישט היטן יעצט. פרוביר נאכאמאל.", "error");
             }
+        });
 
-            syncProfileHeader();
-
-            showModalMessage("profile-message", "פרופיל איז אפדעיטעד.", "success");
-            setTimeout(() => {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("profileModal"));
-                modal.hide();
-                openProfileWithCurrentData();
-            }, 600);
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            sessionStorage.removeItem(SESSION_KEY);
+            window.location.href = "nafshi.html";
         });
 
         async function initializePage() {
@@ -867,33 +264,14 @@
             try {
                 const response = await window.vosHeistApi.getUser(currentUserKey);
                 currentUser = response.user;
+                fillProfileView();
             } catch {
                 sessionStorage.removeItem(SESSION_KEY);
                 window.location.href = "nafshi.html";
-                return;
             }
-
-            if (!Array.isArray(currentUser.records)) {
-                currentUser.records = [];
-            }
-
-            document.getElementById("account-name").textContent = currentUser.displayName;
-            document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName;
-            document.getElementById("profile-login-name").textContent = currentUserKey;
-
-            syncProfileHeader();
-            setDefaultDates();
-            bindTitleAutocomplete(mitzvahTitleInput, mitzvahTitleSuggestions, MITZVAH_TITLE_LIBRARY);
-            bindTitleAutocomplete(aveirahTitleInput, aveirahTitleSuggestions, AVEIRAH_TITLE_LIBRARY);
-            renderRecords();
         }
 
         initializePage();
-
-        document.getElementById("logout-btn").addEventListener("click", () => {
-            sessionStorage.removeItem(SESSION_KEY);
-            window.location.href = "nafshi.html";
-        });
     </script>
 </body>
 
