@@ -63,7 +63,14 @@
                     <h3 class="game-title">Tic‑Tac‑Toe</h3>
                     <div id="tictactoe" class="game-root"></div>
                 </article>
-                <!-- Additional games can be added here as more <article class="game-card"> blocks -->
+                <article class="game-card" id="number-guess-card">
+                    <h3 class="game-title">Number Guess</h3>
+                    <div id="number-guess" class="game-root"></div>
+                </article>
+                <article class="game-card" id="rps-card">
+                    <h3 class="game-title">Rock Paper Scissors</h3>
+                    <div id="rps" class="game-root"></div>
+                </article>
             </section>
         </div>
     </main>
@@ -75,10 +82,18 @@
     </footer>
 
     <script src="games/tictactoe.js"></script>
+    <script src="games/number-guess.js"></script>
+    <script src="games/rps.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.TicTacToe && document.getElementById('tictactoe')) {
                 window.TicTacToe.init(document.getElementById('tictactoe'));
+            }
+            if (window.NumberGuessGame && document.getElementById('number-guess')) {
+                window.NumberGuessGame.init(document.getElementById('number-guess'));
+            }
+            if (window.RpsGame && document.getElementById('rps')) {
+                window.RpsGame.init(document.getElementById('rps'));
             }
         });
     </script>

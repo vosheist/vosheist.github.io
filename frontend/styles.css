@@ -764,6 +764,27 @@ body {
     #my-navbar .account-shortcut {
         display: none !important;
     }
+
+    #my-navbar .navbar-collapse {
+        justify-content: flex-start;
+    }
+
+    #my-navbar .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+        margin: 0;
+        padding-top: 0.55rem;
+        padding-bottom: 0.55rem;
+    }
+
+    #my-navbar .nav-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding-top: 0.35rem;
+        padding-bottom: 0.35rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -842,6 +863,16 @@ body {
     color: var(--logo-blue-deep);
 }
 
+.ng-input {
+    width: 120px;
+}
+
+.ng-status,
+.rps-status {
+    font-weight: 600;
+    color: var(--logo-blue-deep);
+}
+
 /* Global responsive tweaks for very small screens (flip phones) */
 @media (max-width: 420px) {
     #my-navbar .navbar-nav {
@@ -850,6 +881,18 @@ body {
 
     #my-navbar .nav-link {
         font-size: 1rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-card {
+        padding: 0.75rem;
+    }
+
+    .ng-input {
+        width: 100%;
     }
 
     .ttt-cell {
@@ -876,7 +919,7 @@ body {
         border-radius: 10px;
     }
 
-    .navbar-brand {
+    #my-navbar .navbar-brand {
         font-size: 1.0rem;
     }
 
