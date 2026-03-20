@@ -6,10 +6,6 @@
         return name.trim().toLowerCase();
     }
 
-    function normalizeNickname(nickname) {
-        return nickname.trim().toLowerCase();
-    }
-
     async function hashPassword(password) {
         if (window.crypto && window.crypto.subtle) {
             const data = new TextEncoder().encode(password);
@@ -101,11 +97,6 @@
                 return;
             }
 
-            if (!nickname || nickname.length < 2) {
-                showMessage(createMessage, "לייג אריין א פען נאמען (מינימום 2 אותיות).", "error");
-                return;
-            }
-
             if (!email || !email.includes("@")) {
                 showMessage(createMessage, "לייג אריין א גילטיקן אימעיל.", "error");
                 return;
@@ -130,8 +121,9 @@
                 passwordHash: await hashPassword(password)
             };
 
+            let signupResult;
             try {
-                await window.vosHeistApi.signup(newUser);
+                signupResult = await window.vosHeistApi.signup(newUser);
             } catch (error) {
                 const message = String(error.message || "").toLowerCase();
                 if (message.includes("nickname")) {
@@ -163,7 +155,14 @@
                 console.warn("Welcome email failed:", err);
             }
 
-            showMessage(createMessage, "חשבון געשאַפֿן. דו קענסט יעצט לאָג אַריין.", "success");
+            const backendUserKey = signupResult && signupResult.userKey
+                ? signupResult.userKey
+                : normalizeName(signupResult && signupResult.user && signupResult.user.displayName
+                    ? signupResult.user.displayName
+                    : displayName);
+            sessionStorage.setItem(SESSION_KEY, backendUserKey);
+
+            showMessage(createMessage, "חשבון געשאַפֿן. דו ביסט שוין אריינגעלאָגט.", "success");
             if (!notification.sent && notification.reason !== "missing-endpoint") {
                 console.warn("Signup created, but owner notification failed:", notification.reason);
             }
@@ -176,13 +175,8 @@
             confirmInput.value = "";
 
             setTimeout(() => {
-                const modalElement = document.getElementById("createAccountModal");
-                if (window.bootstrap && modalElement) {
-                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-                    modal.hide();
-                }
-                showMessage(createMessage, "", null);
-            }, 700);
+                window.location.href = "account.html";
+            }, 450);
         });
     }
 

@@ -179,9 +179,10 @@ app.post("/api/auth/signup", async (req, res) => {
 
     const displayName = `${String(firstname || "").trim()} ${String(lastname || "").trim()}`.trim();
     const userKey = normalizeName(displayName);
-    const nicknameKey = normalizeName(nickname);
+    const nextNickname = String(nickname || "").trim() || displayName;
+    const nicknameKey = normalizeName(nextNickname);
 
-    if (!userKey || !nicknameKey || !email || !passwordHash) {
+    if (!userKey || !email || !passwordHash) {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -208,7 +209,7 @@ app.post("/api/auth/signup", async (req, res) => {
         firstname: String(firstname).trim(),
         firstnameKey: normalizeName(firstname),
         lastname: String(lastname).trim(),
-        nickname: String(nickname).trim(),
+        nickname: nextNickname,
         nicknameKey,
         email: String(email).trim(),
         emailKey: normalizeEmail(email),
