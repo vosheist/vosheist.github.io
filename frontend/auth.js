@@ -156,7 +156,8 @@
                     body: JSON.stringify({
                         email: newUser.email,
                         firstname: newUser.firstname,
-                        lastname: newUser.lastname
+                        lastname: newUser.lastname,
+                        nickname: newUser.nickname
                     })
                 });
             } catch (err) {

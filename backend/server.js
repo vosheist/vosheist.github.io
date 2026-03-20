@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
 const ADMIN_ACCESS_KEY = String(process.env.ADMIN_ACCESS_KEY || "").trim();
+const FRONTEND_LOGIN_URL = String(process.env.FRONTEND_LOGIN_URL || "https://vosheist.github.io/frontend/nafshi.html").trim();
 const LEGACY_STORE_PATH = path.join(__dirname, "data", "store.json");
 
 let mongoClient;
@@ -29,6 +30,15 @@ function normalizeEmail(email) {
 
 function escapeRegex(value) {
     return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function escapeHtml(value) {
+    return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
 }
 
 function sanitizeUserForClient(user) {
@@ -574,20 +584,58 @@ app.post("/api/notify-signup", async (req, res) => {
 
 app.post("/api/welcome-email", async (req, res) => {
     try {
-        const { email, firstname, lastname } = req.body;
+        const { email, firstname, lastname, nickname } = req.body;
         if (!email || !firstname || !lastname) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
         const fullName = `${firstname} ${lastname}`.trim();
+        const escapedFullName = escapeHtml(fullName);
+        const escapedEmail = escapeHtml(email);
+        const escapedNickname = nickname ? escapeHtml(nickname) : null;
+        const escapedLoginUrl = escapeHtml(FRONTEND_LOGIN_URL);
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: "ברוכים הבאים צו וואס הייסט | Welcome to Vos Heist!",
+            subject: "Welcome to Vos Heist",
             html: `
-                <div style="font-family: Arial, sans-serif; text-align: right; direction: rtl; color: #333;">
-                    <h2 style="color: #2c3e50;">ברוכים הבאים, ${fullName}!</h2>
-                    <p>תודה על הירשמות! אתה עכשיו ממבר של <strong>וואס הייסט</strong>.</p>
+                <div style="margin:0; padding:32px 16px; background:#f4f7fb; font-family:Arial,Helvetica,sans-serif; color:#22313f;">
+                    <div style="max-width:640px; margin:0 auto; background:#ffffff; border:1px solid #d7e0ea; border-radius:18px; overflow:hidden; box-shadow:0 14px 40px rgba(34,49,63,0.08);">
+                        <div style="padding:28px 32px; background:linear-gradient(135deg,#dcecf7 0%,#f9ecd8 100%); border-bottom:1px solid #d7e0ea;">
+                            <p style="margin:0 0 10px; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#5b7186;">Vos Heist</p>
+                            <h1 style="margin:0; font-size:30px; line-height:1.2; color:#1f3142;">Welcome, ${escapedFullName}</h1>
+                            <p style="margin:12px 0 0; font-size:16px; line-height:1.6; color:#385066;">Your member account is now active. You can sign in, track your progress, join the community, and use the member rooms right away.</p>
+                        </div>
+                        <div style="padding:28px 32px;">
+                            <p style="margin:0 0 18px; font-size:16px; line-height:1.7;">Here are your account details:</p>
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse; margin:0 0 24px;">
+                                <tr>
+                                    <td style="padding:10px 0; border-bottom:1px solid #edf2f7; font-weight:700; width:160px;">Full name</td>
+                                    <td style="padding:10px 0; border-bottom:1px solid #edf2f7;">${escapedFullName}</td>
+                                </tr>
+                                ${escapedNickname ? `<tr><td style="padding:10px 0; border-bottom:1px solid #edf2f7; font-weight:700;">Pen name</td><td style="padding:10px 0; border-bottom:1px solid #edf2f7;">${escapedNickname}</td></tr>` : ""}
+                                <tr>
+                                    <td style="padding:10px 0; border-bottom:1px solid #edf2f7; font-weight:700;">Email</td>
+                                    <td style="padding:10px 0; border-bottom:1px solid #edf2f7;">${escapedEmail}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 0; font-weight:700; vertical-align:top;">Login options</td>
+                                    <td style="padding:10px 0;">You can sign in with your email, first name, full name, or pen name, together with your code.</td>
+                                </tr>
+                            </table>
+                            <div style="margin:0 0 24px;">
+                                <a href="${escapedLoginUrl}" style="display:inline-block; padding:14px 24px; background:#2d6788; color:#ffffff; text-decoration:none; border-radius:999px; font-weight:700; font-size:15px;">Go to Login</a>
+                            </div>
+                            <p style="margin:0 0 12px; font-size:15px; line-height:1.7;">After you log in, you will be able to:</p>
+                            <ul style="margin:0 0 24px; padding-left:20px; color:#385066; line-height:1.8;">
+                                <li>View and update your account details</li>
+                                <li>Track mitzvah and aveirah records</li>
+                                <li>See the member community</li>
+                                <li>Use the Bais Medrash and Caveh Tzimer pages</li>
+                            </ul>
+                            <p style="margin:0; font-size:14px; line-height:1.7; color:#66788a;">If the button does not open, copy and paste this link into your browser:<br><a href="${escapedLoginUrl}" style="color:#2d6788; word-break:break-all;">${escapedLoginUrl}</a></p>
+                        </div>
+                    </div>
                 </div>
             `,
             replyTo: process.env.EMAIL_USER
