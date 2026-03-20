@@ -1049,6 +1049,19 @@ body {
     width: 120px;
 }
 
+.pw-toggle {
+    color: var(--logo-blue-deep);
+    opacity: 0.65;
+    padding: 0.375rem 0.65rem;
+    line-height: 1;
+}
+
+.pw-toggle:hover,
+.pw-toggle:focus {
+    opacity: 1;
+    color: var(--logo-blue-deep);
+}
+
 .snake-board {
     display: grid;
     gap: 3px;
