@@ -200,8 +200,23 @@
             const newPassword = document.getElementById("profile-new-password").value;
             const confirmPassword = document.getElementById("profile-confirm-password").value;
 
-            if (!firstname || !lastname || !nickname || !email) {
-                showMessage("profile-message", "ביטע פול אויס אלע פעלדער.", "error");
+            if (!firstname || firstname.length < 2) {
+                showMessage("profile-message", "ערשטע נאמען דארף זיין כאטש 2 אותיות.", "error");
+                return;
+            }
+
+            if (!lastname || lastname.length < 2) {
+                showMessage("profile-message", "לעצטע נאמען דארף זיין כאטש 2 אותיות.", "error");
+                return;
+            }
+
+            if (!nickname || nickname.length < 2) {
+                showMessage("profile-message", "פען נאמען דארף זיין כאטש 2 אותיות.", "error");
+                return;
+            }
+
+            if (!email || !email.includes("@")) {
+                showMessage("profile-message", "לייג אריין א גילטיקן אימעיל.", "error");
                 return;
             }
 
