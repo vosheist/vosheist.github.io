@@ -72,15 +72,15 @@
             cells.forEach((cell) => {
                 const idx = Number(cell.getAttribute('data-index'));
                 cell.textContent = board[idx] || '';
-                cell.disabled = !running || Boolean(board[idx]);
+                // Player is X, computer is O
+                cell.disabled = !running || Boolean(board[idx]) || current === 'O';
             });
         }
 
         function endGame(result) {
             running = false;
             if (result && result.winner) {
-                controls.status.textContent = `${result.winner} wins!`;
-                // highlight
+                controls.status.textContent = result.winner === 'X' ? 'You win!' : 'Computer wins!';
                 for (const i of result.line) {
                     const el = boardEl.querySelector(`.ttt-cell[data-index="${i}"]`);
                     if (el) el.classList.add('ttt-win');
@@ -91,24 +91,43 @@
             render();
         }
 
+        function cpuTurn() {
+            if (!running || current !== 'O') return;
+            const empty = board
+                .map((value, index) => (value ? -1 : index))
+                .filter((index) => index >= 0);
+            if (!empty.length) return;
+
+            const i = empty[Math.floor(Math.random() * empty.length)];
+            board[i] = 'O';
+            const res = checkWinner(board);
+            if (res) return endGame(res);
+            current = 'X';
+            controls.status.textContent = "Your turn";
+            render();
+        }
+
         boardEl.addEventListener('click', (ev) => {
             const t = ev.target;
             if (!t || !t.classList.contains('ttt-cell')) return;
             const i = Number(t.getAttribute('data-index'));
-            if (!running || board[i]) return;
-            board[i] = current;
+            if (!running || board[i] || current !== 'X') return;
+
+            board[i] = 'X';
             const res = checkWinner(board);
             if (res) return endGame(res);
-            current = current === 'X' ? 'O' : 'X';
-            controls.status.textContent = `${current}'s turn`;
+
+            current = 'O';
+            controls.status.textContent = 'Computer thinking...';
             render();
+            setTimeout(cpuTurn, 260);
         });
 
         controls.reset.addEventListener('click', () => {
             board = Array(9).fill(null);
             current = 'X';
             running = true;
-            controls.status.textContent = 'X starts';
+            controls.status.textContent = 'You start';
             boardEl.querySelectorAll('.ttt-cell').forEach((c) => c.classList.remove('ttt-win'));
             render();
         });
