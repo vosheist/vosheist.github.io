@@ -1035,24 +1035,70 @@ body {
     cursor: pointer;
 }
 
-.ttt-cell:disabled { cursor: default; opacity: 0.85; }
-.ttt-win { background: linear-gradient(90deg,#dcecf7,#f9ecd8); }
+.ttt-cell:disabled {
+    cursor: default;
+    opacity: 0.85;
+}
 
-.ttt-controls { display:flex; justify-content: space-between; align-items:center; gap:0.6rem; }
-.ttt-status { font-weight:600; color:var(--logo-blue-deep); }
+.ttt-win {
+    background: linear-gradient(90deg, #dcecf7, #f9ecd8);
+}
+
+.ttt-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.ttt-status {
+    font-weight: 600;
+    color: var(--logo-blue-deep);
+}
 
 /* Global responsive tweaks for very small screens (flip phones) */
 @media (max-width: 420px) {
-    #my-navbar .navbar-nav { gap: 0.6rem; }
-    #my-navbar .nav-link { font-size: 1rem; }
-    .ttt-cell { width: 52px; height: 52px; font-size: 20px; }
+    #my-navbar .navbar-nav {
+        gap: 0.6rem;
+    }
+
+    #my-navbar .nav-link {
+        font-size: 1rem;
+    }
+
+    .ttt-cell {
+        width: 52px;
+        height: 52px;
+        font-size: 20px;
+    }
 }
 
 @media (max-width: 320px) {
-    body { padding-top: calc(var(--nav-height) + 0.5rem); }
-    .ttt-cell { width: 44px; height: 44px; font-size: 18px; }
-    .auth-card, .game-card { padding: 0.6rem; border-radius: 10px; }
-    .navbar-brand { font-size: 1.0rem; }
-    #my-navbar .navbar-nav { gap: 0.4rem; }
-    .pricing-grid { grid-template-columns: 1fr; }
+    body {
+        padding-top: calc(var(--nav-height) + 0.5rem);
+    }
+
+    .ttt-cell {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+
+    .auth-card,
+    .game-card {
+        padding: 0.6rem;
+        border-radius: 10px;
+    }
+
+    .navbar-brand {
+        font-size: 1.0rem;
+    }
+
+    #my-navbar .navbar-nav {
+        gap: 0.4rem;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
 }
