@@ -27,7 +27,6 @@ vos heist/
 │   ├── BACKEND_SETUP.md
 │   ├── CODE_AUDIT.md
 │   ├── TESTING_GUIDE.md
-│   └── README_UPDATED.md
 └── .gitignore                    # Git ignore rules
 
 ```
