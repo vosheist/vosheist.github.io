@@ -97,7 +97,7 @@
     document.addEventListener('click', function (e) {
         var btn = e.target.closest('.pw-toggle');
         if (!btn) return;
-        var group = btn.closest('.input-group');
+        var group = btn.closest('.pw-wrap') || btn.closest('.input-group');
         if (!group) return;
         var input = group.querySelector('input');
         if (!input) return;
