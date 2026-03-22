@@ -1085,6 +1085,7 @@ body {
     background: #dce8f2;
     padding: 5px;
     border-radius: 8px;
+    direction: ltr;
 }
 
 .snake-cell {
@@ -1112,6 +1113,7 @@ body {
     background: #dce8f2;
     padding: 6px;
     border-radius: 10px;
+    direction: ltr;
 }
 
 .c4-cell {
@@ -1136,6 +1138,13 @@ body {
     background: #dce8f2;
     padding: 5px;
     border-radius: 8px;
+    direction: ltr;
+}
+
+.g2048-board,
+.ttt-board,
+.mm-grid {
+    direction: ltr;
 }
 
 .lr-cell {

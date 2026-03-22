@@ -107,3 +107,127 @@
         btn.setAttribute('aria-label', show ? 'הסתר קאוד' : 'הראה קאוד');
     });
 })();
+
+// Game help + demo panel
+(function () {
+    var HELP = {
+        "game-2048.html": {
+            steps: [
+                "Use arrow keys to slide all tiles.",
+                "Matching numbers merge into one bigger tile.",
+                "Keep space open so you do not get stuck."
+            ],
+            demo: "Demo: Left -> Up -> Left -> Down to build early merges in one corner."
+        },
+        "game-tictactoe.html": {
+            steps: [
+                "Click any empty square to place X.",
+                "Computer responds with O.",
+                "Get 3 in a row to win."
+            ],
+            demo: "Demo: Start from center, then take opposite corners when available."
+        },
+        "game-connect4.html": {
+            steps: [
+                "Click a column to drop your piece.",
+                "Computer drops after your move.",
+                "Connect 4 in a row horizontally, vertically, or diagonally."
+            ],
+            demo: "Demo: Build 3 in a row on the bottom, then force a double-threat move."
+        },
+        "game-snake.html": {
+            steps: [
+                "Use arrow keys to move the snake.",
+                "Eat food to grow and increase score.",
+                "Do not hit walls or your own body."
+            ],
+            demo: "Demo: Move in a wide loop first: Right -> Down -> Left -> Up."
+        },
+        "game-lane-racer.html": {
+            steps: [
+                "Use left/right arrows to switch lanes.",
+                "Avoid red obstacle blocks.",
+                "Survive longer to raise score."
+            ],
+            demo: "Demo: Stay in middle lane until danger appears, then switch once."
+        },
+        "game-memory-match.html": {
+            steps: [
+                "Click cards to reveal symbols.",
+                "Match pairs before the board resets your memory.",
+                "Clear all pairs to finish."
+            ],
+            demo: "Demo: Open cards left-to-right on first pass, then match remembered pairs."
+        },
+        "game-reaction-timer.html": {
+            steps: [
+                "Press start and wait for green state.",
+                "Click immediately when ready signal appears.",
+                "If you click too early, round is invalid."
+            ],
+            demo: "Demo: Keep mouse centered and click only on color switch to green."
+        },
+        "game-quick-math.html": {
+            steps: [
+                "Solve each math question quickly.",
+                "Submit answers before timer runs down.",
+                "Chain correct answers for better score."
+            ],
+            demo: "Demo: Estimate first, then type exact answer fast."
+        },
+        "game-number-guess.html": {
+            steps: [
+                "Guess the hidden number.",
+                "Use high/low feedback to narrow the range.",
+                "Find it in as few guesses as possible."
+            ],
+            demo: "Demo: Start at 50, then halve interval (25/75 etc.) like binary search."
+        },
+        "game-rps.html": {
+            steps: [
+                "Pick rock, paper, or scissors.",
+                "Computer reveals its choice.",
+                "Track streaks and adapt your picks."
+            ],
+            demo: "Demo: Try 5 rounds and switch after every loss."
+        }
+    };
+
+    function currentFileName() {
+        var path = window.location.pathname || "";
+        return (path.split("/").pop() || "").toLowerCase();
+    }
+
+    function createHelpPanel(info, id) {
+        var section = document.createElement("section");
+        section.className = "mt-3";
+
+        var steps = info.steps.map(function (step) {
+            return "<li>" + step + "</li>";
+        }).join("");
+
+        section.innerHTML = [
+            '<button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#' + id + '" aria-expanded="false" aria-controls="' + id + '">How to Play + Demo</button>',
+            '<div id="' + id + '" class="collapse mt-2">',
+            '<div class="p-2 border rounded bg-light-subtle">',
+            '<ol class="mb-2 ps-3">' + steps + '</ol>',
+            '<p class="mb-0 small text-secondary"><strong>Demo:</strong> ' + info.demo + '</p>',
+            '</div>',
+            '</div>'
+        ].join("");
+
+        return section;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var fileName = currentFileName();
+        var info = HELP[fileName];
+        if (!info) return;
+
+        var gameCard = document.querySelector("article.game-card");
+        if (!gameCard) return;
+
+        var panelId = "game-help-" + fileName.replace(/[^a-z0-9]/g, "-");
+        gameCard.appendChild(createHelpPanel(info, panelId));
+    });
+})();
