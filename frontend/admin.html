@@ -56,6 +56,36 @@
             font-family: Consolas, "Courier New", monospace;
             font-size: 0.86rem;
         }
+
+        .pw-wrap {
+            position: relative;
+        }
+
+        .pw-wrap .form-control {
+            padding-right: 2.25rem;
+        }
+
+        .pw-toggle {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #6a7b8a;
+            padding: 0.15rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .pw-toggle:hover,
+        .pw-toggle:focus {
+            color: #203043;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -200,6 +230,19 @@
             messageEl.className = `small mt-2 mb-0 ${isError ? "text-danger" : "text-success"}`;
         }
 
+        (function wireAdminPasswordToggle() {
+            const toggleButton = document.querySelector(".pw-toggle");
+            if (!toggleButton || !accessInput) {
+                return;
+            }
+
+            toggleButton.addEventListener("click", () => {
+                const show = accessInput.type === "password";
+                accessInput.type = show ? "text" : "password";
+                toggleButton.setAttribute("aria-label", show ? "Hide password" : "Show password");
+            });
+        })();
+
         function renderMembers(users) {
             const tableBody = document.getElementById("members-table-body");
             if (!users.length) {
@@ -256,7 +299,10 @@
                 setMessage("Admin data loaded successfully.", false);
             } catch (error) {
                 console.error(error);
-                const text = error && error.message ? error.message : "Failed to load admin data";
+                const rawText = error && error.message ? error.message : "Failed to load admin data";
+                const text = rawText.toLowerCase().includes("failed to fetch")
+                    ? "Cannot reach backend API. If you are on github.io, the backend may not be running or not publicly hosted yet."
+                    : rawText;
                 setMessage(text, true);
             }
         });
