@@ -45,7 +45,6 @@ body {
 }
 
 #my-navbar .navbar-collapse {
-    display: flex;
     justify-content: center;
     flex-grow: 1;
 }

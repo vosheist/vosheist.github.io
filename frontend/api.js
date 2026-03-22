@@ -1,14 +1,55 @@
 (() => {
-    const API_BASE_URL = "http://localhost:3000";
+    function normalizeBaseUrl(url) {
+        return String(url || "").trim().replace(/\/+$/, "");
+    }
+
+    function resolveApiBaseUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const queryBaseUrl = normalizeBaseUrl(params.get("apiBaseUrl"));
+
+        if (queryBaseUrl) {
+            try {
+                localStorage.setItem("vosHeistApiBaseUrl", queryBaseUrl);
+            } catch {
+                // Ignore storage errors (private mode, blocked storage, etc.)
+            }
+            return queryBaseUrl;
+        }
+
+        const runtimeBaseUrl = normalizeBaseUrl(window.VOS_HEIST_API_BASE_URL);
+        if (runtimeBaseUrl) {
+            return runtimeBaseUrl;
+        }
+
+        let savedBaseUrl = "";
+        try {
+            savedBaseUrl = normalizeBaseUrl(localStorage.getItem("vosHeistApiBaseUrl"));
+        } catch {
+            savedBaseUrl = "";
+        }
+
+        if (savedBaseUrl) {
+            return savedBaseUrl;
+        }
+
+        return "http://localhost:3000";
+    }
+
+    const API_BASE_URL = resolveApiBaseUrl();
 
     async function request(path, options = {}) {
-        const response = await fetch(`${API_BASE_URL}${path}`, {
-            headers: {
-                "Content-Type": "application/json",
-                ...(options.headers || {})
-            },
-            ...options
-        });
+        let response;
+        try {
+            response = await fetch(`${API_BASE_URL}${path}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
+                },
+                ...options
+            });
+        } catch {
+            throw new Error(`Failed to fetch from ${API_BASE_URL}`);
+        }
 
         let payload = null;
         try {
