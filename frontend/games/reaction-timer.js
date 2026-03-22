@@ -2,6 +2,9 @@
    Usage: ReactionTimerGame.init(containerElement)
 */
 (function (global) {
+    const SESSION_KEY = "vosHeistCurrentUser";
+    const GAME_KEY = "reaction-timer";
+
     function init(container) {
         if (!container) return null;
         container.innerHTML = "";
@@ -30,12 +33,59 @@
         let bestValue = Number(localStorage.getItem("vosheist-reaction-best") || 0);
         best.textContent = bestValue ? `Best: ${bestValue} ms` : "Best: -";
 
+        const leaderboard = document.createElement("div");
+        leaderboard.className = "game-leaderboard mt-2";
+        leaderboard.innerHTML = `
+            <h2 class="h6 mb-1">Reaction Leaderboard</h2>
+            <ol class="game-score-list mb-1"></ol>
+            <small class="text-secondary game-score-note"></small>
+        `;
+        const scoreList = leaderboard.querySelector(".game-score-list");
+        const scoreNote = leaderboard.querySelector(".game-score-note");
+
         row.appendChild(start);
         row.appendChild(best);
 
         wrap.appendChild(panel);
         wrap.appendChild(row);
+        wrap.appendChild(leaderboard);
         container.appendChild(wrap);
+
+        async function refreshLeaderboard() {
+            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+                scoreList.innerHTML = "<li>API unavailable</li>";
+                scoreNote.textContent = "";
+                return;
+            }
+            try {
+                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const rows = Array.isArray(payload.scores) ? payload.scores : [];
+                scoreList.innerHTML = rows.length
+                    ? rows.slice(0, 8).map((row) => {
+                        const name = row.nickname || row.displayName || row.userKey || "Player";
+                        return `<li><span>${name}</span><strong>${row.score}</strong></li>`;
+                    }).join("")
+                    : "<li>No scores yet</li>";
+                scoreNote.textContent = sessionStorage.getItem(SESSION_KEY)
+                    ? "Higher points means faster reaction."
+                    : "Log in to publish your score.";
+            } catch {
+                scoreList.innerHTML = "<li>Could not load scores</li>";
+                scoreNote.textContent = "";
+            }
+        }
+
+        async function submitScore(resultMs) {
+            const userKey = sessionStorage.getItem(SESSION_KEY);
+            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            const points = Math.max(1, 2000 - resultMs);
+            try {
+                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: points });
+                await refreshLeaderboard();
+            } catch {
+                // Ignore leaderboard submission failures.
+            }
+        }
 
         function setPanel(text, cls) {
             panel.textContent = text;
@@ -73,6 +123,7 @@
             const result = Math.round(performance.now() - startAt);
             phase = "idle";
             setPanel(`${result} ms`, "rt-good");
+            submitScore(result);
 
             if (!bestValue || result < bestValue) {
                 bestValue = result;
@@ -80,6 +131,8 @@
                 best.textContent = `Best: ${bestValue} ms`;
             }
         });
+
+        refreshLeaderboard();
 
         return { reset };
     }

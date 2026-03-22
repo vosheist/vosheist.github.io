@@ -19,6 +19,8 @@ let db;
 let usersCollection;
 let baisMedrashCollection;
 let coffeeRoomCollection;
+let gameScoresCollection;
+let gamePlaysCollection;
 
 function normalizeName(name) {
     return String(name || "").trim().toLowerCase();
@@ -43,13 +45,18 @@ function escapeHtml(value) {
 
 function sanitizeUserForClient(user) {
     return {
+        userKey: user.userKey,
         displayName: user.displayName,
         firstname: user.firstname,
         lastname: user.lastname,
         nickname: user.nickname,
         email: user.email,
         passwordHash: user.passwordHash,
-        createdAt: user.createdAt || null
+        createdAt: user.createdAt || null,
+        lastLoginAt: user.lastLoginAt || null,
+        revoked: Boolean(user.revoked),
+        revokedAt: user.revokedAt || null,
+        revokeReason: user.revokeReason || null
     };
 }
 
@@ -74,12 +81,18 @@ async function connectMongo() {
     usersCollection = db.collection("users");
     baisMedrashCollection = db.collection("bais_medrash_posts");
     coffeeRoomCollection = db.collection("coffee_room_messages");
+    gameScoresCollection = db.collection("game_scores");
+    gamePlaysCollection = db.collection("game_plays");
 
     await usersCollection.createIndex({ userKey: 1 }, { unique: true });
     await usersCollection.createIndex({ nicknameKey: 1 }, { unique: true });
     await usersCollection.createIndex({ displayNameKey: 1 }, { unique: true });
     await usersCollection.createIndex({ emailKey: 1 });
     await usersCollection.createIndex({ firstnameKey: 1 });
+    await gameScoresCollection.createIndex({ gameKey: 1, userKey: 1 }, { unique: true });
+    await gameScoresCollection.createIndex({ gameKey: 1, score: -1, updatedAt: 1 });
+    await gamePlaysCollection.createIndex({ userKey: 1, playedAt: -1 });
+    await gamePlaysCollection.createIndex({ gameKey: 1, playedAt: -1 });
 }
 
 async function migrateLegacyStoreIfNeeded() {
@@ -214,7 +227,11 @@ app.post("/api/auth/signup", async (req, res) => {
         email: String(email).trim(),
         emailKey: normalizeEmail(email),
         passwordHash,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        lastLoginAt: null,
+        revoked: false,
+        revokedAt: null,
+        revokeReason: null
     };
 
     await usersCollection.insertOne(userDoc);
@@ -260,6 +277,13 @@ app.post("/api/auth/login", async (req, res) => {
     if (!user || user.passwordHash !== passwordHash) {
         return res.status(401).json({ error: "Invalid credentials" });
     }
+
+    if (user.revoked) {
+        return res.status(403).json({ error: "Account access has been revoked" });
+    }
+
+    const lastLoginAt = new Date().toISOString();
+    await usersCollection.updateOne({ userKey: user.userKey }, { $set: { lastLoginAt } });
 
     return res.json({
         success: true,
@@ -451,6 +475,86 @@ app.get("/api/admin/overview", requireAdmin, async (req, res) => {
     });
 });
 
+app.get("/api/admin/members/:userKey/details", requireAdmin, async (req, res) => {
+    const userKey = normalizeName(req.params.userKey);
+    if (!userKey) {
+        return res.status(400).json({ error: "Invalid user key" });
+    }
+
+    const user = await usersCollection.findOne({ userKey });
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const scoreDocs = await gameScoresCollection
+        .find({ userKey })
+        .sort({ score: -1, updatedAt: -1 })
+        .toArray();
+
+    const playDocs = await gamePlaysCollection
+        .find({ userKey })
+        .sort({ playedAt: -1 })
+        .limit(100)
+        .toArray();
+
+    const gamesPlayedSet = new Set(playDocs.map((play) => String(play.gameKey || "")).filter(Boolean));
+
+    const scores = scoreDocs.map((doc) => ({
+        gameKey: doc.gameKey,
+        score: Number(doc.score) || 0,
+        updatedAt: doc.updatedAt || null
+    }));
+
+    const plays = playDocs.map((doc) => ({
+        gameKey: doc.gameKey,
+        score: Number(doc.score) || 0,
+        playedAt: doc.playedAt || null
+    }));
+
+    return res.json({
+        success: true,
+        user: sanitizeUserForClient(user),
+        details: {
+            gamesPlayed: Array.from(gamesPlayedSet.values()).sort(),
+            totalGameSessions: playDocs.length,
+            scores,
+            recentPlays: plays
+        }
+    });
+});
+
+app.post("/api/admin/members/:userKey/revoke", requireAdmin, async (req, res) => {
+    const userKey = normalizeName(req.params.userKey);
+    const revoked = Boolean(req.body && req.body.revoked);
+    const reason = String((req.body && req.body.reason) || "").trim();
+
+    if (!userKey) {
+        return res.status(400).json({ error: "Invalid user key" });
+    }
+
+    const user = await usersCollection.findOne({ userKey });
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const update = revoked
+        ? {
+            revoked: true,
+            revokedAt: new Date().toISOString(),
+            revokeReason: reason || "Revoked by admin"
+        }
+        : {
+            revoked: false,
+            revokedAt: null,
+            revokeReason: null
+        };
+
+    await usersCollection.updateOne({ userKey }, { $set: update });
+    const updated = await usersCollection.findOne({ userKey });
+
+    return res.json({ success: true, user: sanitizeUserForClient(updated) });
+});
+
 app.post("/api/coffee-room", async (req, res) => {
     const { message } = req.body || {};
     if (!message || !message.nickname || !message.message) {
@@ -469,6 +573,77 @@ app.post("/api/coffee-room", async (req, res) => {
         return rest;
     });
     return res.json({ success: true, messages: normalizedMessages });
+});
+
+app.get("/api/games/:gameKey/scores", async (req, res) => {
+    const gameKey = normalizeName(req.params.gameKey);
+    if (!gameKey) {
+        return res.status(400).json({ error: "Invalid game key" });
+    }
+
+    const docs = await gameScoresCollection
+        .find({ gameKey })
+        .sort({ score: -1, updatedAt: 1 })
+        .limit(20)
+        .toArray();
+
+    const scores = docs.map((doc) => ({
+        gameKey: doc.gameKey,
+        userKey: doc.userKey,
+        nickname: doc.nickname,
+        displayName: doc.displayName,
+        score: Number(doc.score) || 0,
+        updatedAt: doc.updatedAt || null
+    }));
+
+    return res.json({ success: true, scores });
+});
+
+app.post("/api/games/:gameKey/scores", async (req, res) => {
+    const gameKey = normalizeName(req.params.gameKey);
+    const userKey = normalizeName(req.body && req.body.userKey);
+    const rawScore = req.body ? Number(req.body.score) : NaN;
+
+    if (!gameKey || !userKey || !Number.isFinite(rawScore) || rawScore < 0) {
+        return res.status(400).json({ error: "Invalid score payload" });
+    }
+
+    const score = Math.floor(rawScore);
+    const user = await usersCollection.findOne({ userKey });
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const playedAt = new Date().toISOString();
+    await gamePlaysCollection.insertOne({
+        gameKey,
+        userKey,
+        score,
+        playedAt
+    });
+
+    const existing = await gameScoresCollection.findOne({ gameKey, userKey });
+    if (existing && Number(existing.score) >= score) {
+        return res.json({ success: true, updated: false, kept: true, score: Number(existing.score) || 0 });
+    }
+
+    const updatedAt = playedAt;
+    await gameScoresCollection.updateOne(
+        { gameKey, userKey },
+        {
+            $set: {
+                gameKey,
+                userKey,
+                score,
+                nickname: String(user.nickname || user.displayName || user.userKey || userKey),
+                displayName: String(user.displayName || user.nickname || userKey),
+                updatedAt
+            }
+        },
+        { upsert: true }
+    );
+
+    return res.json({ success: true, updated: true, score, updatedAt });
 });
 
 app.post("/api/feedback", async (req, res) => {

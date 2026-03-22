@@ -4,6 +4,8 @@
 (function (global) {
     const ROWS = 6;
     const COLS = 7;
+    const SESSION_KEY = "vosHeistCurrentUser";
+    const GAME_KEY = "connect4";
 
     function init(container) {
         if (!container) return null;
@@ -20,13 +22,61 @@
         reset.className = "btn btn-outline-secondary btn-sm mt-2";
         reset.textContent = "New Game";
 
+        const leaderboard = document.createElement("div");
+        leaderboard.className = "game-leaderboard mt-2";
+        leaderboard.innerHTML = `
+            <h2 class="h6 mb-1">Connect 4 Leaderboard</h2>
+            <ol class="game-score-list mb-1"></ol>
+            <small class="text-secondary game-score-note"></small>
+        `;
+        const scoreList = leaderboard.querySelector(".game-score-list");
+        const scoreNote = leaderboard.querySelector(".game-score-note");
+
         container.appendChild(boardEl);
         container.appendChild(status);
         container.appendChild(reset);
+        container.appendChild(leaderboard);
 
         let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
         let running = true;
         let playerTurn = true; // player=1, computer=2
+        let wins = 0;
+
+        async function refreshLeaderboard() {
+            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+                scoreList.innerHTML = "<li>API unavailable</li>";
+                scoreNote.textContent = "";
+                return;
+            }
+            try {
+                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const rows = Array.isArray(payload.scores) ? payload.scores : [];
+                scoreList.innerHTML = rows.length
+                    ? rows.slice(0, 8).map((row) => {
+                        const name = row.nickname || row.displayName || row.userKey || "Player";
+                        return `<li><span>${name}</span><strong>${row.score}</strong></li>`;
+                    }).join("")
+                    : "<li>No scores yet</li>";
+                scoreNote.textContent = sessionStorage.getItem(SESSION_KEY)
+                    ? "Wins against the computer are tracked."
+                    : "Log in to publish your score.";
+            } catch {
+                scoreList.innerHTML = "<li>Could not load scores</li>";
+                scoreNote.textContent = "";
+            }
+        }
+
+        async function submitWins() {
+            if (wins <= 0) return;
+            const userKey = sessionStorage.getItem(SESSION_KEY);
+            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            try {
+                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: wins });
+                await refreshLeaderboard();
+            } catch {
+                // Ignore leaderboard submission failures.
+            }
+        }
 
         function availableRow(col) {
             for (let r = ROWS - 1; r >= 0; r--) {
@@ -141,6 +191,8 @@
             if (checkWin(1)) {
                 running = false;
                 status.textContent = "You win";
+                wins += 1;
+                submitWins();
                 render();
                 return;
             }
@@ -165,6 +217,7 @@
         }
 
         reset.addEventListener("click", restart);
+        refreshLeaderboard();
         restart();
 
         return { reset: restart };

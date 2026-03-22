@@ -76,10 +76,27 @@
         addBaisMedrash: (post) => request("/api/bais-medrash", { method: "POST", body: JSON.stringify({ post }) }),
         getCoffeeRoom: () => request("/api/coffee-room"),
         addCoffeeRoom: (message) => request("/api/coffee-room", { method: "POST", body: JSON.stringify({ message }) }),
+        getGameScores: (gameKey) => request(`/api/games/${encodeURIComponent(gameKey)}/scores`),
+        submitGameScore: (gameKey, body) => request(`/api/games/${encodeURIComponent(gameKey)}/scores`, {
+            method: "POST",
+            body: JSON.stringify(body)
+        }),
         getAdminOverview: (adminKey) => request("/api/admin/overview", {
             headers: {
                 "x-admin-key": String(adminKey || "")
             }
+        }),
+        getAdminMemberDetails: (adminKey, userKey) => request(`/api/admin/members/${encodeURIComponent(userKey)}/details`, {
+            headers: {
+                "x-admin-key": String(adminKey || "")
+            }
+        }),
+        setAdminMemberRevoked: (adminKey, userKey, body) => request(`/api/admin/members/${encodeURIComponent(userKey)}/revoke`, {
+            method: "POST",
+            headers: {
+                "x-admin-key": String(adminKey || "")
+            },
+            body: JSON.stringify(body || {})
         })
     };
 })();

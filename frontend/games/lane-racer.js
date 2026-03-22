@@ -2,6 +2,9 @@
    Usage: LaneRacerGame.init(containerElement)
 */
 (function (global) {
+    const SESSION_KEY = "vosHeistCurrentUser";
+    const GAME_KEY = "lane-racer";
+
     function init(container) {
         if (!container) return null;
         container.innerHTML = "";
@@ -32,11 +35,22 @@
             <button type="button" class="btn btn-sm btn-outline-secondary" data-dir="right">Right</button>
         `;
 
+        const leaderboard = document.createElement("div");
+        leaderboard.className = "game-leaderboard mt-2";
+        leaderboard.innerHTML = `
+            <h2 class="h6 mb-1">Lane Racer Leaderboard</h2>
+            <ol class="game-score-list mb-1"></ol>
+            <small class="text-secondary game-score-note"></small>
+        `;
+        const scoreList = leaderboard.querySelector(".game-score-list");
+        const scoreNote = leaderboard.querySelector(".game-score-note");
+
         container.appendChild(board);
         container.appendChild(status);
         container.appendChild(best);
         container.appendChild(reset);
         container.appendChild(controls);
+        container.appendChild(leaderboard);
 
         let playerLane = 1;
         let obstacles = [];
@@ -45,6 +59,44 @@
         let running = true;
         let timer = null;
         let tickMs = 190;
+        let submittedThisRun = false;
+
+        async function refreshLeaderboard() {
+            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+                scoreList.innerHTML = "<li>API unavailable</li>";
+                scoreNote.textContent = "";
+                return;
+            }
+            try {
+                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const rows = Array.isArray(payload.scores) ? payload.scores : [];
+                scoreList.innerHTML = rows.length
+                    ? rows.slice(0, 8).map((row) => {
+                        const name = row.nickname || row.displayName || row.userKey || "Player";
+                        return `<li><span>${name}</span><strong>${row.score}</strong></li>`;
+                    }).join("")
+                    : "<li>No scores yet</li>";
+                scoreNote.textContent = sessionStorage.getItem(SESSION_KEY)
+                    ? "Score saves automatically when you crash."
+                    : "Log in to publish your score.";
+            } catch {
+                scoreList.innerHTML = "<li>Could not load scores</li>";
+                scoreNote.textContent = "";
+            }
+        }
+
+        async function submitScoreIfNeeded() {
+            if (submittedThisRun || ticks <= 0) return;
+            const userKey = sessionStorage.getItem(SESSION_KEY);
+            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            try {
+                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: ticks });
+                submittedThisRun = true;
+                await refreshLeaderboard();
+            } catch {
+                // Ignore leaderboard submission failures.
+            }
+        }
 
         function spawnObstacle() {
             obstacles.push({ lane: Math.floor(Math.random() * lanes), row: 0 });
@@ -94,6 +146,7 @@
                     best.textContent = `Best: ${bestScore}`;
                 }
                 render();
+                submitScoreIfNeeded();
                 return;
             }
 
@@ -120,6 +173,7 @@
             ticks = 0;
             running = true;
             tickMs = 190;
+            submittedThisRun = false;
             clearInterval(timer);
             timer = setInterval(step, tickMs);
             render();
@@ -136,6 +190,7 @@
             render();
         });
         timer = setInterval(step, tickMs);
+        refreshLeaderboard();
         restart();
 
         return {

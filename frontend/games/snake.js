@@ -2,6 +2,9 @@
    Usage: SnakeGame.init(containerElement)
 */
 (function (global) {
+    const SESSION_KEY = "vosHeistCurrentUser";
+    const GAME_KEY = "snake";
+
     function init(container) {
         if (!container) return null;
         container.innerHTML = "";
@@ -36,12 +39,23 @@
             <button type="button" class="btn btn-sm btn-outline-secondary" data-dir="right">Right</button>
         `;
 
+        const leaderboard = document.createElement("div");
+        leaderboard.className = "game-leaderboard mt-2";
+        leaderboard.innerHTML = `
+            <h2 class="h6 mb-1">Snake Leaderboard</h2>
+            <ol class="game-score-list mb-1"></ol>
+            <small class="text-secondary game-score-note"></small>
+        `;
+        const scoreList = leaderboard.querySelector(".game-score-list");
+        const scoreNote = leaderboard.querySelector(".game-score-note");
+
         container.appendChild(board);
         container.appendChild(status);
         container.appendChild(best);
         container.appendChild(reset);
         container.appendChild(pause);
         container.appendChild(controls);
+        container.appendChild(leaderboard);
 
         let snake = [{ x: 6, y: 7 }, { x: 5, y: 7 }, { x: 4, y: 7 }];
         let dir = { x: 1, y: 0 };
@@ -51,6 +65,44 @@
         let running = true;
         let paused = false;
         let tickMs = 170;
+        let submittedThisRun = false;
+
+        async function refreshLeaderboard() {
+            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+                scoreList.innerHTML = "<li>API unavailable</li>";
+                scoreNote.textContent = "";
+                return;
+            }
+            try {
+                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const rows = Array.isArray(payload.scores) ? payload.scores : [];
+                scoreList.innerHTML = rows.length
+                    ? rows.slice(0, 8).map((row) => {
+                        const name = row.nickname || row.displayName || row.userKey || "Player";
+                        return `<li><span>${name}</span><strong>${row.score}</strong></li>`;
+                    }).join("")
+                    : "<li>No scores yet</li>";
+                scoreNote.textContent = sessionStorage.getItem(SESSION_KEY)
+                    ? "Score saves automatically on game over."
+                    : "Log in to publish your score.";
+            } catch {
+                scoreList.innerHTML = "<li>Could not load scores</li>";
+                scoreNote.textContent = "";
+            }
+        }
+
+        async function submitScoreIfNeeded() {
+            if (submittedThisRun || score <= 0) return;
+            const userKey = sessionStorage.getItem(SESSION_KEY);
+            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            try {
+                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score });
+                submittedThisRun = true;
+                await refreshLeaderboard();
+            } catch {
+                // Ignore leaderboard submission failures.
+            }
+        }
 
         function placeFood() {
             while (true) {
@@ -92,6 +144,7 @@
             ) {
                 running = false;
                 render();
+                submitScoreIfNeeded();
                 return;
             }
 
@@ -140,6 +193,7 @@
             running = true;
             paused = false;
             tickMs = 170;
+            submittedThisRun = false;
             pause.textContent = "Pause";
             clearInterval(timer);
             timer = setInterval(step, tickMs);
@@ -161,6 +215,7 @@
         });
 
         timer = setInterval(step, tickMs);
+        refreshLeaderboard();
         render();
 
         return {

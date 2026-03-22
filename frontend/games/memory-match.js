@@ -3,6 +3,8 @@
 */
 (function (global) {
     const SYMBOLS = ["🍎", "🍌", "🍇", "🍒", "🍉", "🍓", "🥝", "🍍"];
+    const SESSION_KEY = "vosHeistCurrentUser";
+    const GAME_KEY = "memory-match";
 
     function shuffle(arr) {
         const out = arr.slice();
@@ -42,9 +44,57 @@
         const grid = document.createElement("div");
         grid.className = "mm-grid";
 
+        const leaderboard = document.createElement("div");
+        leaderboard.className = "game-leaderboard mt-2";
+        leaderboard.innerHTML = `
+            <h2 class="h6 mb-1">Memory Match Leaderboard</h2>
+            <ol class="game-score-list mb-1"></ol>
+            <small class="text-secondary game-score-note"></small>
+        `;
+        const scoreList = leaderboard.querySelector(".game-score-list");
+        const scoreNote = leaderboard.querySelector(".game-score-note");
+
         wrap.appendChild(top);
         wrap.appendChild(grid);
+        wrap.appendChild(leaderboard);
         container.appendChild(wrap);
+
+        async function refreshLeaderboard() {
+            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+                scoreList.innerHTML = "<li>API unavailable</li>";
+                scoreNote.textContent = "";
+                return;
+            }
+            try {
+                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const rows = Array.isArray(payload.scores) ? payload.scores : [];
+                scoreList.innerHTML = rows.length
+                    ? rows.slice(0, 8).map((row) => {
+                        const name = row.nickname || row.displayName || row.userKey || "Player";
+                        return `<li><span>${name}</span><strong>${row.score}</strong></li>`;
+                    }).join("")
+                    : "<li>No scores yet</li>";
+                scoreNote.textContent = sessionStorage.getItem(SESSION_KEY)
+                    ? "Higher points means fewer moves to finish."
+                    : "Log in to publish your score.";
+            } catch {
+                scoreList.innerHTML = "<li>Could not load scores</li>";
+                scoreNote.textContent = "";
+            }
+        }
+
+        async function submitScoreOnFinish() {
+            if (matched !== SYMBOLS.length || moves <= 0) return;
+            const userKey = sessionStorage.getItem(SESSION_KEY);
+            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            const points = Math.max(1, 200 - (moves * 10));
+            try {
+                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: points });
+                await refreshLeaderboard();
+            } catch {
+                // Ignore leaderboard submission failures.
+            }
+        }
 
         function updateInfo() {
             info.textContent = matched === SYMBOLS.length
@@ -82,6 +132,7 @@
                 matched += 1;
                 open = [];
                 render();
+                submitScoreOnFinish();
                 return;
             }
 
@@ -106,6 +157,7 @@
         }
 
         reset.addEventListener("click", resetGame);
+        refreshLeaderboard();
         resetGame();
 
         return { reset: resetGame };

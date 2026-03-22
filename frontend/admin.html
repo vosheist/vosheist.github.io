@@ -86,6 +86,21 @@
             color: #203043;
             outline: none;
         }
+
+        .member-row {
+            cursor: pointer;
+        }
+
+        .member-row:hover {
+            background: rgba(47, 81, 101, 0.06);
+        }
+
+        .modal-pre {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.86rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     </style>
 </head>
 
@@ -152,6 +167,8 @@
                                 <th>Email</th>
                                 <th>Joined</th>
                                 <th>Status</th>
+                                <th>Password Hash</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="members-table-body"></tbody>
@@ -194,14 +211,35 @@
                 </div>
             </div>
         </section>
+
+        <div class="modal fade" id="memberDetailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title h5 mb-0">Member Details</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="member-detail-content" class="small"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
     <script>
         const accessForm = document.getElementById("admin-access-form");
         const accessInput = document.getElementById("admin-key");
         const messageEl = document.getElementById("admin-message");
         const contentEl = document.getElementById("admin-content");
+        const detailContentEl = document.getElementById("member-detail-content");
+        const detailModalEl = document.getElementById("memberDetailModal");
+        const detailModal = detailModalEl ? new bootstrap.Modal(detailModalEl) : null;
+        let currentAdminKey = "";
 
         function escapeHtml(value) {
             return String(value || "")
@@ -243,16 +281,134 @@
             });
         })();
 
-        function renderMembers(users) {
-            const tableBody = document.getElementById("members-table-body");
-            if (!users.length) {
-                tableBody.innerHTML = "<tr><td colspan=\"5\" class=\"text-secondary\">No members found.</td></tr>";
+        function statusBadge(user) {
+            if (user.revoked) {
+                return '<span class="badge text-bg-danger">Revoked</span>';
+            }
+            return '<span class="badge text-bg-success">Active</span>';
+        }
+
+        async function toggleRevoke(userKey, nextRevoked) {
+            try {
+                const reason = nextRevoked
+                    ? prompt("Reason for revoking this member (optional):") || ""
+                    : "";
+
+                await window.vosHeistApi.setAdminMemberRevoked(currentAdminKey, userKey, {
+                    revoked: nextRevoked,
+                    reason
+                });
+
+                await loadOverview();
+                setMessage(nextRevoked ? "Member access revoked." : "Member access restored.", false);
+            } catch (error) {
+                setMessage(error && error.message ? error.message : "Failed to update member access.", true);
+            }
+        }
+
+        function renderRecentPlays(plays) {
+            if (!plays.length) {
+                return "<p class=\"text-secondary mb-0\">No recorded game sessions yet.</p>";
+            }
+
+            return `<div class="table-wrap"><table class="table table-sm align-middle"><thead><tr><th>Game</th><th>Score</th><th>Played</th></tr></thead><tbody>${plays.map((play) => `<tr><td>${escapeHtml(play.gameKey)}</td><td>${escapeHtml(play.score)}</td><td>${formatDate(play.playedAt)}</td></tr>`).join("")}</tbody></table></div>`;
+        }
+
+        function renderBestScores(scores) {
+            if (!scores.length) {
+                return "<p class=\"text-secondary mb-0\">No best scores yet.</p>";
+            }
+
+            return `<div class="table-wrap"><table class="table table-sm align-middle"><thead><tr><th>Game</th><th>Best Score</th><th>Updated</th></tr></thead><tbody>${scores.map((item) => `<tr><td>${escapeHtml(item.gameKey)}</td><td>${escapeHtml(item.score)}</td><td>${formatDate(item.updatedAt)}</td></tr>`).join("")}</tbody></table></div>`;
+        }
+
+        async function openMemberDetails(userKey) {
+            if (!detailModal || !currentAdminKey) {
                 return;
             }
 
-            tableBody.innerHTML = users.map(({ user }) => {
-                return `<tr><td>${escapeHtml(user.displayName)}</td><td>${escapeHtml(user.nickname)}</td><td>${escapeHtml(user.email)}</td><td>${formatDate(user.createdAt)}</td><td>Active</td></tr>`;
+            detailContentEl.innerHTML = "<p class=\"text-secondary mb-0\">Loading member details...</p>";
+            detailModal.show();
+
+            try {
+                const payload = await window.vosHeistApi.getAdminMemberDetails(currentAdminKey, userKey);
+                const user = payload.user || {};
+                const details = payload.details || {};
+                const scores = Array.isArray(details.scores) ? details.scores : [];
+                const recentPlays = Array.isArray(details.recentPlays) ? details.recentPlays : [];
+                const gamesPlayed = Array.isArray(details.gamesPlayed) ? details.gamesPlayed : [];
+
+                detailContentEl.innerHTML = `
+                    <div class="mb-3">
+                        <h3 class="h6">Identity</h3>
+                        <p class="mb-1"><strong>User Key:</strong> ${escapeHtml(user.userKey || "-")}</p>
+                        <p class="mb-1"><strong>Name:</strong> ${escapeHtml(user.displayName || "-")}</p>
+                        <p class="mb-1"><strong>First Name:</strong> ${escapeHtml(user.firstname || "-")}</p>
+                        <p class="mb-1"><strong>Last Name:</strong> ${escapeHtml(user.lastname || "-")}</p>
+                        <p class="mb-1"><strong>Nickname:</strong> ${escapeHtml(user.nickname || "-")}</p>
+                        <p class="mb-1"><strong>Email:</strong> ${escapeHtml(user.email || "-")}</p>
+                        <p class="mb-1"><strong>Password Hash:</strong></p>
+                        <div class="modal-pre border rounded p-2 bg-light">${escapeHtml(user.passwordHash || "-")}</div>
+                    </div>
+                    <div class="mb-3">
+                        <h3 class="h6">Access & Timing</h3>
+                        <p class="mb-1"><strong>Status:</strong> ${user.revoked ? "Revoked" : "Active"}</p>
+                        <p class="mb-1"><strong>Joined:</strong> ${formatDate(user.createdAt)}</p>
+                        <p class="mb-1"><strong>Last Login:</strong> ${formatDate(user.lastLoginAt)}</p>
+                        <p class="mb-1"><strong>Revoked At:</strong> ${formatDate(user.revokedAt)}</p>
+                        <p class="mb-0"><strong>Revoke Reason:</strong> ${escapeHtml(user.revokeReason || "-")}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3 class="h6">Game Summary</h3>
+                        <p class="mb-1"><strong>Games Played:</strong> ${gamesPlayed.length ? escapeHtml(gamesPlayed.join(", ")) : "-"}</p>
+                        <p class="mb-0"><strong>Recorded Sessions:</strong> ${escapeHtml(details.totalGameSessions || 0)}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3 class="h6">Best Scores By Game</h3>
+                        ${renderBestScores(scores)}
+                    </div>
+                    <div>
+                        <h3 class="h6">Recent Game Sessions</h3>
+                        ${renderRecentPlays(recentPlays)}
+                    </div>
+                `;
+            } catch (error) {
+                detailContentEl.innerHTML = `<p class="text-danger mb-0">${escapeHtml(error && error.message ? error.message : "Failed to load member details")}</p>`;
+            }
+        }
+
+        function renderMembers(users) {
+            const tableBody = document.getElementById("members-table-body");
+            if (!users.length) {
+                tableBody.innerHTML = "<tr><td colspan=\"7\" class=\"text-secondary\">No members found.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = users.map(({ key, user }) => {
+                const revokeLabel = user.revoked ? "Restore" : "Revoke";
+                const revokeClass = user.revoked ? "btn-outline-success" : "btn-outline-danger";
+                return `<tr class="member-row" data-user-key="${escapeHtml(key)}"><td>${escapeHtml(user.displayName)}</td><td>${escapeHtml(user.nickname)}</td><td>${escapeHtml(user.email)}</td><td>${formatDate(user.createdAt)}</td><td>${statusBadge(user)}</td><td class="mono">${escapeHtml(user.passwordHash || "-")}</td><td><button type="button" class="btn btn-sm ${revokeClass}" data-revoke-user="${escapeHtml(key)}" data-next-revoked="${user.revoked ? "false" : "true"}">${revokeLabel}</button></td></tr>`;
             }).join("");
+
+            tableBody.querySelectorAll("tr.member-row").forEach((row) => {
+                row.addEventListener("dblclick", () => {
+                    const userKey = row.getAttribute("data-user-key");
+                    if (userKey) {
+                        openMemberDetails(userKey);
+                    }
+                });
+            });
+
+            tableBody.querySelectorAll("button[data-revoke-user]").forEach((button) => {
+                button.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    const userKey = button.getAttribute("data-revoke-user");
+                    const nextRevoked = button.getAttribute("data-next-revoked") === "true";
+                    if (userKey) {
+                        toggleRevoke(userKey, nextRevoked);
+                    }
+                });
+            });
         }
 
         function renderBais(posts) {
@@ -275,13 +431,12 @@
             tableBody.innerHTML = messages.map((item) => `<tr><td>${escapeHtml(item.nickname)}</td><td class=\"mono\">${escapeHtml(item.message)}</td><td>${formatDate(item.createdAt)}</td></tr>`).join("");
         }
 
-        accessForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
+        async function loadOverview() {
             contentEl.classList.add("d-none");
             setMessage("Loading admin data...", false);
 
             try {
-                const payload = await window.vosHeistApi.getAdminOverview(accessInput.value);
+                const payload = await window.vosHeistApi.getAdminOverview(currentAdminKey);
                 const totals = payload.totals || {};
                 const users = Array.isArray(payload.users) ? payload.users : [];
                 const posts = Array.isArray(payload.baisMedrashPosts) ? payload.baisMedrashPosts : [];
@@ -305,6 +460,12 @@
                     : rawText;
                 setMessage(text, true);
             }
+        }
+
+        accessForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            currentAdminKey = String(accessInput.value || "");
+            await loadOverview();
         });
     </script>
 </body>
