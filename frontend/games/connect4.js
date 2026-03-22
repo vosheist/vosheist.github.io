@@ -61,6 +61,23 @@
             return board[0].every((v) => v !== 0);
         }
 
+        function scoreColumnPreference(col) {
+            const center = Math.floor(COLS / 2);
+            return center - Math.abs(center - col);
+        }
+
+        function findWinningCol(token) {
+            for (let c = 0; c < COLS; c++) {
+                const r = availableRow(c);
+                if (r < 0) continue;
+                board[r][c] = token;
+                const win = checkWin(token);
+                board[r][c] = 0;
+                if (win) return c;
+            }
+            return -1;
+        }
+
         function render() {
             boardEl.innerHTML = "";
             for (let r = 0; r < ROWS; r++) {
@@ -84,7 +101,16 @@
             for (let c = 0; c < COLS; c++) if (availableRow(c) >= 0) valid.push(c);
             if (!valid.length) return;
 
-            const col = valid[Math.floor(Math.random() * valid.length)];
+            // 1) Try immediate win, 2) block player win, 3) favor center columns.
+            let col = findWinningCol(2);
+            if (col < 0) col = findWinningCol(1);
+            if (col < 0) {
+                const scored = valid
+                    .map((c) => ({ c, s: scoreColumnPreference(c) + Math.random() * 0.4 }))
+                    .sort((a, b) => b.s - a.s);
+                col = scored[0].c;
+            }
+
             const row = availableRow(col);
             board[row][col] = 2;
 

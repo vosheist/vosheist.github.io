@@ -151,7 +151,7 @@ async function migrateLegacyStoreIfNeeded() {
 app.use(cors({
     origin: "*",
     methods: ["GET", "POST", "PUT", "OPTIONS"],
-    allowedHeaders: ["Content-Type"]
+    allowedHeaders: ["Content-Type", "x-admin-key"]
 }));
 app.use(express.json());
 

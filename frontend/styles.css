@@ -838,6 +838,357 @@ body {
     transform: translateY(-2px);
 }
 
+.game-preview {
+    height: 92px;
+    border: 1px solid rgba(47, 81, 101, 0.18);
+    border-radius: 10px;
+    margin-bottom: 0.55rem;
+    background: linear-gradient(180deg, #f8fbff 0%, #edf4fb 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+.preview-2048 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 6px;
+}
+
+.preview-2048 .pv-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #2f5165;
+    animation: pvPulse 3s infinite ease-in-out;
+}
+
+.preview-2048 .pv-2 {
+    background: #fff8e8;
+}
+
+.preview-2048 .pv-4 {
+    background: #ffefcf;
+    animation-delay: 0.4s;
+}
+
+.preview-2048 .pv-8 {
+    background: #ffe0b2;
+    animation-delay: 0.8s;
+}
+
+.preview-2048 .pv-16 {
+    background: #ffd08d;
+    animation-delay: 1.2s;
+}
+
+.preview-ttt {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 6px;
+}
+
+.preview-ttt span {
+    border-radius: 6px;
+    border: 1px solid rgba(47, 81, 101, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #2f5165;
+    background: #fff;
+    animation: pvBlink 3s infinite ease-in-out;
+}
+
+.preview-c4 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    padding: 7px;
+    background: #dce8f2;
+}
+
+.preview-c4 .c4-dot {
+    border-radius: 50%;
+    background: #f7fbff;
+    border: 1px solid rgba(47, 81, 101, 0.16);
+}
+
+.preview-c4 .c4-dot.p {
+    background: #2f5165;
+}
+
+.preview-c4 .c4-dot.c {
+    background: #f29f67;
+    animation: c4Drop 3s infinite;
+}
+
+.preview-snake {
+    background: #dce8f2;
+}
+
+.preview-snake .snk {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+.preview-snake .head {
+    background: #2f5165;
+    top: 36px;
+    left: 18px;
+    animation: snakeMove 3s infinite linear;
+}
+
+.preview-snake .body {
+    background: #7ea6c4;
+    top: 36px;
+    left: 4px;
+    animation: snakeMove 3s infinite linear;
+}
+
+.preview-snake .body:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.preview-snake .body:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+.preview-snake .food {
+    background: #f29f67;
+    top: 20px;
+    right: 18px;
+}
+
+.preview-racer {
+    background: linear-gradient(180deg, #edf4fb, #e4eef7);
+}
+
+.preview-racer::before,
+.preview-racer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(47, 81, 101, 0.18);
+}
+
+.preview-racer::before {
+    left: 33%;
+}
+
+.preview-racer::after {
+    left: 66%;
+}
+
+.preview-racer .lane-car,
+.preview-racer .lane-ob {
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    border-radius: 4px;
+}
+
+.preview-racer .lane-car {
+    background: #2f5165;
+    bottom: 10px;
+    left: 40%;
+    animation: racerCar 3s infinite ease-in-out;
+}
+
+.preview-racer .lane-ob {
+    background: #d4655b;
+    top: -16px;
+    left: 12%;
+    animation: racerObs 3s infinite linear;
+}
+
+.preview-memory {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    padding: 7px;
+}
+
+.preview-memory span {
+    border-radius: 6px;
+    border: 1px solid rgba(47, 81, 101, 0.16);
+    background: #f6fbff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pvBlink 3s infinite ease-in-out;
+}
+
+.preview-memory span:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.preview-memory span:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+.preview-memory span:nth-child(4) {
+    animation-delay: 1.2s;
+}
+
+.preview-reaction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-reaction .light {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #f0b9b9;
+    border: 2px solid rgba(47, 81, 101, 0.2);
+    animation: reactLight 3s infinite;
+}
+
+.preview-math,
+.preview-guess,
+.preview-rps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #2f5165;
+    letter-spacing: 0.02em;
+}
+
+.preview-math {
+    animation: pvPulse 3s infinite ease-in-out;
+}
+
+.preview-guess {
+    font-size: 1.05rem;
+    animation: pvBlink 3s infinite;
+}
+
+.preview-rps {
+    font-size: 1.5rem;
+    animation: pvRps 3s infinite ease-in-out;
+}
+
+@keyframes pvPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+    }
+}
+
+@keyframes pvBlink {
+
+    0%,
+    100% {
+        opacity: 0.85;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes c4Drop {
+    0% {
+        transform: translateY(-18px);
+    }
+
+    35% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes snakeMove {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    30% {
+        transform: translate(34px, 0);
+    }
+
+    60% {
+        transform: translate(34px, 20px);
+    }
+
+    100% {
+        transform: translate(0, 20px);
+    }
+}
+
+@keyframes racerObs {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(108px);
+    }
+}
+
+@keyframes racerCar {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    35% {
+        transform: translateX(26px);
+    }
+
+    70% {
+        transform: translateX(-26px);
+    }
+}
+
+@keyframes reactLight {
+
+    0%,
+    55% {
+        background: #f0b9b9;
+    }
+
+    65%,
+    100% {
+        background: #c9f2cf;
+    }
+}
+
+@keyframes pvRps {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    33% {
+        transform: translateY(-2px) scale(1.04);
+    }
+
+    66% {
+        transform: translateY(2px) scale(0.96);
+    }
+}
+
 .game-card {
     background: #fffdf9;
     border: 1px solid var(--logo-border);
@@ -1159,6 +1510,10 @@ body {
 
 .lr-obstacle {
     background: #d4655b;
+}
+
+.lr-boost {
+    background: #f0cf58;
 }
 
 /* Global responsive tweaks for very small screens (flip phones) */

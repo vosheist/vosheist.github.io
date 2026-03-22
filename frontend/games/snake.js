@@ -14,13 +14,34 @@
         const status = document.createElement("small");
         status.className = "text-secondary d-block mt-2";
 
+        const best = document.createElement("small");
+        best.className = "text-secondary d-block";
+        let bestScore = Number(localStorage.getItem("vosheist-snake-best") || 0);
+        best.textContent = `Best: ${bestScore}`;
+
         const reset = document.createElement("button");
         reset.className = "btn btn-outline-secondary btn-sm mt-2";
         reset.textContent = "New Game";
 
+        const pause = document.createElement("button");
+        pause.className = "btn btn-outline-primary btn-sm mt-2 ms-2";
+        pause.textContent = "Pause";
+
+        const controls = document.createElement("div");
+        controls.className = "d-flex flex-wrap gap-2 mt-2";
+        controls.innerHTML = `
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-dir="up">Up</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-dir="left">Left</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-dir="down">Down</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-dir="right">Right</button>
+        `;
+
         container.appendChild(board);
         container.appendChild(status);
+        container.appendChild(best);
         container.appendChild(reset);
+        container.appendChild(pause);
+        container.appendChild(controls);
 
         let snake = [{ x: 6, y: 7 }, { x: 5, y: 7 }, { x: 4, y: 7 }];
         let dir = { x: 1, y: 0 };
@@ -28,6 +49,8 @@
         let timer = null;
         let score = 0;
         let running = true;
+        let paused = false;
+        let tickMs = 170;
 
         function placeFood() {
             while (true) {
@@ -59,7 +82,7 @@
         }
 
         function step() {
-            if (!running) return;
+            if (!running || paused) return;
             const head = snake[0];
             const next = { x: head.x + dir.x, y: head.y + dir.y };
 
@@ -75,6 +98,15 @@
             snake.unshift(next);
             if (next.x === food.x && next.y === food.y) {
                 score += 1;
+                if (score > bestScore) {
+                    bestScore = score;
+                    localStorage.setItem("vosheist-snake-best", String(bestScore));
+                    best.textContent = `Best: ${bestScore}`;
+                }
+                // Make the game gradually faster.
+                tickMs = Math.max(90, tickMs - 4);
+                clearInterval(timer);
+                timer = setInterval(step, tickMs);
                 placeFood();
             } else {
                 snake.pop();
@@ -82,11 +114,23 @@
             render();
         }
 
+        function setDirection(nextDir) {
+            if (nextDir === "up" && dir.y !== 1) dir = { x: 0, y: -1 };
+            if (nextDir === "down" && dir.y !== -1) dir = { x: 0, y: 1 };
+            if (nextDir === "left" && dir.x !== 1) dir = { x: -1, y: 0 };
+            if (nextDir === "right" && dir.x !== -1) dir = { x: 1, y: 0 };
+        }
+
         function keyHandler(e) {
-            if (e.key === "ArrowUp" && dir.y !== 1) dir = { x: 0, y: -1 };
-            if (e.key === "ArrowDown" && dir.y !== -1) dir = { x: 0, y: 1 };
-            if (e.key === "ArrowLeft" && dir.x !== 1) dir = { x: -1, y: 0 };
-            if (e.key === "ArrowRight" && dir.x !== -1) dir = { x: 1, y: 0 };
+            if (e.key === "ArrowUp") setDirection("up");
+            if (e.key === "ArrowDown") setDirection("down");
+            if (e.key === "ArrowLeft") setDirection("left");
+            if (e.key === "ArrowRight") setDirection("right");
+            if (e.key === " ") {
+                e.preventDefault();
+                paused = !paused;
+                pause.textContent = paused ? "Resume" : "Pause";
+            }
         }
 
         function restart() {
@@ -94,14 +138,29 @@
             dir = { x: 1, y: 0 };
             score = 0;
             running = true;
+            paused = false;
+            tickMs = 170;
+            pause.textContent = "Pause";
+            clearInterval(timer);
+            timer = setInterval(step, tickMs);
             placeFood();
             render();
         }
 
         window.addEventListener("keydown", keyHandler);
         reset.addEventListener("click", restart);
+        pause.addEventListener("click", () => {
+            if (!running) return;
+            paused = !paused;
+            pause.textContent = paused ? "Resume" : "Pause";
+        });
+        controls.addEventListener("click", (e) => {
+            const btn = e.target.closest("button[data-dir]");
+            if (!btn) return;
+            setDirection(btn.getAttribute("data-dir"));
+        });
 
-        timer = setInterval(step, 150);
+        timer = setInterval(step, tickMs);
         render();
 
         return {
