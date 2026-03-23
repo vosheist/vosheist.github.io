@@ -1,6 +1,6 @@
 /**
  * View member test data from MongoDB
- * Run: node view-test-data.js
+ * Run: npm run view:test-data
  */
 const { MongoClient } = require("mongodb");
 require("dotenv").config();

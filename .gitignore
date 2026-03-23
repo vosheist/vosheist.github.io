@@ -32,3 +32,4 @@ logs/
 *.tmp
 *.bak
 vosheist.txt
+archive/

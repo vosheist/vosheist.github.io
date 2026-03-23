@@ -88,13 +88,13 @@ Content-Type: application/json
 
 ## Frontend Configuration
 
-The frontend is already configured to use:
-- Hearos feedback: `http://localhost:3000/api/feedback`
-- Signup notifications: `http://localhost:3000/api/notify-signup`
+The frontend uses `frontend/api.js` for backend requests.
 
-Update these in:
-- `hearos.html` - line 121 (FEEDBACK_ENDPOINT)
-- `nafshi.html` - line 136 (SIGNUP_NOTIFY_ENDPOINT)
+Default backend URL is already `http://localhost:3000`, so local development needs no changes.
+
+For custom/staging/production URLs, set one of:
+- Runtime global: `window.YESHIVA_CHILL_API_BASE_URL`
+- localStorage key: `yeshivaChillApiBaseUrl`
 
 ## Production Deployment
 

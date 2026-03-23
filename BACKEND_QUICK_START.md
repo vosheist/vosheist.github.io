@@ -12,11 +12,21 @@ yeshiva-chill/
 │   ├── prices.html
 │   ├── community.html
 │   ├── hearos.html
+│   ├── bein-hasdarim.html
+│   ├── games/                    # Game pages + game scripts
+│   │   ├── game-2048.html
+│   │   ├── ...
+│   │   ├── game2048.js
+│   │   └── ...
 │   ├── styles.css
 │   └── script.js
 ├── backend/                      # Node.js backend
 │   ├── server.js                 # Express server
 │   ├── package.json              # Dependencies
+│   ├── scripts/                  # Utility scripts
+│   │   ├── seed-test-data.js
+│   │   ├── view-test-data.js
+│   │   └── rename-female-to-male.js
 │   ├── .env                      # Configuration (SECRET - don't commit)
 │   └── .env.example              # Template for .env
 ├── public/
@@ -235,17 +245,12 @@ Response:
 
 The frontend is **already configured** to use the backend:
 
-**File:** `frontend/nafshi.html` (line ~136)
-```javascript
-const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
-```
+- Frontend requests go through `frontend/api.js`
+- Default backend URL: `http://localhost:3000`
+- You can override URL by setting `window.YESHIVA_CHILL_API_BASE_URL`
+  before loading `api.js`, or by saving `yeshivaChillApiBaseUrl` in localStorage.
 
-**File:** `frontend/hearos.html` (line ~121)
-```javascript
-const FEEDBACK_ENDPOINT = "http://localhost:3000/api/feedback";
-```
-
-No changes needed for development!
+No code changes are needed for local development if backend runs on port 3000.
 
 ## 🧪 Testing the Backend
 
@@ -326,9 +331,8 @@ netstat -ano | findstr :3000
 
 **Solution:** Verify frontend has correct backend URL:
 ```javascript
-// In frontend/hearos.html and frontend/nafshi.html:
-const FEEDBACK_ENDPOINT = "http://localhost:3000/api/feedback";
-const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
+// Runtime override before frontend/api.js loads:
+window.YESHIVA_CHILL_API_BASE_URL = "http://localhost:3000";
 ```
 
 ## 📝 Directory Structure Explanation
@@ -366,10 +370,9 @@ BACKEND_URL=https://your-domain.com
 ```
 
 ### 2. Update Frontend URLs
-In `frontend/nafshi.html` and `frontend/hearos.html`:
+Set runtime base URL in the pages (before `frontend/api.js`):
 ```javascript
-const SIGNUP_NOTIFY_ENDPOINT = "https://your-domain.com/api/notify-signup";
-const FEEDBACK_ENDPOINT = "https://your-domain.com/api/feedback";
+window.YESHIVA_CHILL_API_BASE_URL = "https://your-domain.com";
 ```
 
 ### 3. Use Process Manager

@@ -1,76 +1,51 @@
-# וואס הייסט (Yeshiva Chill)
+# Yeshiva Chill Documentation
 
-A personal accountability and tracker application for recording mitzvot (good deeds) and aveirot (transgressions) in Yiddish.
+This repository contains the Yeshiva Chill member platform (frontend + backend) and supporting docs.
 
-## Features
+## Current Structure
 
-- **User Accounts** — Create accounts with display names and pen names
-- **Tracker** — Log mitzvot and aveirot with details, categories, and dates
-- **Analytics** — View period charts (today, weekly, monthly)
-- **Community** — Browse public community records by pen name
-- **Profile Management** — Edit profile info and change passwords
-- **Responsive Design** — Works on desktop and mobile devices
+- `frontend/` - Main web app pages and shared assets
+- `frontend/games/` - All game pages and game logic scripts
+- `backend/` - Express + MongoDB API server
+- `backend/scripts/` - Utility and seed scripts
+- `public/` - Shared static images/assets
+- `mashbak/` - SMS compliance/support page
+- `archive/legacy-root/` - Archived legacy root files
 
-## Tech Stack
+## Frontend Overview
 
-- **HTML5** / **CSS3** / **Vanilla JavaScript**
-- **Bootstrap 5.3.8** — Responsive styling
-- **Web Crypto API** — Password hashing (SHA-256)
-- **LocalStorage** — User data persistence
-- **RTL & Yiddish Support** — Full internationalization
+- Core app pages (auth, account, community, etc.) live in `frontend/`
+- Games hub is `frontend/bein-hasdarim.html`
+- Individual game pages are now grouped in `frontend/games/`
+- Shared frontend logic:
+	- `frontend/script.js`
+	- `frontend/api.js`
+	- `frontend/auth.js`
+	- `frontend/styles.css`
 
-## Pages
+## Backend Overview
 
-- `index.html` — Home page
-- `nafshi.html` — Login and signup
-- `account.html` — User dashboard with tracker
-- `community.html` — Public community records
-- `prices.html` — Pricing/info page
+- Main API server: `backend/server.js`
+- Package config: `backend/package.json`
+- Env template: `backend/.env.example`
+- Utility scripts:
+	- `npm run seed:test-data`
+	- `npm run view:test-data`
+	- `npm run rename:test-users`
 
 ## Getting Started
 
-1. Clone the repository
-2. Open `index.html` in a web browser
-3. Create an account and start tracking
+1. Start backend:
+	 - `cd backend`
+	 - `npm install`
+	 - copy `.env.example` to `.env` and fill values
+	 - `npm run dev`
+2. Open the frontend entrypoint:
+	 - `index.html` (redirects to `frontend/index.html`)
 
-## Features
+## Related Docs
 
-### Account Creation
-- Create account with name, pen name, and password
-- Passwords are hashed locally using Web Crypto SHA-256
-- Unique pen names across all users
-
-### Tracker
-- Log mitzvot and aveirot separately
-- Categorize entries
-- Add optional details
-- Auto-detect type based on keywords
-- Mark aveirot as fixed/resolved
-
-### Analytics
-- View counts by period (today/weekly/monthly)
-- Visual bar charts for quick overview
-
-### Community
-- Browse other users' pen names
-- View public record summaries
-- See mitzvot/aveirot statistics
-
-## Security Notes
-
-- Passwords are hashed locally before storage
-- No backend server — data stored in browser localStorage
-- User session managed via sessionStorage
-- No personal data is sent externally (except optional email notifications)
-
-## Future Enhancements
-
-- Backend integration for persistent storage
-- Email notifications on signup
-- Social features (challenges, leaderboards)
-- Data export/backup
-- Reminder notifications
-
----
-
-**Language:** Yiddish (יידיש) | **Direction:** Right-to-Left (RTL)
+- `docs/BACKEND_SETUP.md` - Practical backend setup and run steps
+- `BACKEND_QUICK_START.md` - Expanded backend setup and troubleshooting
+- `docs/TESTING_GUIDE.md` - Manual test checklist
+- `docs/CODE_AUDIT.md` - Code audit notes

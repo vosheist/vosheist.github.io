@@ -1,6 +1,6 @@
 /**
  * Rename specific female test users to male names in the database
- * Run: node rename-female-to-male.js
+ * Run: npm run rename:test-users
  */
 const { MongoClient } = require('mongodb');
 require('dotenv').config();

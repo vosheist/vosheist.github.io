@@ -2,6 +2,12 @@
     const SESSION_KEY = "yeshivaChillCurrentUser";
     const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
 
+    function routeTo(page) {
+        const path = (window.location.pathname || "").toLowerCase();
+        const inFrontendDir = path.includes("/frontend/");
+        return inFrontendDir ? page : `frontend/${page}`;
+    }
+
     function persistSessionUser(userKey) {
         if (!userKey) {
             return;
@@ -183,7 +189,7 @@
             confirmInput.value = "";
 
             setTimeout(() => {
-                window.location.href = "account.html";
+                window.location.href = routeTo("account.html");
             }, 450);
         });
     }
@@ -224,7 +230,7 @@
                 return;
             }
             setTimeout(() => {
-                window.location.href = "account.html";
+                window.location.href = routeTo("account.html");
             }, 400);
         });
     }

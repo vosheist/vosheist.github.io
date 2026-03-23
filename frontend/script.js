@@ -1,6 +1,12 @@
 (() => {
     const SESSION_KEY = "yeshivaChillCurrentUser";
-    const LOGIN_PAGE = "nafshi.html";
+    function routeTo(page) {
+        const path = (window.location.pathname || "").toLowerCase();
+        const inFrontendDir = path.includes("/frontend/");
+        return inFrontendDir ? page : `frontend/${page}`;
+    }
+
+    const LOGIN_PAGE = routeTo("nafshi.html");
     const PUBLIC_PAGES = new Set(["index.html", "nafshi.html"]);
 
     function getCurrentPageName() {
@@ -44,10 +50,10 @@
         shortcuts.forEach((shortcut) => {
             if (isLoggedIn) {
                 shortcut.classList.remove("d-none");
-                shortcut.setAttribute("href", "account.html");
+                shortcut.setAttribute("href", routeTo("account.html"));
             } else {
                 shortcut.classList.add("d-none");
-                shortcut.setAttribute("href", "nafshi.html");
+                shortcut.setAttribute("href", routeTo("nafshi.html"));
             }
         });
     }

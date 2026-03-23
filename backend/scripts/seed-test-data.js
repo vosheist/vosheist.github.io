@@ -1,6 +1,6 @@
 /**
  * Seed test members with sample activity entries
- * Run: node seed-test-data.js
+ * Run: npm run seed:test-data
  */
 const { MongoClient } = require("mongodb");
 require("dotenv").config();
