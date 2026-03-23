@@ -8,7 +8,7 @@
 
 1. Navigate to the project directory:
 ```bash
-cd "c:\Users\owner\Desktop\vos heist"
+cd "c:\Users\owner\Desktop\yeshiva-chill"
 ```
 
 2. Install dependencies:

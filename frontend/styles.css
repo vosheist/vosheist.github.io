@@ -1323,6 +1323,112 @@ body {
     font-size: 0.92rem;
 }
 
+.game-companion-shell {
+    border: 1px solid #d8e3ef;
+    border-radius: 12px;
+    padding: 0.75rem;
+    background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+}
+
+.game-companion-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.game-companion-title {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--logo-blue-deep);
+    font-family: "Playpen Sans Hebrew", sans-serif;
+}
+
+.game-companion-target {
+    font-size: 0.76rem;
+    background: #eef5ff;
+    border: 1px solid #d7e6fb;
+    border-radius: 999px;
+    padding: 0.18rem 0.55rem;
+    color: #34526b;
+}
+
+.game-companion-challenge {
+    color: #3f5568;
+    font-size: 0.92rem;
+}
+
+.game-companion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.game-companion-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.game-stat-box {
+    background: #fff;
+    border: 1px solid #dde7f2;
+    border-radius: 10px;
+    padding: 0.45rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-stat-label {
+    font-size: 0.7rem;
+    color: #587287;
+}
+
+.game-stat-box strong {
+    font-size: 1.02rem;
+    color: #234259;
+}
+
+.game-companion-tip {
+    font-size: 0.9rem;
+    color: #385369;
+}
+
+.game-companion-progress {
+    font-size: 0.88rem;
+    color: #4f667a;
+}
+
+.game-progress-ok {
+    color: #1e7a42;
+    font-weight: 700;
+}
+
+.game-companion-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.game-badge {
+    border: 1px solid #c9e6d5;
+    background: #ebfbf2;
+    color: #17653b;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+}
+
+@media (max-width: 700px) {
+    .game-companion-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 
 .g2048-tile {
     min-height: 52px;

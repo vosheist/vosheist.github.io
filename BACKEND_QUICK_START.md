@@ -3,7 +3,7 @@
 ## 📁 Project Structure
 
 ```
-vos heist/
+yeshiva-chill/
 ├── index.html                    # Entry point (redirects to frontend)
 ├── frontend/                     # All frontend files
 │   ├── index.html
