@@ -1,12 +1,12 @@
 (() => {
     const SESSION_KEY = "yeshivaChillCurrentUser";
     const LOGIN_PAGE = "/nafshi.html";
-    const PUBLIC_PAGES = new Set(["index.html", "nafshi.html"]);
+    const PUBLIC_PAGES = new Set(["login.html", "nafshi.html"]);
 
     function getCurrentPageName() {
         const path = window.location.pathname || "";
         const fileName = path.split("/").pop();
-        return fileName || "index.html";
+        return fileName || "login.html";
     }
 
     function enforceMemberAccess() {
