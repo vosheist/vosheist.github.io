@@ -173,7 +173,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const SESSION_KEY = "vosHeistCurrentUser";
+        const SESSION_KEY = "yeshivaChillCurrentUser";
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
         let currentUser = null;
 
@@ -270,7 +270,7 @@
             }
 
             try {
-                const updated = await window.vosHeistApi.updateProfile(currentUserKey, {
+                const updated = await window.yeshivaChillApi.updateProfile(currentUserKey, {
                     firstname,
                     lastname,
                     nickname,
@@ -308,7 +308,7 @@
             }
 
             try {
-                const response = await window.vosHeistApi.getUser(currentUserKey);
+                const response = await window.yeshivaChillApi.getUser(currentUserKey);
                 currentUser = response.user;
                 fillProfileView();
             } catch {

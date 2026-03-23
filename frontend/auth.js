@@ -1,6 +1,14 @@
 (() => {
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
+
+    function persistSessionUser(userKey) {
+        if (!userKey) {
+            return;
+        }
+
+        sessionStorage.setItem(SESSION_KEY, userKey);
+    }
 
     function normalizeName(name) {
         return name.trim().toLowerCase();
@@ -41,7 +49,7 @@
             nickname: newUser.nickname,
             email: newUser.email,
             createdAt: new Date().toISOString(),
-            source: "vos-heist"
+            source: "yeshiva-chill"
         };
 
         try {
@@ -123,7 +131,7 @@
 
             let signupResult;
             try {
-                signupResult = await window.vosHeistApi.signup(newUser);
+                signupResult = await window.yeshivaChillApi.signup(newUser);
             } catch (error) {
                 const message = String(error.message || "").toLowerCase();
                 if (message.includes("nickname")) {
@@ -160,7 +168,7 @@
                 : normalizeName(signupResult && signupResult.user && signupResult.user.displayName
                     ? signupResult.user.displayName
                     : displayName);
-            sessionStorage.setItem(SESSION_KEY, backendUserKey);
+            persistSessionUser(backendUserKey);
 
             showMessage(createMessage, "חשבון געשאַפֿן. דו ביסט שוין אריינגעלאָגט.", "success");
             if (!notification.sent && notification.reason !== "missing-endpoint") {
@@ -201,7 +209,7 @@
             const userKey = normalizeName(loginIdentifier);
             try {
                 const incomingHash = await hashPassword(passwordInput.value);
-                const loginResult = await window.vosHeistApi.login({
+                const loginResult = await window.yeshivaChillApi.login({
                     identifier: loginIdentifier,
                     name: loginIdentifier,
                     passwordHash: incomingHash
@@ -209,7 +217,7 @@
 
                 const user = loginResult.user;
                 const backendUserKey = loginResult.userKey || userKey;
-                sessionStorage.setItem(SESSION_KEY, backendUserKey);
+                persistSessionUser(backendUserKey);
                 showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
             } catch {
                 showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער קאוד איז נישט ריכטיג.", "error");

@@ -80,7 +80,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const SESSION_KEY = "vosHeistCurrentUser";
+        const SESSION_KEY = "yeshivaChillCurrentUser";
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
 
         if (!currentUserKey) {
@@ -97,7 +97,7 @@
         }
 
         async function renderCommunity() {
-            const response = await window.vosHeistApi.getCommunity(currentUserKey);
+            const response = await window.yeshivaChillApi.getCommunity(currentUserKey);
             const grid = document.getElementById("community-grid");
             const entries = response.users || [];
 

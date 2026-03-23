@@ -2,7 +2,7 @@
    Usage: SnakeGame.init(containerElement)
 */
 (function (global) {
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const GAME_KEY = "snake";
 
     function init(container) {
@@ -19,7 +19,7 @@
 
         const best = document.createElement("small");
         best.className = "text-secondary d-block";
-        let bestScore = Number(localStorage.getItem("vosheist-snake-best") || 0);
+        let bestScore = Number(localStorage.getItem("yeshivachill-snake-best") || 0);
         best.textContent = `Best: ${bestScore}`;
 
         const reset = document.createElement("button");
@@ -68,13 +68,13 @@
         let submittedThisRun = false;
 
         async function refreshLeaderboard() {
-            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+            if (!global.yeshivaChillApi || typeof global.yeshivaChillApi.getGameScores !== "function") {
                 scoreList.innerHTML = "<li>API unavailable</li>";
                 scoreNote.textContent = "";
                 return;
             }
             try {
-                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const payload = await global.yeshivaChillApi.getGameScores(GAME_KEY);
                 const rows = Array.isArray(payload.scores) ? payload.scores : [];
                 scoreList.innerHTML = rows.length
                     ? rows.slice(0, 8).map((row) => {
@@ -94,9 +94,9 @@
         async function submitScoreIfNeeded() {
             if (submittedThisRun || score <= 0) return;
             const userKey = sessionStorage.getItem(SESSION_KEY);
-            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            if (!userKey || !global.yeshivaChillApi || typeof global.yeshivaChillApi.submitGameScore !== "function") return;
             try {
-                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score });
+                await global.yeshivaChillApi.submitGameScore(GAME_KEY, { userKey, score });
                 submittedThisRun = true;
                 await refreshLeaderboard();
             } catch {
@@ -153,7 +153,7 @@
                 score += 1;
                 if (score > bestScore) {
                     bestScore = score;
-                    localStorage.setItem("vosheist-snake-best", String(bestScore));
+                    localStorage.setItem("yeshivachill-snake-best", String(bestScore));
                     best.textContent = `Best: ${bestScore}`;
                 }
                 // Make the game gradually faster.

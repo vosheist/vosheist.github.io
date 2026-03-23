@@ -98,7 +98,7 @@ npm run dev
 
 **Expected output:**
 ```
-✓ Vos Heist Backend running on http://localhost:3000
+✓ Yeshiva Chill Backend running on http://localhost:3000
 ✓ Email service configured
 ✓ CORS enabled for all origins
 ✓ Endpoints: /health, /api/feedback, /api/notify-signup, /api/welcome-email
@@ -375,7 +375,7 @@ const FEEDBACK_ENDPOINT = "https://your-domain.com/api/feedback";
 ### 3. Use Process Manager
 ```bash
 npm install -g pm2
-pm2 start backend/server.js --name "vos-heist"
+pm2 start backend/server.js --name "yeshiva-chill"
 pm2 save
 pm2 startup
 ```

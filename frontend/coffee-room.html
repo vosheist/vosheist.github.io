@@ -94,7 +94,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const SESSION_KEY = "vosHeistCurrentUser";
+        const SESSION_KEY = "yeshivaChillCurrentUser";
 
         function escapeHtml(value) {
             return String(value)
@@ -107,7 +107,7 @@
 
         async function renderFeed() {
             const feed = document.getElementById("coffee-feed");
-            const response = await window.vosHeistApi.getCoffeeRoom();
+            const response = await window.yeshivaChillApi.getCoffeeRoom();
             const messages = (response.messages || []).slice().reverse();
 
             if (!messages.length) {
@@ -128,7 +128,7 @@
             const currentUserKey = sessionStorage.getItem(SESSION_KEY);
             let user = null;
             try {
-                const userResponse = await window.vosHeistApi.getUser(currentUserKey);
+                const userResponse = await window.yeshivaChillApi.getUser(currentUserKey);
                 user = userResponse.user;
             } catch {
                 user = null;
@@ -143,7 +143,7 @@
                 return;
             }
 
-            await window.vosHeistApi.addCoffeeRoom({
+            await window.yeshivaChillApi.addCoffeeRoom({
                 nickname: user.nickname || user.displayName || "מיטגליד",
                 topic,
                 message

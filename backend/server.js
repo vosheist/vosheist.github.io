@@ -732,12 +732,12 @@ app.post("/api/welcome-email", async (req, res) => {
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: "Welcome to Vos Heist",
+            subject: "Welcome to Yeshiva Chill",
             html: `
                 <div style="margin:0; padding:32px 16px; background:#f4f7fb; font-family:Arial,Helvetica,sans-serif; color:#22313f;">
                     <div style="max-width:640px; margin:0 auto; background:#ffffff; border:1px solid #d7e0ea; border-radius:18px; overflow:hidden; box-shadow:0 14px 40px rgba(34,49,63,0.08);">
                         <div style="padding:28px 32px; background:linear-gradient(135deg,#dcecf7 0%,#f9ecd8 100%); border-bottom:1px solid #d7e0ea;">
-                            <p style="margin:0 0 10px; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#5b7186;">Vos Heist</p>
+                            <p style="margin:0 0 10px; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#5b7186;">Yeshiva Chill</p>
                             <h1 style="margin:0; font-size:30px; line-height:1.2; color:#1f3142;">Welcome, ${escapedFullName}</h1>
                             <p style="margin:12px 0 0; font-size:16px; line-height:1.6; color:#385066;">Your member account is now active. You can sign in, track your progress, join the community, and use the member rooms right away.</p>
                         </div>
@@ -793,7 +793,7 @@ async function startServer() {
         await migrateLegacyStoreIfNeeded();
 
         app.listen(PORT, () => {
-            console.log(`✓ Vos Heist Backend running on http://localhost:${PORT}`);
+            console.log(`✓ Yeshiva Chill Backend running on http://localhost:${PORT}`);
             console.log(`✓ MongoDB connected: ${MONGODB_DB_NAME}`);
             if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
                 console.log("✓ Email service configured");

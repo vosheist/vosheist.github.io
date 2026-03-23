@@ -1,5 +1,5 @@
 (() => {
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const LOGIN_PAGE = "nafshi.html";
     const PUBLIC_PAGES = new Set(["index.html", "nafshi.html"]);
 

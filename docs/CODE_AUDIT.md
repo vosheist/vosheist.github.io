@@ -93,7 +93,7 @@
 #### localStorage Structure ✅
 ```javascript
 {
-  vosHeistUsers: {
+  yeshivaChillUsers: {
     "first lastname": {
       displayName: "First Last",
       firstname: "First",
@@ -104,8 +104,8 @@
       passwordHash: "SHA256..."
     }
   },
-  vosHeistSelectedPlan: "starter" | "pro",
-  vosHeistCurrentUser: "first lastname"  // sessionStorage
+  yeshivaChillSelectedPlan: "starter" | "pro",
+  yeshivaChillCurrentUser: "first lastname"  // sessionStorage
 }
 ```
 

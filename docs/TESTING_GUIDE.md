@@ -70,7 +70,7 @@ No changes needed unless deploying to production.
 
 **Expected Results:**
 - ✅ Success message
-- ✅ sessionStorage gets vosHeistCurrentUser
+- ✅ sessionStorage gets yeshivaChillCurrentUser
 - ✅ Redirects to account.html
 - ✅ Profile panel shows user info
 - ✅ Community link becomes visible in navbar
@@ -155,9 +155,9 @@ Both emails should have:
 ```
 Open: DevTools → Application → Local Storage
 Check:
-- vosHeistUsers: {}  (all users stored here)
-- vosHeistSelectedPlan: "pro" | "starter"
-- vosHeistCurrentUser: "firstname lastname"  (sessionStorage)
+- yeshivaChillUsers: {}  (all users stored here)
+- yeshivaChillSelectedPlan: "pro" | "starter"
+- yeshivaChillCurrentUser: "firstname lastname"  (sessionStorage)
 ```
 
 **User Object Structure**
@@ -310,7 +310,7 @@ After launch, monitor:
 
 **Issue: Community link not hiding**
 - Clear localStorage and reload
-- Check: sessionStorage has vosHeistCurrentUser
+- Check: sessionStorage has yeshivaChillCurrentUser
 
 **Issue: Records not saving**
 - Check: Browser localStorage isn't disabled

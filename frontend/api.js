@@ -1,4 +1,6 @@
 (() => {
+    const API_BASE_STORAGE_KEY = "yeshivaChillApiBaseUrl";
+
     function normalizeBaseUrl(url) {
         return String(url || "").trim().replace(/\/+$/, "");
     }
@@ -9,21 +11,21 @@
 
         if (queryBaseUrl) {
             try {
-                localStorage.setItem("vosHeistApiBaseUrl", queryBaseUrl);
+                localStorage.setItem(API_BASE_STORAGE_KEY, queryBaseUrl);
             } catch {
                 // Ignore storage errors (private mode, blocked storage, etc.)
             }
             return queryBaseUrl;
         }
 
-        const runtimeBaseUrl = normalizeBaseUrl(window.VOS_HEIST_API_BASE_URL);
+        const runtimeBaseUrl = normalizeBaseUrl(window.YESHIVA_CHILL_API_BASE_URL);
         if (runtimeBaseUrl) {
             return runtimeBaseUrl;
         }
 
         let savedBaseUrl = "";
         try {
-            savedBaseUrl = normalizeBaseUrl(localStorage.getItem("vosHeistApiBaseUrl"));
+            savedBaseUrl = normalizeBaseUrl(localStorage.getItem(API_BASE_STORAGE_KEY));
         } catch {
             savedBaseUrl = "";
         }
@@ -66,7 +68,7 @@
         return payload;
     }
 
-    window.vosHeistApi = {
+    const apiClient = {
         signup: (body) => request("/api/auth/signup", { method: "POST", body: JSON.stringify(body) }),
         login: (body) => request("/api/auth/login", { method: "POST", body: JSON.stringify(body) }),
         getUser: (userKey) => request(`/api/users/${encodeURIComponent(userKey)}`),
@@ -99,4 +101,6 @@
             body: JSON.stringify(body || {})
         })
     };
+
+    window.yeshivaChillApi = apiClient;
 })();

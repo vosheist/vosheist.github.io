@@ -1,4 +1,4 @@
-# Vos Heist Backend Setup Guide
+# Yeshiva Chill Backend Setup Guide
 
 ## Prerequisites
 - Node.js 14+ and npm installed
@@ -104,7 +104,7 @@ For production:
 2. Use a process manager like PM2:
    ```bash
    npm install -g pm2
-   pm2 start server.js --name "vos-heist-backend"
+   pm2 start server.js --name "yeshiva-chill-backend"
    ```
 3. Use a reverse proxy (nginx/Apache) to forward requests
 4. Set `BACKEND_URL` to your production domain

@@ -2,7 +2,7 @@
    Usage: LaneRacerGame.init(containerElement)
 */
 (function (global) {
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const GAME_KEY = "lane-racer";
 
     function init(container) {
@@ -21,7 +21,7 @@
 
         const best = document.createElement("small");
         best.className = "text-secondary d-block";
-        let bestScore = Number(localStorage.getItem("vosheist-racer-best") || 0);
+        let bestScore = Number(localStorage.getItem("yeshivachill-racer-best") || 0);
         best.textContent = `Best: ${bestScore}`;
 
         const reset = document.createElement("button");
@@ -62,13 +62,13 @@
         let submittedThisRun = false;
 
         async function refreshLeaderboard() {
-            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+            if (!global.yeshivaChillApi || typeof global.yeshivaChillApi.getGameScores !== "function") {
                 scoreList.innerHTML = "<li>API unavailable</li>";
                 scoreNote.textContent = "";
                 return;
             }
             try {
-                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const payload = await global.yeshivaChillApi.getGameScores(GAME_KEY);
                 const rows = Array.isArray(payload.scores) ? payload.scores : [];
                 scoreList.innerHTML = rows.length
                     ? rows.slice(0, 8).map((row) => {
@@ -88,9 +88,9 @@
         async function submitScoreIfNeeded() {
             if (submittedThisRun || ticks <= 0) return;
             const userKey = sessionStorage.getItem(SESSION_KEY);
-            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            if (!userKey || !global.yeshivaChillApi || typeof global.yeshivaChillApi.submitGameScore !== "function") return;
             try {
-                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: ticks });
+                await global.yeshivaChillApi.submitGameScore(GAME_KEY, { userKey, score: ticks });
                 submittedThisRun = true;
                 await refreshLeaderboard();
             } catch {
@@ -142,7 +142,7 @@
                 running = false;
                 if (ticks > bestScore) {
                     bestScore = ticks;
-                    localStorage.setItem("vosheist-racer-best", String(bestScore));
+                    localStorage.setItem("yeshivachill-racer-best", String(bestScore));
                     best.textContent = `Best: ${bestScore}`;
                 }
                 render();

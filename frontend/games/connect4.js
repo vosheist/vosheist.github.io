@@ -4,7 +4,7 @@
 (function (global) {
     const ROWS = 6;
     const COLS = 7;
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const GAME_KEY = "connect4";
 
     function init(container) {
@@ -43,13 +43,13 @@
         let wins = 0;
 
         async function refreshLeaderboard() {
-            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+            if (!global.yeshivaChillApi || typeof global.yeshivaChillApi.getGameScores !== "function") {
                 scoreList.innerHTML = "<li>API unavailable</li>";
                 scoreNote.textContent = "";
                 return;
             }
             try {
-                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const payload = await global.yeshivaChillApi.getGameScores(GAME_KEY);
                 const rows = Array.isArray(payload.scores) ? payload.scores : [];
                 scoreList.innerHTML = rows.length
                     ? rows.slice(0, 8).map((row) => {
@@ -69,9 +69,9 @@
         async function submitWins() {
             if (wins <= 0) return;
             const userKey = sessionStorage.getItem(SESSION_KEY);
-            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            if (!userKey || !global.yeshivaChillApi || typeof global.yeshivaChillApi.submitGameScore !== "function") return;
             try {
-                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: wins });
+                await global.yeshivaChillApi.submitGameScore(GAME_KEY, { userKey, score: wins });
                 await refreshLeaderboard();
             } catch {
                 // Ignore leaderboard submission failures.

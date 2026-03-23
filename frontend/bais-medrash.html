@@ -116,7 +116,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-        const SESSION_KEY = "vosHeistCurrentUser";
+        const SESSION_KEY = "yeshivaChillCurrentUser";
 
         function escapeHtml(value) {
             return String(value)
@@ -128,7 +128,7 @@
         }
 
         async function renderPosts() {
-            const response = await window.vosHeistApi.getBaisMedrash();
+            const response = await window.yeshivaChillApi.getBaisMedrash();
             const posts = (response.posts || []).slice().reverse();
             const list = document.getElementById("bm-list");
 
@@ -150,7 +150,7 @@
             let currentUser = null;
 
             try {
-                const userResponse = await window.vosHeistApi.getUser(currentUserKey);
+                const userResponse = await window.yeshivaChillApi.getUser(currentUserKey);
                 currentUser = userResponse.user;
             } catch {
                 currentUser = null;
@@ -168,7 +168,7 @@
                 return;
             }
 
-            await window.vosHeistApi.addBaisMedrash({
+            await window.yeshivaChillApi.addBaisMedrash({
                 nickname: currentUser.nickname || currentUser.displayName || "מיטגליד",
                 time,
                 length,

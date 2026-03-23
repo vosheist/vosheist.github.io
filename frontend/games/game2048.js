@@ -3,7 +3,7 @@
 */
 (function (global) {
     const SIZE = 4;
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const GAME_KEY = "2048";
 
     function emptyBoard() {
@@ -102,7 +102,7 @@
 
         let board = emptyBoard();
         let score = 0;
-        let best = Number(localStorage.getItem("vosheist-2048-best") || 0);
+        let best = Number(localStorage.getItem("yeshivachill-2048-best") || 0);
         let history = [];
         let submittedThisRun = false;
         addTile(board);
@@ -158,14 +158,14 @@
         container.appendChild(wrap);
 
         async function refreshLeaderboard() {
-            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+            if (!global.yeshivaChillApi || typeof global.yeshivaChillApi.getGameScores !== "function") {
                 scoreList.innerHTML = "<li>API unavailable</li>";
                 boardNote.textContent = "";
                 return;
             }
 
             try {
-                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const payload = await global.yeshivaChillApi.getGameScores(GAME_KEY);
                 const rows = Array.isArray(payload.scores) ? payload.scores : [];
                 if (!rows.length) {
                     scoreList.innerHTML = "<li>No scores yet</li>";
@@ -190,10 +190,10 @@
             if (submittedThisRun || score <= 0) return;
             const currentUserKey = sessionStorage.getItem(SESSION_KEY);
             if (!currentUserKey) return;
-            if (!global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            if (!global.yeshivaChillApi || typeof global.yeshivaChillApi.submitGameScore !== "function") return;
 
             try {
-                await global.vosHeistApi.submitGameScore(GAME_KEY, {
+                await global.yeshivaChillApi.submitGameScore(GAME_KEY, {
                     userKey: currentUserKey,
                     score
                 });
@@ -250,7 +250,7 @@
             score += res.scoreGain;
             if (score > best) {
                 best = score;
-                localStorage.setItem("vosheist-2048-best", String(best));
+                localStorage.setItem("yeshivachill-2048-best", String(best));
             }
             addTile(board);
             draw();

@@ -1,4 +1,4 @@
-# וואס הייסט (Vos Heist)
+# וואס הייסט (Yeshiva Chill)
 
 A personal accountability and tracker application for recording mitzvot (good deeds) and aveirot (transgressions) in Yiddish.
 

@@ -2,7 +2,7 @@
    Usage: ReactionTimerGame.init(containerElement)
 */
 (function (global) {
-    const SESSION_KEY = "vosHeistCurrentUser";
+    const SESSION_KEY = "yeshivaChillCurrentUser";
     const GAME_KEY = "reaction-timer";
 
     function init(container) {
@@ -30,7 +30,7 @@
 
         const best = document.createElement("small");
         best.className = "text-secondary";
-        let bestValue = Number(localStorage.getItem("vosheist-reaction-best") || 0);
+        let bestValue = Number(localStorage.getItem("yeshivachill-reaction-best") || 0);
         best.textContent = bestValue ? `Best: ${bestValue} ms` : "Best: -";
 
         const leaderboard = document.createElement("div");
@@ -52,13 +52,13 @@
         container.appendChild(wrap);
 
         async function refreshLeaderboard() {
-            if (!global.vosHeistApi || typeof global.vosHeistApi.getGameScores !== "function") {
+            if (!global.yeshivaChillApi || typeof global.yeshivaChillApi.getGameScores !== "function") {
                 scoreList.innerHTML = "<li>API unavailable</li>";
                 scoreNote.textContent = "";
                 return;
             }
             try {
-                const payload = await global.vosHeistApi.getGameScores(GAME_KEY);
+                const payload = await global.yeshivaChillApi.getGameScores(GAME_KEY);
                 const rows = Array.isArray(payload.scores) ? payload.scores : [];
                 scoreList.innerHTML = rows.length
                     ? rows.slice(0, 8).map((row) => {
@@ -77,10 +77,10 @@
 
         async function submitScore(resultMs) {
             const userKey = sessionStorage.getItem(SESSION_KEY);
-            if (!userKey || !global.vosHeistApi || typeof global.vosHeistApi.submitGameScore !== "function") return;
+            if (!userKey || !global.yeshivaChillApi || typeof global.yeshivaChillApi.submitGameScore !== "function") return;
             const points = Math.max(1, 2000 - resultMs);
             try {
-                await global.vosHeistApi.submitGameScore(GAME_KEY, { userKey, score: points });
+                await global.yeshivaChillApi.submitGameScore(GAME_KEY, { userKey, score: points });
                 await refreshLeaderboard();
             } catch {
                 // Ignore leaderboard submission failures.
@@ -127,7 +127,7 @@
 
             if (!bestValue || result < bestValue) {
                 bestValue = result;
-                localStorage.setItem("vosheist-reaction-best", String(bestValue));
+                localStorage.setItem("yeshivachill-reaction-best", String(bestValue));
                 best.textContent = `Best: ${bestValue} ms`;
             }
         });
