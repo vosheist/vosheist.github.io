@@ -467,11 +467,9 @@ app.get("/api/community", async (req, res) => {
             firstname: doc.firstname,
             lastname: doc.lastname,
             nickname: doc.nickname,
-            email: doc.email,
             createdAt: doc.createdAt || null,
             displayAs: normalizeDisplayAs(doc.displayAs),
-            publicName: resolvePublicName(doc),
-            passwordHash: doc.passwordHash
+            publicName: resolvePublicName(doc)
         }
     }));
 

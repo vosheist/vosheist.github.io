@@ -38,7 +38,8 @@
                         <li class="nav-item"><a class="nav-link" href="/bais-medrash.html">בית מדרש</a></li>
                         <li class="nav-item"><a class="nav-link" href="/coffee-room.html">קאווע צימער</a></li>
                         <li class="nav-item"><a class="nav-link" href="/bein-hasdarim.html">בין הסדרים</a></li>
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/inbox.html">Inbox</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/inbox.html">Inbox</a>
+                        </li>
                     </ul>
                 </div>
                 <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi.html">חשבון</a>
@@ -55,8 +56,9 @@
 
             <ul class="nav nav-tabs mb-3" id="inboxTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages-pane"
-                        type="button" role="tab" aria-controls="messages-pane" aria-selected="true">Messages</button>
+                    <button class="nav-link active" id="messages-tab" data-bs-toggle="tab"
+                        data-bs-target="#messages-pane" type="button" role="tab" aria-controls="messages-pane"
+                        aria-selected="true">Messages</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="invites-tab" data-bs-toggle="tab" data-bs-target="#invites-pane"
@@ -65,7 +67,8 @@
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="messages-pane" role="tabpanel" aria-labelledby="messages-tab">
+                <div class="tab-pane fade show active" id="messages-pane" role="tabpanel"
+                    aria-labelledby="messages-tab">
                     <div class="inbox-layout">
                         <aside class="inbox-list-shell">
                             <h2 class="h6 mb-2">Conversations</h2>
@@ -77,7 +80,8 @@
                             </div>
                             <div id="thread-messages" class="thread-messages"></div>
                             <form id="thread-form" class="thread-compose mt-2 d-none">
-                                <textarea id="thread-input" class="form-control" rows="3" maxlength="500" required></textarea>
+                                <textarea id="thread-input" class="form-control" rows="3" maxlength="500"
+                                    required></textarea>
                                 <div class="d-flex justify-content-end mt-2">
                                     <button id="thread-send-btn" class="btn auth-btn" type="submit">Send</button>
                                 </div>
@@ -110,6 +114,8 @@
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
         let selectedConversation = null;
         let conversations = [];
+        let pollTimer = null;
+        let pollInFlight = false;
 
         if (!currentUserKey) {
             window.location.href = "/nafshi.html";
@@ -268,6 +274,58 @@
             });
         }
 
+        function isTypingReply() {
+            const input = document.getElementById("thread-input");
+            return Boolean(input && document.activeElement === input && String(input.value || "").trim());
+        }
+
+        async function refreshInboxData() {
+            if (pollInFlight) {
+                return;
+            }
+
+            pollInFlight = true;
+            try {
+                await Promise.all([loadConversations(), loadInvites()]);
+
+                if (!selectedConversation || isTypingReply()) {
+                    return;
+                }
+
+                const stillExists = conversations.some((entry) => entry.partnerUserKey === selectedConversation.partnerUserKey);
+                if (stillExists) {
+                    await loadThread();
+                }
+            } catch {
+                // Keep polling; transient network errors are expected occasionally.
+            } finally {
+                pollInFlight = false;
+            }
+        }
+
+        function startPolling() {
+            if (pollTimer) {
+                return;
+            }
+
+            pollTimer = setInterval(() => {
+                if (document.hidden) {
+                    return;
+                }
+
+                refreshInboxData();
+            }, 10000);
+        }
+
+        function stopPolling() {
+            if (!pollTimer) {
+                return;
+            }
+
+            clearInterval(pollTimer);
+            pollTimer = null;
+        }
+
         document.getElementById("thread-form").addEventListener("submit", async (event) => {
             event.preventDefault();
             if (!selectedConversation) return;
@@ -293,10 +351,24 @@
             }
         });
 
-        Promise.all([loadConversations(), loadInvites()]).catch((error) => {
+        Promise.all([loadConversations(), loadInvites()]).then(() => {
+            startPolling();
+        }).catch((error) => {
             console.error(error);
             document.getElementById("conversation-list").innerHTML = '<div class="community-card"><p class="community-meta mb-0">Could not load inbox.</p></div>';
             document.getElementById("invite-list").innerHTML = '<div class="community-card"><p class="community-meta mb-0">Could not load invites.</p></div>';
+        });
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                return;
+            }
+
+            refreshInboxData();
+        });
+
+        window.addEventListener("beforeunload", () => {
+            stopPolling();
         });
     </script>
 </body>

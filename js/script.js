@@ -78,6 +78,63 @@
         });
     }
 
+    function setUnreadBadge(shortcut, unreadCount) {
+        if (!shortcut) {
+            return;
+        }
+
+        let badge = shortcut.querySelector(".inbox-unread-badge");
+        if (!badge) {
+            badge = document.createElement("span");
+            badge.className = "inbox-unread-badge d-none";
+            badge.setAttribute("aria-live", "polite");
+            shortcut.appendChild(badge);
+        }
+
+        if (!unreadCount) {
+            badge.classList.add("d-none");
+            badge.textContent = "";
+            shortcut.classList.remove("has-unread");
+            shortcut.removeAttribute("title");
+            return;
+        }
+
+        const text = unreadCount > 99 ? "99+" : String(unreadCount);
+        badge.textContent = text;
+        badge.classList.remove("d-none");
+        shortcut.classList.add("has-unread");
+        shortcut.setAttribute("title", `Inbox unread: ${text}`);
+    }
+
+    async function syncInboxUnreadBadge() {
+        const shortcuts = document.querySelectorAll(".js-account-shortcut");
+        if (!shortcuts.length) {
+            return;
+        }
+
+        const isLoggedIn = Boolean(sessionStorage.getItem(SESSION_KEY));
+        if (!isLoggedIn || !window.yeshivaChillApi || !window.yeshivaChillApi.getMessageConversations) {
+            shortcuts.forEach((shortcut) => setUnreadBadge(shortcut, 0));
+            return;
+        }
+
+        const userKey = sessionStorage.getItem(SESSION_KEY);
+        if (!userKey) {
+            shortcuts.forEach((shortcut) => setUnreadBadge(shortcut, 0));
+            return;
+        }
+
+        try {
+            const response = await window.yeshivaChillApi.getMessageConversations(userKey);
+            const unreadCount = (response.conversations || []).reduce((sum, conversation) => {
+                return sum + Number(conversation.unreadCount || 0);
+            }, 0);
+            shortcuts.forEach((shortcut) => setUnreadBadge(shortcut, unreadCount));
+        } catch {
+            shortcuts.forEach((shortcut) => setUnreadBadge(shortcut, 0));
+        }
+    }
+
     window.addEventListener("scroll", syncNavbarScrollState, { passive: true });
     window.addEventListener("load", () => {
         if (!enforceMemberAccess()) {
@@ -87,6 +144,13 @@
         syncNavbarScrollState();
         syncAccountShortcut();
         syncGuestNavTargets();
+        syncInboxUnreadBadge();
+
+        if (sessionStorage.getItem(SESSION_KEY)) {
+            setInterval(() => {
+                syncInboxUnreadBadge();
+            }, 12000);
+        }
     });
 })();
 
