@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yeshiva Chill | ????</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@100..800&family=Rubik+80s+Fade&family=Rubik+Marker+Hatch&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="my-navbar">
+        <nav class="navbar navbar-expand-lg rtl-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/index.html" aria-label="Yeshiva Chill">
+                    <span class="brand-lockup" aria-hidden="true">
+                        <span class="brand-words">
+                            <span class="brand-vos">?????</span>
+                            <span class="brand-heist">????</span>
+                        </span>
+                        <span class="brand-tes"></span>
+                        <span class="brand-marks">
+                            <span class="brand-mark brand-mark-one">?</span>
+                            <span class="brand-mark brand-mark-two">?</span>
+                            <span class="brand-mark brand-mark-three">?</span>
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/community.html">?????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bais-medrash.html">??? ????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/coffee-room.html">????? ?????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bein-hasdarim.html">??? ??????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/hearos.html">?????</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi.html">?????</a>
+            </div>
+        </nav>
+    </div>
+    <section class="login-center-section">
+        <div class="login-center-wrap">
+            <h1>???? ??????</h1>
+            <p>??? ??? ??? ????????? ??? ????? ????. ??? ?????? ????? ???? ??????.</p>
+            <form id="login-form" class="auth-card auth-single">
+                <h3>????</h3>
+                <label for="login-name" class="form-label">?????</label>
+                <input id="login-name" name="name" class="form-control" type="text"
+                    placeholder="?????? / ????? / ??? ?????" required>
+                <label for="login-password" class="form-label">????</label>
+                <div class="pw-wrap">
+                    <input id="login-password" name="password" class="form-control" type="password" required>
+                    <button class="pw-toggle" type="button" tabindex="-1" aria-label="???? ????"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                            <path
+                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                        </svg></button>
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn">??????????</button>
+                <p class="auth-switch-text">???? ???? ???? ??????</p>
+                <button type="button" class="btn btn-outline-secondary auth-switch-btn" data-bs-toggle="modal"
+                    data-bs-target="#createAccountModal">???? ?? ????? ?????</button>
+                <p id="login-message" class="auth-message" aria-live="polite"></p>
+            </form>
+        </div>
+    </section>
+
+    <div class="modal fade" id="createAccountModal" tabindex="-1" aria-labelledby="createAccountModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="createAccountModalLabel">???? ?? ????? ?????</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="create-account-form">
+                    <div class="modal-body">
+                        <label for="create-firstname" class="form-label">????? ?????</label>
+                        <input id="create-firstname" name="firstname" class="form-control" type="text" required>
+                        <label for="create-lastname" class="form-label mt-2">????? ?????</label>
+                        <input id="create-lastname" name="lastname" class="form-control" type="text" required>
+                        <label for="create-nickname" class="form-label mt-2">??? ????? (???????)</label>
+                        <input id="create-nickname" name="nickname" class="form-control" type="text" maxlength="24">
+                        <label for="create-email" class="form-label mt-2">??????</label>
+                        <input id="create-email" name="email" class="form-control" type="email" required>
+                        <label for="create-password" class="form-label mt-2">????</label>
+                        <div class="pw-wrap">
+                            <input id="create-password" name="password" class="form-control" type="password"
+                                minlength="4" required>
+                            <button class="pw-toggle" type="button" tabindex="-1" aria-label="???? ????"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                    <path
+                                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                </svg></button>
+                        </div>
+                        <label for="create-password-confirm" class="form-label mt-2">???????? ????</label>
+                        <div class="pw-wrap">
+                            <input id="create-password-confirm" name="passwordConfirm" class="form-control"
+                                type="password" minlength="4" required>
+                            <button class="pw-toggle" type="button" tabindex="-1" aria-label="???? ????"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                    <path
+                                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                </svg></button>
+                        </div>
+                        <p id="create-message" class="auth-message mt-2" aria-live="polite"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">???????</button>
+                        <button type="submit" class="btn btn-primary auth-btn">?????? ?????</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
+            <p class="site-footer-text">&copy; 2026 Yeshiva Chill</p>
+        </div>
+    </footer>
+
+    <script src="/js/script.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

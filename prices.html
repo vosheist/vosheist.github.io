@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yeshiva Chill | ??????</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@100..800&family=Rubik+80s+Fade&family=Rubik+Marker+Hatch&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="my-navbar">
+        <nav class="navbar navbar-expand-lg rtl-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/index.html" aria-label="Yeshiva Chill">
+                    <span class="brand-lockup" aria-hidden="true">
+                        <span class="brand-words">
+                            <span class="brand-vos">?????</span>
+                            <span class="brand-heist">????</span>
+                        </span>
+                        <span class="brand-tes"></span>
+                        <span class="brand-marks">
+                            <span class="brand-mark brand-mark-one">?</span>
+                            <span class="brand-mark brand-mark-two">?</span>
+                            <span class="brand-mark brand-mark-three">?</span>
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/community.html">?????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bais-medrash.html">??? ????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/coffee-room.html">????? ?????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bein-hasdarim.html">??? ??????</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/hearos.html">?????</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi.html">?????</a>
+            </div>
+        </nav>
+    </div>
+    <div class="hero">
+        <div class="hero-title-wrap">
+            <h1>??????</h1>
+        </div>
+        <img src="../public/images/logo.png" alt="Yeshiva Chill Logo" class="hero-image">
+    </div>
+
+    <section class="pricing-section">
+        <div class="pricing-wrap">
+            <h2>??? ? ????</h2>
+            <div class="pricing-grid">
+                <article class="pricing-card js-plan-card" data-plan="starter" aria-selected="false">
+                    <p class="pricing-plan">Starter</p>
+                    <h3 class="pricing-name">????? ????</h3>
+                    <p class="pricing-price">$9<span>/month</span></p>
+                    <ul class="pricing-features">
+                        <li>?????????? ??????</li>
+                        <li>??????? ???????</li>
+                        <li>????? ??????</li>
+                    </ul>
+                    <button type="button" class="btn btn-outline-primary pricing-btn js-select-plan"
+                        data-plan="starter">??? ??? ????</button>
+                    <p class="pricing-selected-note" hidden>??? ???? ??? ???????????</p>
+                    <a href="/nafshi.html" class="btn auth-btn pricing-btn">??? ???????</a>
+                </article>
+
+                <article class="pricing-card pricing-card-featured js-plan-card" data-plan="pro" aria-selected="false">
+                    <p class="pricing-badge">???????</p>
+                    <p class="pricing-plan">Pro</p>
+                    <h3 class="pricing-name">??? ????</h3>
+                    <p class="pricing-price">$19<span>/month</span></p>
+                    <ul class="pricing-features">
+                        <li>???? ??? ???? 1</li>
+                        <li>???? ???????? ??? ??????</li>
+                        <li>?????? ????? ????????????</li>
+                    </ul>
+                    <button type="button" class="btn btn-outline-primary pricing-btn js-select-plan" data-plan="pro">???
+                        ??? ????</button>
+                    <p class="pricing-selected-note" hidden>??? ???? ??? ???????????</p>
+                    <a href="/nafshi.html" class="btn auth-btn pricing-btn">??? ???????</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
+            <p class="site-footer-text">&copy; 2026 Yeshiva Chill</p>
+        </div>
+    </footer>
+    <script src="/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        const PLAN_STORAGE_KEY = "yeshivaChillSelectedPlan";
+        const planCards = Array.from(document.querySelectorAll(".js-plan-card"));
+        const planButtons = Array.from(document.querySelectorAll(".js-select-plan"));
+
+        function setSelectedPlan(planKey) {
+            planCards.forEach((card) => {
+                const isSelected = card.dataset.plan === planKey;
+                card.classList.toggle("is-selected", isSelected);
+                card.setAttribute("aria-selected", String(isSelected));
+                const note = card.querySelector(".pricing-selected-note");
+                if (note) {
+                    note.hidden = !isSelected;
+                }
+            });
+
+            localStorage.setItem(PLAN_STORAGE_KEY, planKey);
+        }
+
+        planButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                setSelectedPlan(button.dataset.plan);
+            });
+        });
+
+        const savedPlan = localStorage.getItem(PLAN_STORAGE_KEY);
+        if (savedPlan && planCards.some((card) => card.dataset.plan === savedPlan)) {
+            setSelectedPlan(savedPlan);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yeshiva Chill | ???? ?????</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gveret+Levin&family=Playpen+Sans+Hebrew:wght@100..800&family=Rubik+80s+Fade&family=Rubik+Marker+Hatch&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="my-navbar">
+        <nav class="navbar navbar-expand-lg rtl-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/index.html" aria-label="Yeshiva Chill">
+                    <span class="brand-lockup" aria-hidden="true">
+                        <span class="brand-words">
+                            <span class="brand-vos">?????</span>
+                            <span class="brand-heist">????</span>
+                        </span>
+                        <span class="brand-tes"></span>
+                        <span class="brand-marks">
+                            <span class="brand-mark brand-mark-one">?</span>
+                            <span class="brand-mark brand-mark-two">?</span>
+                            <span class="brand-mark brand-mark-three">?</span>
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/community.html">?????</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/bais-medrash.html">??? ????</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/coffee-room.html">????? ?????</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/bein-hasdarim.html">??? ??????</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/hearos.html">?????</a></li>
+                    </ul>
+                </div>
+                <a class="nav-link account-shortcut js-account-shortcut active" aria-current="page"
+                    href="/account.html">?????</a>
+            </div>
+        </nav>
+    </div>
+
+    <section class="account-section">
+        <div class="container py-3">
+            <div class="account-shell">
+                <header class="account-hero-panel mb-3">
+                    <h1 class="mb-1">???? ?????</h1>
+                    <p class="account-sub mb-0">???? ???, <span id="account-name">...</span> (<span
+                            id="account-nickname">...</span>)</p>
+                </header>
+
+                <div class="row g-3">
+                    <div class="col-12 col-lg-8">
+                        <div class="account-panel p-3 h-100">
+                            <h2 class="account-panel-title mb-3">?????? ??????</h2>
+                            <div class="row g-2 small text-secondary">
+                                <div class="col-12 col-sm-6"><strong>?????? ?????:</strong> <span
+                                        id="profile-login-name">-</span></div>
+                                <div class="col-12 col-sm-6"><strong>????? ?????:</strong> <span
+                                        id="profile-firstname">-</span></div>
+                                <div class="col-12 col-sm-6"><strong>????? ?????:</strong> <span
+                                        id="profile-lastname">-</span></div>
+                                <div class="col-12 col-sm-6"><strong>??? ?????:</strong> <span
+                                        id="profile-nickname">-</span></div>
+                                <div class="col-12"><strong>??????:</strong> <span id="profile-email">-</span></div>
+                            </div>
+                            <div class="d-flex gap-2 mt-3 flex-wrap">
+                                <button id="open-profile-modal-btn" class="btn btn-outline-primary" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#profileModal">???? ??????</button>
+                                <button id="logout-btn" class="btn auth-btn">???? ?????</button>
+                            </div>
+                            <p id="profile-inline-message" class="auth-message mt-2" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container-fluid d-flex justify-content-center align-items-center py-3">
+            <p class="site-footer-text">&copy; 2026 Yeshiva Chill</p>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="profileModalLabel">???? ??????</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="profile-form">
+                    <div class="modal-body">
+                        <label for="profile-firstname-input" class="form-label">????? ?????</label>
+                        <input id="profile-firstname-input" class="form-control" type="text" required>
+
+                        <label for="profile-lastname-input" class="form-label mt-2">????? ?????</label>
+                        <input id="profile-lastname-input" class="form-control" type="text" required>
+
+                        <label for="profile-nickname-input" class="form-label mt-2">??? ?????</label>
+                        <input id="profile-nickname-input" class="form-control" type="text" maxlength="24" required>
+
+                        <label for="profile-email-input" class="form-label mt-2">??????</label>
+                        <input id="profile-email-input" class="form-control" type="email" required>
+
+                        <label for="profile-current-password" class="form-label mt-2">???????? ???? (??? ???? ?? ??????
+                            ?????)</label>
+                        <div class="pw-wrap">
+                            <input id="profile-current-password" class="form-control" type="password">
+                            <button class="pw-toggle" type="button" tabindex="-1"
+                                aria-label="???? ????"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                    <path
+                                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                </svg></button>
+                        </div>
+
+                        <label for="profile-new-password" class="form-label mt-2">????? ???? (????????)</label>
+                        <div class="pw-wrap">
+                            <input id="profile-new-password" class="form-control" type="password" minlength="4">
+                            <button class="pw-toggle" type="button" tabindex="-1"
+                                aria-label="???? ????"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                    <path
+                                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                </svg></button>
+                        </div>
+
+                        <label for="profile-confirm-password" class="form-label mt-2">???????? ????? ????</label>
+                        <div class="pw-wrap">
+                            <input id="profile-confirm-password" class="form-control" type="password" minlength="4">
+                            <button class="pw-toggle" type="button" tabindex="-1"
+                                aria-label="???? ????"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                    <path
+                                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                </svg></button>
+                        </div>
+
+                        <p id="profile-message" class="auth-message mt-2" aria-live="polite"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">???????</button>
+                        <button type="submit" class="btn auth-btn">??? ??????????</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        const SESSION_KEY = "yeshivaChillCurrentUser";
+        const currentUserKey = sessionStorage.getItem(SESSION_KEY);
+        let currentUser = null;
+
+        async function hashPassword(password) {
+            if (window.crypto && window.crypto.subtle) {
+                const data = new TextEncoder().encode(password);
+                const digest = await window.crypto.subtle.digest("SHA-256", data);
+                return Array.from(new Uint8Array(digest))
+                    .map((b) => b.toString(16).padStart(2, "0"))
+                    .join("");
+            }
+            return password;
+        }
+
+        function showMessage(id, text, type) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.classList.remove("error", "success");
+            if (type) {
+                el.classList.add(type);
+            }
+        }
+
+        function fillProfileView() {
+            document.getElementById("account-name").textContent = currentUser.displayName || "-";
+            document.getElementById("account-nickname").textContent = currentUser.nickname || currentUser.displayName || "-";
+            document.getElementById("profile-login-name").textContent = currentUserKey || "-";
+            document.getElementById("profile-firstname").textContent = currentUser.firstname || "-";
+            document.getElementById("profile-lastname").textContent = currentUser.lastname || "-";
+            document.getElementById("profile-nickname").textContent = currentUser.nickname || "-";
+            document.getElementById("profile-email").textContent = currentUser.email || "-";
+        }
+
+        function openProfileWithCurrentData() {
+            document.getElementById("profile-firstname-input").value = currentUser.firstname || "";
+            document.getElementById("profile-lastname-input").value = currentUser.lastname || "";
+            document.getElementById("profile-nickname-input").value = currentUser.nickname || "";
+            document.getElementById("profile-email-input").value = currentUser.email || "";
+            document.getElementById("profile-current-password").value = "";
+            document.getElementById("profile-new-password").value = "";
+            document.getElementById("profile-confirm-password").value = "";
+            showMessage("profile-message", "", null);
+        }
+
+        document.getElementById("open-profile-modal-btn").addEventListener("click", openProfileWithCurrentData);
+
+        document.getElementById("profile-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const firstname = document.getElementById("profile-firstname-input").value.trim();
+            const lastname = document.getElementById("profile-lastname-input").value.trim();
+            const nickname = document.getElementById("profile-nickname-input").value.trim();
+            const email = document.getElementById("profile-email-input").value.trim();
+            const currentPassword = document.getElementById("profile-current-password").value;
+            const newPassword = document.getElementById("profile-new-password").value;
+            const confirmPassword = document.getElementById("profile-confirm-password").value;
+
+            if (!firstname || firstname.length < 2) {
+                showMessage("profile-message", "????? ????? ???? ???? ???? 2 ??????.", "error");
+                return;
+            }
+
+            if (!lastname || lastname.length < 2) {
+                showMessage("profile-message", "????? ????? ???? ???? ???? 2 ??????.", "error");
+                return;
+            }
+
+            if (!nickname || nickname.length < 2) {
+                showMessage("profile-message", "??? ????? ???? ???? ???? 2 ??????.", "error");
+                return;
+            }
+
+            if (!email || !email.includes("@")) {
+                showMessage("profile-message", "???? ????? ? ??????? ??????.", "error");
+                return;
+            }
+
+            let nextPasswordHash = null;
+            const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
+
+            if (wantsPasswordChange) {
+                if (!currentPassword || newPassword.length < 4 || newPassword !== confirmPassword) {
+                    showMessage("profile-message", "???? ???????? ??? ???? ??????.", "error");
+                    return;
+                }
+
+                const currentHash = await hashPassword(currentPassword);
+                if (currentHash !== currentUser.passwordHash) {
+                    showMessage("profile-message", "??? ???????? ???? ??? ???? ??????.", "error");
+                    return;
+                }
+
+                nextPasswordHash = await hashPassword(newPassword);
+            }
+
+            try {
+                const updated = await window.yeshivaChillApi.updateProfile(currentUserKey, {
+                    firstname,
+                    lastname,
+                    nickname,
+                    email,
+                    passwordHash: nextPasswordHash
+                });
+                currentUser = updated.user;
+                fillProfileView();
+                showMessage("profile-message", "?????? ??? ????????.", "success");
+                showMessage("profile-inline-message", "?????? ??? ????????.", "success");
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("profileModal"));
+                    modal.hide();
+                    showMessage("profile-message", "", null);
+                }, 600);
+            } catch (error) {
+                const msg = String(error.message || "").toLowerCase();
+                if (msg.includes("nickname")) {
+                    showMessage("profile-message", "??? ??? ????? ??? ???? ????????.", "error");
+                    return;
+                }
+                showMessage("profile-message", "??? ???? ???? ????. ?????? ???????.", "error");
+            }
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            sessionStorage.removeItem(SESSION_KEY);
+            window.location.href = "nafshi.html";
+        });
+
+        async function initializePage() {
+            if (!currentUserKey) {
+                window.location.href = "nafshi.html";
+                return;
+            }
+
+            try {
+                const response = await window.yeshivaChillApi.getUser(currentUserKey);
+                currentUser = response.user;
+                fillProfileView();
+            } catch {
+                sessionStorage.removeItem(SESSION_KEY);
+                window.location.href = "nafshi.html";
+            }
+        }
+
+        initializePage();
+    </script>
+</body>
+
+</html>
