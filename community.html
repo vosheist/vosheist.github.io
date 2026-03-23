@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yeshiva Chill | ?????</title>
+    <title>Yeshiva Chill | Community</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
@@ -22,8 +22,8 @@
                 <a class="navbar-brand" href="/index.html" aria-label="Yeshiva Chill">
                     <span class="brand-lockup" aria-hidden="true">
                         <span class="brand-words">
-                            <span class="brand-vos">?????</span>
-                            <span class="brand-heist">????</span>
+                            <span class="brand-vos">ישיבה</span>
+                            <span class="brand-heist">טשיל</span>
                         </span>
                         <span class="brand-tes"></span>
                         <span class="brand-marks">
@@ -39,31 +39,31 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/community.html">?????</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/bais-medrash.html">??? ????</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/coffee-room.html">????? ?????</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/bein-hasdarim.html">??? ??????</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/hearos.html">?????</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/community.html">קהילה</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/bais-medrash.html">בית מדרש</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/coffee-room.html">קאווע צימער</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/bein-hasdarim.html">בין הסדרים</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/hearos.html">הערות</a></li>
                     </ul>
                 </div>
-                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi.html">?????</a>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi.html">חשבון</a>
             </div>
         </nav>
     </div>
 
     <section class="community-section">
         <div class="community-wrap">
-            <h1>????? (??? ??? ?????????)</h1>
+            <div class="community-topbar mb-3">
+                <h1 class="mb-0">קהילה</h1>
+                <a class="btn btn-outline-primary btn-sm" href="/inbox.html">Open Inbox</a>
+            </div>
+
+            <div class="community-search-shell mb-3">
+                <label for="member-search" class="form-label mb-1">Search by nickname</label>
+                <input id="member-search" type="search" class="form-control" placeholder="Type nickname..." autocomplete="off">
+                <p id="member-search-meta" class="community-meta mb-0 mt-2"></p>
+            </div>
+
             <div id="community-grid" class="community-grid"></div>
         </div>
     </section>
@@ -74,6 +74,71 @@
         </div>
     </footer>
 
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="messageModalLabel">Send Private Message</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="message-form">
+                    <div class="modal-body">
+                        <p class="small text-secondary mb-2">To: <strong id="message-target-label">-</strong></p>
+                        <label for="message-text" class="form-label">Message</label>
+                        <textarea id="message-text" class="form-control" rows="4" maxlength="500" required></textarea>
+                        <p id="message-modal-status" class="auth-message mt-2" aria-live="polite"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="message-submit-btn" type="submit" class="btn auth-btn">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="inviteModalLabel">Invite To Play</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="invite-form">
+                    <div class="modal-body">
+                        <p class="small text-secondary mb-2">To: <strong id="invite-target-label">-</strong></p>
+
+                        <label for="invite-game" class="form-label">Game</label>
+                        <select id="invite-game" class="form-select" required>
+                            <option value="">Choose game...</option>
+                            <option value="2048">2048</option>
+                            <option value="tictactoe">Tic Tac Toe</option>
+                            <option value="connect4">Connect 4</option>
+                            <option value="snake">Snake</option>
+                            <option value="lane-racer">Lane Racer</option>
+                            <option value="memory-match">Memory Match</option>
+                            <option value="reaction-timer">Reaction Timer</option>
+                            <option value="quick-math">Quick Math</option>
+                            <option value="number-guess">Number Guess</option>
+                            <option value="rps">Rock Paper Scissors</option>
+                        </select>
+
+                        <label for="invite-time" class="form-label mt-2">Proposed play time (optional)</label>
+                        <input id="invite-time" type="datetime-local" class="form-control">
+
+                        <label for="invite-note" class="form-label mt-2">Note (optional)</label>
+                        <textarea id="invite-note" class="form-control" rows="3" maxlength="240"></textarea>
+                        <p id="invite-modal-status" class="auth-message mt-2" aria-live="polite"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="invite-submit-btn" type="submit" class="btn auth-btn">Send Invite</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="/js/script.js"></script>
     <script src="/js/api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -82,13 +147,21 @@
     <script>
         const SESSION_KEY = "yeshivaChillCurrentUser";
         const currentUserKey = sessionStorage.getItem(SESSION_KEY);
+        const allMembers = [];
+        let activeMessageTarget = null;
+        let activeInviteTarget = null;
 
         if (!currentUserKey) {
-            window.location.href = "nafshi.html";
+            window.location.href = "/nafshi.html";
         }
 
+        const messageModalEl = document.getElementById("messageModal");
+        const inviteModalEl = document.getElementById("inviteModal");
+        const messageModal = bootstrap.Modal.getOrCreateInstance(messageModalEl);
+        const inviteModal = bootstrap.Modal.getOrCreateInstance(inviteModalEl);
+
         function escapeHtml(value) {
-            return String(value)
+            return String(value || "")
                 .replaceAll("&", "&amp;")
                 .replaceAll("<", "&lt;")
                 .replaceAll(">", "&gt;")
@@ -96,27 +169,153 @@
                 .replaceAll("'", "&#39;");
         }
 
-        async function renderCommunity() {
-            const response = await window.yeshivaChillApi.getCommunity(currentUserKey);
-            const grid = document.getElementById("community-grid");
-            const entries = response.users || [];
+        function getMemberLabel(user, fallbackKey) {
+            return user.publicName || user.nickname || user.displayName || fallbackKey || "-";
+        }
 
-            if (!entries.length) {
-                grid.innerHTML = '<div class="community-card"><p class="community-meta">??????? ???? ?????????.</p></div>';
+        function setStatus(id, text, type) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = text;
+            el.classList.remove("error", "success");
+            if (type) {
+                el.classList.add(type);
+            }
+        }
+
+        function renderMembers() {
+            const query = (document.getElementById("member-search").value || "").trim().toLowerCase();
+            const filtered = allMembers.filter((entry) => {
+                const nickname = String(entry.user.nickname || "").toLowerCase();
+                return !query || nickname.includes(query);
+            });
+
+            const grid = document.getElementById("community-grid");
+            const meta = document.getElementById("member-search-meta");
+            meta.textContent = `Showing ${filtered.length} of ${allMembers.length} members`;
+
+            if (!filtered.length) {
+                grid.innerHTML = '<div class="community-card"><p class="community-meta mb-0">No members match your search.</p></div>';
                 return;
             }
 
-            grid.innerHTML = entries.map(({ key, user }) => {
-                const nickname = user.nickname || user.displayName || key;
+            grid.innerHTML = filtered.map(({ key, user }) => {
+                const publicName = getMemberLabel(user, key);
                 const joined = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-";
-                return `<article class="community-card"><p class="community-name">${escapeHtml(nickname)}</p><p class="community-meta">?????: ${escapeHtml(user.displayName || "-")}</p><p class="community-meta">??????: ${escapeHtml(user.email || "-")}</p><p class="community-meta">????????????: ${escapeHtml(joined)}</p></article>`;
+                return [
+                    `<article class="community-card">`,
+                    `<p class="community-name mb-1">${escapeHtml(publicName)}</p>`,
+                    `<p class="community-meta mb-1">Nickname: ${escapeHtml(user.nickname || "-")}</p>`,
+                    `<p class="community-meta mb-1">Name: ${escapeHtml(user.displayName || "-")}</p>`,
+                    `<p class="community-meta mb-1">Joined: ${escapeHtml(joined)}</p>`,
+                    `<div class="community-card-actions mt-2">`,
+                    `<button type="button" class="btn btn-sm btn-outline-primary js-message-btn" data-member-key="${escapeHtml(key)}">Message</button>`,
+                    `<button type="button" class="btn btn-sm auth-btn js-invite-btn" data-member-key="${escapeHtml(key)}">Invite</button>`,
+                    `</div>`,
+                    `</article>`
+                ].join("");
             }).join("");
+
+            grid.querySelectorAll(".js-message-btn").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const memberKey = button.getAttribute("data-member-key");
+                    activeMessageTarget = allMembers.find((entry) => entry.key === memberKey) || null;
+                    if (!activeMessageTarget) return;
+
+                    document.getElementById("message-target-label").textContent = getMemberLabel(activeMessageTarget.user, activeMessageTarget.key);
+                    document.getElementById("message-text").value = "";
+                    setStatus("message-modal-status", "", null);
+                    messageModal.show();
+                });
+            });
+
+            grid.querySelectorAll(".js-invite-btn").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const memberKey = button.getAttribute("data-member-key");
+                    activeInviteTarget = allMembers.find((entry) => entry.key === memberKey) || null;
+                    if (!activeInviteTarget) return;
+
+                    document.getElementById("invite-target-label").textContent = getMemberLabel(activeInviteTarget.user, activeInviteTarget.key);
+                    document.getElementById("invite-game").value = "";
+                    document.getElementById("invite-time").value = "";
+                    document.getElementById("invite-note").value = "";
+                    setStatus("invite-modal-status", "", null);
+                    inviteModal.show();
+                });
+            });
         }
 
-        renderCommunity().catch((error) => {
+        async function loadCommunity() {
+            const response = await window.yeshivaChillApi.getCommunity(currentUserKey);
+            const entries = response.users || [];
+            allMembers.length = 0;
+            entries.forEach((entry) => {
+                allMembers.push(entry);
+            });
+            renderMembers();
+        }
+
+        document.getElementById("member-search").addEventListener("input", renderMembers);
+
+        document.getElementById("message-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!activeMessageTarget) return;
+
+            const submitBtn = document.getElementById("message-submit-btn");
+            const messageText = document.getElementById("message-text").value.trim();
+            if (!messageText) {
+                setStatus("message-modal-status", "Please type a message.", "error");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            try {
+                await window.yeshivaChillApi.sendMessageToMember(currentUserKey, activeMessageTarget.key, messageText);
+                setStatus("message-modal-status", "Message sent.", "success");
+                setTimeout(() => messageModal.hide(), 450);
+            } catch (error) {
+                setStatus("message-modal-status", String(error.message || "Failed to send message."), "error");
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        document.getElementById("invite-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!activeInviteTarget) return;
+
+            const submitBtn = document.getElementById("invite-submit-btn");
+            const gameKey = document.getElementById("invite-game").value.trim();
+            const proposedTime = document.getElementById("invite-time").value;
+            const note = document.getElementById("invite-note").value.trim();
+
+            if (!gameKey) {
+                setStatus("invite-modal-status", "Choose a game first.", "error");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            try {
+                await window.yeshivaChillApi.sendInvite({
+                    fromUserKey: currentUserKey,
+                    toUserKey: activeInviteTarget.key,
+                    gameKey,
+                    proposedTime,
+                    note
+                });
+                setStatus("invite-modal-status", "Invite sent.", "success");
+                setTimeout(() => inviteModal.hide(), 450);
+            } catch (error) {
+                setStatus("invite-modal-status", String(error.message || "Failed to send invite."), "error");
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        loadCommunity().catch((error) => {
             console.error(error);
             const grid = document.getElementById("community-grid");
-            grid.innerHTML = '<div class="community-card"><p class="community-meta">???? ?????? ????? ????? ????.</p></div>';
+            grid.innerHTML = '<div class="community-card"><p class="community-meta mb-0">Could not load members right now.</p></div>';
         });
     </script>
 </body>

@@ -75,10 +75,12 @@
                                 <div class="col-12 col-sm-6"><strong>??? ?????:</strong> <span
                                         id="profile-nickname">-</span></div>
                                 <div class="col-12"><strong>??????:</strong> <span id="profile-email">-</span></div>
+                                <div class="col-12"><strong>Display name mode:</strong> <span id="profile-display-as">-</span></div>
                             </div>
                             <div class="d-flex gap-2 mt-3 flex-wrap">
                                 <button id="open-profile-modal-btn" class="btn btn-outline-primary" type="button"
                                     data-bs-toggle="modal" data-bs-target="#profileModal">???? ??????</button>
+                                <a class="btn btn-outline-secondary" href="/inbox.html">Inbox</a>
                                 <button id="logout-btn" class="btn auth-btn">???? ?????</button>
                             </div>
                             <p id="profile-inline-message" class="auth-message mt-2" aria-live="polite"></p>
@@ -115,6 +117,12 @@
 
                         <label for="profile-email-input" class="form-label mt-2">??????</label>
                         <input id="profile-email-input" class="form-control" type="email" required>
+
+                        <label for="profile-display-as-input" class="form-label mt-2">How members see your name</label>
+                        <select id="profile-display-as-input" class="form-select" required>
+                            <option value="nickname">Show nickname</option>
+                            <option value="real-name">Show real name</option>
+                        </select>
 
                         <label for="profile-current-password" class="form-label mt-2">???????? ???? (??? ???? ?? ??????
                             ?????)</label>
@@ -205,6 +213,7 @@
             document.getElementById("profile-lastname").textContent = currentUser.lastname || "-";
             document.getElementById("profile-nickname").textContent = currentUser.nickname || "-";
             document.getElementById("profile-email").textContent = currentUser.email || "-";
+            document.getElementById("profile-display-as").textContent = currentUser.displayAs === "real-name" ? "Real name" : "Nickname";
         }
 
         function openProfileWithCurrentData() {
@@ -212,6 +221,7 @@
             document.getElementById("profile-lastname-input").value = currentUser.lastname || "";
             document.getElementById("profile-nickname-input").value = currentUser.nickname || "";
             document.getElementById("profile-email-input").value = currentUser.email || "";
+            document.getElementById("profile-display-as-input").value = currentUser.displayAs === "real-name" ? "real-name" : "nickname";
             document.getElementById("profile-current-password").value = "";
             document.getElementById("profile-new-password").value = "";
             document.getElementById("profile-confirm-password").value = "";
@@ -227,6 +237,7 @@
             const lastname = document.getElementById("profile-lastname-input").value.trim();
             const nickname = document.getElementById("profile-nickname-input").value.trim();
             const email = document.getElementById("profile-email-input").value.trim();
+            const displayAs = document.getElementById("profile-display-as-input").value;
             const currentPassword = document.getElementById("profile-current-password").value;
             const newPassword = document.getElementById("profile-new-password").value;
             const confirmPassword = document.getElementById("profile-confirm-password").value;
@@ -275,6 +286,7 @@
                     lastname,
                     nickname,
                     email,
+                    displayAs,
                     passwordHash: nextPasswordHash
                 });
                 currentUser = updated.user;

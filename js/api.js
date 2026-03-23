@@ -78,6 +78,22 @@
         addBaisMedrash: (post) => request("/api/bais-medrash", { method: "POST", body: JSON.stringify({ post }) }),
         getCoffeeRoom: () => request("/api/coffee-room"),
         addCoffeeRoom: (message) => request("/api/coffee-room", { method: "POST", body: JSON.stringify({ message }) }),
+        getMessageConversations: (userKey) => request(`/api/messages/conversations?userKey=${encodeURIComponent(userKey || "")}`),
+        getMessageThread: (userKey, otherUserKey) => request(`/api/messages/thread/${encodeURIComponent(otherUserKey || "")}?userKey=${encodeURIComponent(userKey || "")}`),
+        sendMessageToMember: (userKey, otherUserKey, message) => request(`/api/messages/thread/${encodeURIComponent(otherUserKey || "")}`, {
+            method: "POST",
+            body: JSON.stringify({ userKey, message })
+        }),
+        markThreadRead: (userKey, otherUserKey) => request(`/api/messages/thread/${encodeURIComponent(otherUserKey || "")}/read`, {
+            method: "PUT",
+            body: JSON.stringify({ userKey })
+        }),
+        getInvites: (userKey) => request(`/api/invites?userKey=${encodeURIComponent(userKey || "")}`),
+        sendInvite: (payload) => request("/api/invites", { method: "POST", body: JSON.stringify(payload || {}) }),
+        respondToInvite: (inviteId, userKey, action) => request(`/api/invites/${encodeURIComponent(inviteId || "")}`, {
+            method: "PUT",
+            body: JSON.stringify({ userKey, action })
+        }),
         getGameScores: (gameKey) => request(`/api/games/${encodeURIComponent(gameKey)}/scores`),
         submitGameScore: (gameKey, body) => request(`/api/games/${encodeURIComponent(gameKey)}/scores`, {
             method: "POST",

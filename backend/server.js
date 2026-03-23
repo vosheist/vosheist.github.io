@@ -3,7 +3,7 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const fs = require("fs/promises");
 const path = require("path");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 const app = express();
@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
 const ADMIN_ACCESS_KEY = String(process.env.ADMIN_ACCESS_KEY || "").trim();
-const FRONTEND_LOGIN_URL = String(process.env.FRONTEND_LOGIN_URL || "https://vosheist.github.io/frontend/nafshi.html").trim();
+const FRONTEND_LOGIN_URL = String(process.env.FRONTEND_LOGIN_URL || "https://vosheist.github.io/nafshi.html").trim();
 const LEGACY_STORE_PATH = path.join(__dirname, "data", "store.json");
 
 let mongoClient;
@@ -21,6 +21,21 @@ let baisMedrashCollection;
 let coffeeRoomCollection;
 let gameScoresCollection;
 let gamePlaysCollection;
+let privateMessagesCollection;
+let gameInvitesCollection;
+
+const INVITE_GAME_ROUTES = {
+    "2048": "/games/game-2048.html",
+    "tictactoe": "/games/game-tictactoe.html",
+    "connect4": "/games/game-connect4.html",
+    "snake": "/games/game-snake.html",
+    "lane-racer": "/games/game-lane-racer.html",
+    "memory-match": "/games/game-memory-match.html",
+    "reaction-timer": "/games/game-reaction-timer.html",
+    "quick-math": "/games/game-quick-math.html",
+    "number-guess": "/games/game-number-guess.html",
+    "rps": "/games/game-rps.html"
+};
 
 function normalizeName(name) {
     return String(name || "").trim().toLowerCase();
@@ -43,6 +58,42 @@ function escapeHtml(value) {
         .replaceAll("'", "&#39;");
 }
 
+function normalizeDisplayAs(value) {
+    const normalized = String(value || "").trim().toLowerCase();
+    return normalized === "real-name" ? "real-name" : "nickname";
+}
+
+function resolvePublicName(user) {
+    const displayAs = normalizeDisplayAs(user && user.displayAs);
+    if (displayAs === "real-name") {
+        return String(user && user.displayName ? user.displayName : user && user.nickname ? user.nickname : user && user.userKey ? user.userKey : "").trim();
+    }
+    return String(user && user.nickname ? user.nickname : user && user.displayName ? user.displayName : user && user.userKey ? user.userKey : "").trim();
+}
+
+function resolveValidGameKey(gameKeyRaw) {
+    const gameKey = normalizeName(gameKeyRaw);
+    return INVITE_GAME_ROUTES[gameKey] ? gameKey : "";
+}
+
+function sanitizeInvite(inviteDoc) {
+    return {
+        id: String(inviteDoc._id),
+        fromUserKey: inviteDoc.fromUserKey,
+        toUserKey: inviteDoc.toUserKey,
+        fromPublicName: inviteDoc.fromPublicName,
+        toPublicName: inviteDoc.toPublicName,
+        gameKey: inviteDoc.gameKey,
+        gamePath: inviteDoc.gamePath,
+        status: inviteDoc.status,
+        proposedTime: inviteDoc.proposedTime || null,
+        note: inviteDoc.note || "",
+        createdAt: inviteDoc.createdAt,
+        respondedAt: inviteDoc.respondedAt || null,
+        expiresAt: inviteDoc.expiresAt || null
+    };
+}
+
 function sanitizeUserForClient(user) {
     return {
         userKey: user.userKey,
@@ -51,6 +102,8 @@ function sanitizeUserForClient(user) {
         lastname: user.lastname,
         nickname: user.nickname,
         email: user.email,
+        displayAs: normalizeDisplayAs(user.displayAs),
+        publicName: resolvePublicName(user),
         passwordHash: user.passwordHash,
         createdAt: user.createdAt || null,
         lastLoginAt: user.lastLoginAt || null,
@@ -83,6 +136,8 @@ async function connectMongo() {
     coffeeRoomCollection = db.collection("coffee_room_messages");
     gameScoresCollection = db.collection("game_scores");
     gamePlaysCollection = db.collection("game_plays");
+    privateMessagesCollection = db.collection("private_messages");
+    gameInvitesCollection = db.collection("game_invites");
 
     await usersCollection.createIndex({ userKey: 1 }, { unique: true });
     await usersCollection.createIndex({ nicknameKey: 1 }, { unique: true });
@@ -93,6 +148,10 @@ async function connectMongo() {
     await gameScoresCollection.createIndex({ gameKey: 1, score: -1, updatedAt: 1 });
     await gamePlaysCollection.createIndex({ userKey: 1, playedAt: -1 });
     await gamePlaysCollection.createIndex({ gameKey: 1, playedAt: -1 });
+    await privateMessagesCollection.createIndex({ fromUserKey: 1, toUserKey: 1, createdAt: -1 });
+    await privateMessagesCollection.createIndex({ toUserKey: 1, readAt: 1, createdAt: -1 });
+    await gameInvitesCollection.createIndex({ toUserKey: 1, status: 1, createdAt: -1 });
+    await gameInvitesCollection.createIndex({ fromUserKey: 1, createdAt: -1 });
 }
 
 async function migrateLegacyStoreIfNeeded() {
@@ -125,6 +184,7 @@ async function migrateLegacyStoreIfNeeded() {
                 nicknameKey: normalizeName(nickname),
                 email,
                 emailKey: normalizeEmail(email),
+                displayAs: normalizeDisplayAs(user.displayAs),
                 passwordHash: String(user.passwordHash || ""),
                 records: Array.isArray(user.records) ? user.records : [],
                 createdAt: user.createdAt || new Date().toISOString()
@@ -187,7 +247,8 @@ app.post("/api/auth/signup", async (req, res) => {
         lastname,
         nickname,
         email,
-        passwordHash
+        passwordHash,
+        displayAs
     } = req.body || {};
 
     const displayName = `${String(firstname || "").trim()} ${String(lastname || "").trim()}`.trim();
@@ -227,6 +288,7 @@ app.post("/api/auth/signup", async (req, res) => {
         email: String(email).trim(),
         emailKey: normalizeEmail(email),
         passwordHash,
+        displayAs: normalizeDisplayAs(displayAs),
         createdAt: new Date().toISOString(),
         lastLoginAt: null,
         revoked: false,
@@ -245,6 +307,8 @@ app.post("/api/auth/signup", async (req, res) => {
             lastname: userDoc.lastname,
             nickname: userDoc.nickname,
             email: userDoc.email,
+            displayAs: userDoc.displayAs,
+            publicName: resolvePublicName(userDoc),
             passwordHash: userDoc.passwordHash
         }
     });
@@ -294,6 +358,8 @@ app.post("/api/auth/login", async (req, res) => {
             lastname: user.lastname,
             nickname: user.nickname,
             email: user.email,
+            displayAs: normalizeDisplayAs(user.displayAs),
+            publicName: resolvePublicName(user),
             passwordHash: user.passwordHash
         }
     });
@@ -314,6 +380,8 @@ app.get("/api/users/:userKey", async (req, res) => {
             lastname: user.lastname,
             nickname: user.nickname,
             email: user.email,
+            displayAs: normalizeDisplayAs(user.displayAs),
+            publicName: resolvePublicName(user),
             passwordHash: user.passwordHash
         }
     });
@@ -321,7 +389,7 @@ app.get("/api/users/:userKey", async (req, res) => {
 
 app.put("/api/users/:userKey/profile", async (req, res) => {
     const userKey = normalizeName(req.params.userKey);
-    const { firstname, lastname, nickname, email, passwordHash } = req.body || {};
+    const { firstname, lastname, nickname, email, passwordHash, displayAs } = req.body || {};
 
     const user = await usersCollection.findOne({ userKey });
     if (!user) {
@@ -362,7 +430,8 @@ app.put("/api/users/:userKey/profile", async (req, res) => {
         nickname: nextNickname,
         nicknameKey: nextNicknameKey,
         email: String(email).trim(),
-        emailKey: normalizeEmail(email)
+        emailKey: normalizeEmail(email),
+        displayAs: normalizeDisplayAs(displayAs || user.displayAs)
     };
 
     if (passwordHash) {
@@ -380,6 +449,8 @@ app.put("/api/users/:userKey/profile", async (req, res) => {
             lastname: updatedUser.lastname,
             nickname: updatedUser.nickname,
             email: updatedUser.email,
+            displayAs: normalizeDisplayAs(updatedUser.displayAs),
+            publicName: resolvePublicName(updatedUser),
             passwordHash: updatedUser.passwordHash
         }
     });
@@ -397,6 +468,9 @@ app.get("/api/community", async (req, res) => {
             lastname: doc.lastname,
             nickname: doc.nickname,
             email: doc.email,
+            createdAt: doc.createdAt || null,
+            displayAs: normalizeDisplayAs(doc.displayAs),
+            publicName: resolvePublicName(doc),
             passwordHash: doc.passwordHash
         }
     }));
@@ -573,6 +647,292 @@ app.post("/api/coffee-room", async (req, res) => {
         return rest;
     });
     return res.json({ success: true, messages: normalizedMessages });
+});
+
+app.get("/api/messages/conversations", async (req, res) => {
+    const userKey = normalizeName(req.query.userKey || "");
+    if (!userKey) {
+        return res.status(400).json({ error: "Missing user key" });
+    }
+
+    const user = await usersCollection.findOne({ userKey });
+    if (!user || user.revoked) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const docs = await privateMessagesCollection
+        .find({
+            $or: [
+                { fromUserKey: userKey },
+                { toUserKey: userKey }
+            ]
+        })
+        .sort({ createdAt: -1 })
+        .toArray();
+
+    const byPartner = new Map();
+    docs.forEach((doc) => {
+        const partnerUserKey = doc.fromUserKey === userKey ? doc.toUserKey : doc.fromUserKey;
+        if (!partnerUserKey || byPartner.has(partnerUserKey)) {
+            return;
+        }
+
+        byPartner.set(partnerUserKey, {
+            partnerUserKey,
+            partnerPublicName: doc.fromUserKey === userKey ? doc.toPublicName : doc.fromPublicName,
+            lastMessage: doc.message,
+            lastMessageAt: doc.createdAt,
+            lastMessageFromUserKey: doc.fromUserKey,
+            unreadCount: 0
+        });
+    });
+
+    docs.forEach((doc) => {
+        if (doc.toUserKey !== userKey || doc.readAt) {
+            return;
+        }
+
+        const partnerUserKey = doc.fromUserKey;
+        const existing = byPartner.get(partnerUserKey);
+        if (existing) {
+            existing.unreadCount += 1;
+        }
+    });
+
+    return res.json({ success: true, conversations: Array.from(byPartner.values()) });
+});
+
+app.get("/api/messages/thread/:otherUserKey", async (req, res) => {
+    const userKey = normalizeName(req.query.userKey || "");
+    const otherUserKey = normalizeName(req.params.otherUserKey || "");
+
+    if (!userKey || !otherUserKey) {
+        return res.status(400).json({ error: "Missing user key" });
+    }
+
+    if (userKey === otherUserKey) {
+        return res.status(400).json({ error: "Cannot open thread with yourself" });
+    }
+
+    const [user, other] = await Promise.all([
+        usersCollection.findOne({ userKey }),
+        usersCollection.findOne({ userKey: otherUserKey })
+    ]);
+
+    if (!user || !other || user.revoked || other.revoked) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const messages = await privateMessagesCollection
+        .find({
+            $or: [
+                { fromUserKey: userKey, toUserKey: otherUserKey },
+                { fromUserKey: otherUserKey, toUserKey: userKey }
+            ]
+        })
+        .sort({ createdAt: 1 })
+        .toArray();
+
+    return res.json({
+        success: true,
+        thread: {
+            userKey,
+            otherUserKey,
+            otherPublicName: resolvePublicName(other)
+        },
+        messages: messages.map((doc) => ({
+            id: String(doc._id),
+            fromUserKey: doc.fromUserKey,
+            toUserKey: doc.toUserKey,
+            fromPublicName: doc.fromPublicName,
+            toPublicName: doc.toPublicName,
+            message: doc.message,
+            createdAt: doc.createdAt,
+            readAt: doc.readAt || null
+        }))
+    });
+});
+
+app.post("/api/messages/thread/:otherUserKey", async (req, res) => {
+    const userKey = normalizeName(req.body && req.body.userKey);
+    const otherUserKey = normalizeName(req.params.otherUserKey || "");
+    const message = String(req.body && req.body.message ? req.body.message : "").trim();
+
+    if (!userKey || !otherUserKey || !message) {
+        return res.status(400).json({ error: "Missing message payload" });
+    }
+
+    if (message.length > 500) {
+        return res.status(400).json({ error: "Message is too long" });
+    }
+
+    if (userKey === otherUserKey) {
+        return res.status(400).json({ error: "Cannot message yourself" });
+    }
+
+    const [fromUser, toUser] = await Promise.all([
+        usersCollection.findOne({ userKey }),
+        usersCollection.findOne({ userKey: otherUserKey })
+    ]);
+
+    if (!fromUser || !toUser || fromUser.revoked || toUser.revoked) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const createdAt = new Date().toISOString();
+    const doc = {
+        fromUserKey: userKey,
+        toUserKey: otherUserKey,
+        fromPublicName: resolvePublicName(fromUser),
+        toPublicName: resolvePublicName(toUser),
+        message,
+        createdAt,
+        readAt: null
+    };
+
+    const inserted = await privateMessagesCollection.insertOne(doc);
+    return res.json({ success: true, message: { ...doc, id: String(inserted.insertedId) } });
+});
+
+app.put("/api/messages/thread/:otherUserKey/read", async (req, res) => {
+    const userKey = normalizeName(req.body && req.body.userKey);
+    const otherUserKey = normalizeName(req.params.otherUserKey || "");
+    if (!userKey || !otherUserKey) {
+        return res.status(400).json({ error: "Missing user key" });
+    }
+
+    const readAt = new Date().toISOString();
+    const result = await privateMessagesCollection.updateMany(
+        {
+            fromUserKey: otherUserKey,
+            toUserKey: userKey,
+            readAt: null
+        },
+        {
+            $set: { readAt }
+        }
+    );
+
+    return res.json({ success: true, updated: result.modifiedCount || 0, readAt });
+});
+
+app.get("/api/invites", async (req, res) => {
+    const userKey = normalizeName(req.query.userKey || "");
+    if (!userKey) {
+        return res.status(400).json({ error: "Missing user key" });
+    }
+
+    const user = await usersCollection.findOne({ userKey });
+    if (!user || user.revoked) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const docs = await gameInvitesCollection
+        .find({
+            $or: [
+                { toUserKey: userKey },
+                { fromUserKey: userKey }
+            ]
+        })
+        .sort({ createdAt: -1 })
+        .toArray();
+
+    return res.json({ success: true, invites: docs.map(sanitizeInvite) });
+});
+
+app.post("/api/invites", async (req, res) => {
+    const fromUserKey = normalizeName(req.body && req.body.fromUserKey);
+    const toUserKey = normalizeName(req.body && req.body.toUserKey);
+    const gameKey = resolveValidGameKey(req.body && req.body.gameKey);
+    const note = String(req.body && req.body.note ? req.body.note : "").trim().slice(0, 240);
+    const proposedTimeRaw = String(req.body && req.body.proposedTime ? req.body.proposedTime : "").trim();
+
+    if (!fromUserKey || !toUserKey || !gameKey) {
+        return res.status(400).json({ error: "Invalid invite payload" });
+    }
+
+    if (fromUserKey === toUserKey) {
+        return res.status(400).json({ error: "Cannot invite yourself" });
+    }
+
+    const [fromUser, toUser] = await Promise.all([
+        usersCollection.findOne({ userKey: fromUserKey }),
+        usersCollection.findOne({ userKey: toUserKey })
+    ]);
+
+    if (!fromUser || !toUser || fromUser.revoked || toUser.revoked) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const createdAt = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + (48 * 60 * 60 * 1000)).toISOString();
+    const invite = {
+        fromUserKey,
+        toUserKey,
+        fromPublicName: resolvePublicName(fromUser),
+        toPublicName: resolvePublicName(toUser),
+        gameKey,
+        gamePath: INVITE_GAME_ROUTES[gameKey],
+        status: "pending",
+        proposedTime: proposedTimeRaw || null,
+        note,
+        createdAt,
+        respondedAt: null,
+        expiresAt
+    };
+
+    const inserted = await gameInvitesCollection.insertOne(invite);
+    return res.json({ success: true, invite: sanitizeInvite({ ...invite, _id: inserted.insertedId }) });
+});
+
+app.put("/api/invites/:inviteId", async (req, res) => {
+    const inviteId = String(req.params.inviteId || "").trim();
+    const userKey = normalizeName(req.body && req.body.userKey);
+    const action = String(req.body && req.body.action ? req.body.action : "").trim().toLowerCase();
+
+    if (!inviteId || !userKey || !["accept", "decline"].includes(action)) {
+        return res.status(400).json({ error: "Invalid invite action payload" });
+    }
+
+    let objectId;
+    try {
+        objectId = new ObjectId(inviteId);
+    } catch {
+        return res.status(400).json({ error: "Invalid invite id" });
+    }
+
+    const invite = await gameInvitesCollection.findOne({ _id: objectId });
+    if (!invite) {
+        return res.status(404).json({ error: "Invite not found" });
+    }
+
+    if (invite.toUserKey !== userKey) {
+        return res.status(403).json({ error: "Only recipient can update invite" });
+    }
+
+    if (invite.status !== "pending") {
+        return res.status(409).json({ error: "Invite already handled" });
+    }
+
+    const nowIso = new Date().toISOString();
+    if (invite.expiresAt && nowIso > invite.expiresAt) {
+        await gameInvitesCollection.updateOne({ _id: objectId }, { $set: { status: "expired", respondedAt: nowIso } });
+        return res.status(409).json({ error: "Invite expired" });
+    }
+
+    const nextStatus = action === "accept" ? "accepted" : "declined";
+    await gameInvitesCollection.updateOne(
+        { _id: objectId },
+        {
+            $set: {
+                status: nextStatus,
+                respondedAt: nowIso
+            }
+        }
+    );
+
+    const updated = await gameInvitesCollection.findOne({ _id: objectId });
+    return res.json({ success: true, invite: sanitizeInvite(updated) });
 });
 
 app.get("/api/games/:gameKey/scores", async (req, res) => {

@@ -1319,6 +1319,103 @@ body {
     color: #385369;
 }
 
+.community-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+}
+
+.community-search-shell {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 12px;
+    padding: 0.8rem;
+}
+
+.community-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.inbox-layout {
+    display: grid;
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+    gap: 0.8rem;
+}
+
+.inbox-list-shell,
+.thread-shell {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 12px;
+    padding: 0.8rem;
+}
+
+.inbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.inbox-conversation {
+    width: 100%;
+    border: 1px solid #dde6ee;
+    border-radius: 10px;
+    padding: 0.55rem;
+    text-align: right;
+    background: #fff;
+}
+
+.inbox-conversation.is-active {
+    border-color: #8fb0cc;
+    box-shadow: 0 0 0 2px rgba(47, 81, 101, 0.11);
+}
+
+.thread-header {
+    border-bottom: 1px solid #e5edf4;
+    padding-bottom: 0.45rem;
+    margin-bottom: 0.55rem;
+}
+
+.thread-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    max-height: 52vh;
+    overflow-y: auto;
+}
+
+.thread-bubble {
+    border-radius: 12px;
+    padding: 0.55rem 0.65rem;
+    max-width: 86%;
+}
+
+.thread-bubble-me {
+    align-self: flex-start;
+    background: #e9f5ec;
+    border: 1px solid #cfe6d4;
+}
+
+.thread-bubble-them {
+    align-self: flex-end;
+    background: #eef4fb;
+    border: 1px solid #d4e2f1;
+}
+
+.invite-list {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 992px) {
+    .inbox-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
 .game-companion-progress {
     font-size: 0.88rem;
     color: #4f667a;
