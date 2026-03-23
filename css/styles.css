@@ -2083,3 +2083,200 @@ body {
         font-size: 0.78rem;
     }
 }
+
+/* Global interaction clarity across all sizes */
+.btn,
+button,
+a,
+input,
+select,
+textarea {
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid rgba(47, 81, 101, 0.55);
+    outline-offset: 2px;
+}
+
+/* Medium laptops and in-between widths: prevent cramped desktop nav and grids */
+@media (min-width: 993px) and (max-width: 1199px) {
+    #my-navbar .navbar-nav {
+        gap: 1.35rem;
+    }
+
+    #my-navbar .nav-link {
+        font-size: 1.04rem;
+    }
+
+    .community-grid,
+    .member-board-list {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .game-hub-grid {
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .inbox-layout {
+        grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+    }
+}
+
+/* Desktop baseline: add breathing room and balanced content width */
+@media (min-width: 1200px) {
+    :root {
+        --nav-height: 82px;
+    }
+
+    body {
+        padding-top: var(--nav-height);
+    }
+
+    #my-navbar .navbar {
+        min-height: var(--nav-height);
+    }
+
+    #my-navbar .container-fluid {
+        padding-left: clamp(1.2rem, 2.4vw, 2.2rem);
+        padding-right: clamp(1.2rem, 2.4vw, 2.2rem);
+    }
+
+    #my-navbar .navbar-nav {
+        gap: clamp(1.6rem, 2vw, 2.4rem);
+    }
+
+    #my-navbar .nav-link {
+        font-size: clamp(1.05rem, 0.68vw + 0.62rem, 1.2rem);
+    }
+
+    .pricing-wrap,
+    .account-shell,
+    .community-wrap,
+    .member-board-wrap {
+        width: min(1280px, 92vw);
+    }
+
+    .community-grid,
+    .member-board-list {
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 1rem;
+    }
+
+    .game-hub-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.1rem;
+    }
+
+    .inbox-layout {
+        grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .thread-messages {
+        max-height: 58vh;
+    }
+
+    .members-home-shell {
+        grid-template-columns: 50% 50%;
+    }
+
+    .members-home-login-pane {
+        padding: 2.4rem 2rem;
+    }
+
+    .members-home-login-card {
+        width: min(620px, 100%);
+    }
+
+    .members-home-title {
+        font-size: clamp(1.7rem, 1.2vw + 0.9rem, 2.3rem);
+    }
+
+    .members-home-subtitle {
+        font-size: 1.04rem;
+    }
+
+    .auth-card,
+    .game-card,
+    .community-card,
+    .account-panel,
+    .inbox-list-shell,
+    .thread-shell,
+    .community-search-shell,
+    .account-hero-panel {
+        box-shadow: 0 6px 20px rgba(47, 81, 101, 0.06);
+    }
+}
+
+/* Large desktops and ultra-wide screens: keep composition intentional */
+@media (min-width: 1600px) {
+    .pricing-wrap,
+    .account-shell,
+    .community-wrap,
+    .member-board-wrap {
+        width: min(1440px, 90vw);
+    }
+
+    .community-section,
+    .member-board-section,
+    .account-section,
+    .pricing-section {
+        padding-top: 2.8rem;
+        padding-bottom: 3.4rem;
+    }
+
+    .community-grid,
+    .member-board-list {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.15rem;
+    }
+
+    .game-hub-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .inbox-layout {
+        grid-template-columns: 380px minmax(0, 1fr);
+        gap: 1.15rem;
+    }
+
+    .thread-messages {
+        max-height: 62vh;
+    }
+
+    .site-footer-text {
+        font-size: 0.98rem;
+    }
+}
+
+/* Desktop enjoyment: richer hover states where a mouse exists */
+@media (hover: hover) and (pointer: fine) {
+    .community-card,
+    .account-panel,
+    .inbox-list-shell,
+    .thread-shell,
+    .game-card,
+    .community-search-shell,
+    .account-hero-panel {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .community-card:hover,
+    .account-panel:hover,
+    .inbox-list-shell:hover,
+    .thread-shell:hover,
+    .game-card:hover,
+    .community-search-shell:hover,
+    .account-hero-panel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(47, 81, 101, 0.12);
+        border-color: #c4d6e5;
+    }
+}
