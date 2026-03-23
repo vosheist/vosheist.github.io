@@ -1772,32 +1772,314 @@ body {
     }
 }
 
-@media (max-width: 320px) {
-    body {
-        padding-top: calc(var(--nav-height) + 0.5rem);
+/* ── Modals: scrollable body on small phones ─────────────── */
+@media (max-width: 576px) {
+    .modal-dialog {
+        max-width: calc(100% - 1rem);
+        margin: 0.5rem auto;
     }
 
-    .ttt-cell {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
+    .modal-content {
+        max-height: calc(100dvh - 1rem);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-body {
+        overflow-y: auto;
+        flex: 1 1 auto;
+    }
+}
+
+/* ── ≤320 px: e.g. 320 × 480, small flip-phone screens ─── */
+@media (max-width: 320px) {
+    :root {
+        --nav-height: 56px;
+    }
+
+    body {
+        padding-top: var(--nav-height);
+    }
+
+    #my-navbar .navbar {
+        min-height: 56px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    #my-navbar .navbar-brand {
+        font-size: 0.92rem;
+    }
+
+    #my-navbar .navbar-toggler {
+        padding: 0.2rem 0.45rem;
+    }
+
+    #my-navbar .navbar-nav {
+        gap: 0.3rem;
+    }
+
+    #my-navbar .nav-link {
+        font-size: 0.93rem;
+        min-height: 40px;
+    }
+
+    /* hide login image so the form gets all screen space */
+    .members-home-image-pane {
+        display: none !important;
+    }
+
+    .members-home-login-pane {
+        padding: 0.75rem 0.5rem;
+        align-items: flex-start;
+    }
+
+    .members-home-title {
+        font-size: 1.05rem;
+    }
+
+    .members-home-subtitle {
+        font-size: 0.82rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .members-home-form {
+        gap: 0.3rem;
     }
 
     .auth-card,
     .game-card {
-        padding: 0.6rem;
+        padding: 0.6rem 0.5rem;
         border-radius: 10px;
     }
 
-    #my-navbar .navbar-brand {
-        font-size: 1.0rem;
+    .community-section,
+    .member-board-section,
+    .account-section,
+    .pricing-section,
+    .login-center-section {
+        padding: 0.75rem 0.5rem 1rem;
     }
 
-    #my-navbar .navbar-nav {
-        gap: 0.4rem;
+    .community-grid {
+        grid-template-columns: 1fr;
     }
 
     .pricing-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Modals */
+    .modal-dialog {
+        margin: 0.25rem auto;
+        max-width: calc(100% - 0.5rem);
+    }
+
+    .modal-content {
+        max-height: calc(100dvh - 0.5rem);
+    }
+
+    .modal-header {
+        padding: 0.5rem 0.5rem;
+        padding-left: 2.2rem;
+    }
+
+    .modal-body {
+        padding: 0.6rem 0.5rem;
+    }
+
+    .modal-footer {
+        padding: 0.5rem;
+        gap: 0.3rem;
+    }
+
+    .modal-footer .btn {
+        font-size: 0.82rem;
+        padding: 0.3rem 0.5rem;
+    }
+
+    /* Games */
+    .ttt-cell {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+    }
+
+    .c4-cell {
+        width: 26px;
+        height: 26px;
+    }
+
+    .g2048-tile {
+        min-height: 40px;
+        font-size: 0.82rem;
+    }
+
+    .mm-card {
+        min-height: 36px;
+    }
+
+    .snake-cell {
+        width: 14px;
+        height: 14px;
+    }
+
+    .lr-cell {
+        width: 30px;
+        height: 18px;
+    }
+}
+
+/* ── ≤260 px: 240 px flip-phone screens ─────────────────── */
+@media (max-width: 260px) {
+    :root {
+        --nav-height: 50px;
+    }
+
+    #my-navbar .navbar {
+        min-height: 50px;
+    }
+
+    #my-navbar .navbar-brand {
+        font-size: 0.78rem;
+    }
+
+    #my-navbar .container-fluid {
+        gap: 0.25rem;
+        padding-left: 0.35rem;
+        padding-right: 0.35rem;
+    }
+
+    .container-fluid {
+        padding-left: 0.35rem !important;
+        padding-right: 0.35rem !important;
+    }
+
+    .members-home-login-pane {
+        padding: 0.55rem 0.35rem;
+    }
+
+    .members-home-title {
+        font-size: 0.95rem;
+    }
+
+    .members-home-subtitle {
+        font-size: 0.78rem;
+    }
+
+    .auth-card,
+    .game-card {
+        padding: 0.45rem 0.38rem;
+    }
+
+    .community-section,
+    .member-board-section,
+    .account-section,
+    .pricing-section,
+    .login-center-section {
+        padding: 0.55rem 0.35rem 0.8rem;
+    }
+
+    .account-hero-panel {
+        padding: 0.55rem 0.45rem;
+    }
+
+    .account-hero-panel h1 {
+        font-size: 1rem;
+    }
+
+    .community-card {
+        padding: 0.6rem 0.5rem;
+    }
+
+    .inbox-list-shell,
+    .thread-shell {
+        padding: 0.45rem 0.35rem;
+    }
+
+    .thread-messages {
+        max-height: 38vh;
+    }
+
+    /* Modals: ultra-compact */
+    .modal-dialog {
+        margin: 0.15rem auto;
+        max-width: calc(100% - 0.3rem);
+    }
+
+    .modal-header {
+        padding: 0.4rem 0.4rem;
+        padding-left: 1.85rem;
+    }
+
+    .modal-body {
+        padding: 0.45rem 0.38rem;
+    }
+
+    .modal-footer {
+        padding: 0.38rem;
+    }
+
+    /* Game boards at 240 px */
+    .ttt-cell {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    /* Connect4: 7 cols × 22 px + 6 gaps × 4 px + 12 px padding ≈ 202 px — fits */
+    .c4-cell {
+        width: 22px;
+        height: 22px;
+    }
+
+    .c4-board {
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .g2048-tile {
+        min-height: 34px;
+        font-size: 0.7rem;
+    }
+
+    .g2048-board {
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .snake-cell {
+        width: 12px;
+        height: 12px;
+    }
+
+    .lr-cell {
+        width: 24px;
+        height: 16px;
+    }
+
+    .mm-card {
+        min-height: 30px;
+        font-size: 0.82rem;
+    }
+
+    .mm-grid {
+        gap: 4px;
+    }
+
+    .game-companion-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .game-stat-box strong {
+        font-size: 0.85rem;
+    }
+
+    .game-stat-label {
+        font-size: 0.6rem;
+    }
+
+    .site-footer-text {
+        font-size: 0.78rem;
     }
 }
