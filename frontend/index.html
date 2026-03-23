@@ -167,31 +167,60 @@
             var ph = input && input.parentElement.querySelector('.anim-ph');
             if (!input || !ph) return;
             var idx = 0, paused = false;
-            var VISIBLE_MS = 2800;
-            var FADE_MS = 1200;
-            var CYCLE_MS = 4300;
+            var VISIBLE_MS = 3500;
+            var FADE_IN_MS = 900;
+            var FADE_OUT_MS = 1400;
+            var CYCLE_MS = 6200;
+            var fadeOutTimer = null;
+
+            function clearFadeTimer() {
+                if (fadeOutTimer) {
+                    clearTimeout(fadeOutTimer);
+                    fadeOutTimer = null;
+                }
+            }
+
             function show(i) {
+                clearFadeTimer();
                 ph.textContent = options[i];
                 ph.style.transition = 'none';
-                ph.style.opacity = '1';
-                setTimeout(function () {
-                    ph.style.transition = 'opacity ' + (FADE_MS / 1000) + 's ease';
+                ph.style.opacity = '0';
+
+                requestAnimationFrame(function () {
+                    ph.style.transition = 'opacity ' + (FADE_IN_MS / 1000) + 's ease';
+                    ph.style.opacity = '1';
+                });
+
+                fadeOutTimer = setTimeout(function () {
+                    ph.style.transition = 'opacity ' + (FADE_OUT_MS / 1000) + 's ease';
                     ph.style.opacity = '0';
                 }, VISIBLE_MS);
             }
+
             function tick() {
                 if (paused) return;
                 show(idx);
                 idx = (idx + 1) % options.length;
             }
+
             tick();
             setInterval(tick, CYCLE_MS);
-            input.addEventListener('focus', function () { paused = true; ph.style.opacity = '0'; });
+
+            input.addEventListener('focus', function () {
+                paused = true;
+                clearFadeTimer();
+                ph.style.opacity = '0';
+            });
+
             input.addEventListener('blur', function () {
                 if (!input.value) { paused = false; tick(); }
             });
+
             input.addEventListener('input', function () {
-                ph.style.opacity = input.value ? '0' : '1';
+                if (input.value) {
+                    clearFadeTimer();
+                    ph.style.opacity = '0';
+                }
             });
         })();
     </script>
