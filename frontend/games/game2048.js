@@ -141,15 +141,15 @@
         status.className = "text-secondary";
 
         const leaderboard = document.createElement("div");
-        leaderboard.className = "g2048-leaderboard mt-2";
+        leaderboard.className = "game-leaderboard mt-2";
         leaderboard.innerHTML = `
             <h2 class="h6 mb-1">2048 Leaderboard</h2>
-            <ol class="g2048-score-list mb-1"></ol>
-            <small class="text-secondary g2048-note"></small>
+            <ol class="game-score-list mb-1"></ol>
+            <small class="text-secondary game-score-note"></small>
         `;
 
-        const scoreList = leaderboard.querySelector(".g2048-score-list");
-        const boardNote = leaderboard.querySelector(".g2048-note");
+        const scoreList = leaderboard.querySelector(".game-score-list");
+        const boardNote = leaderboard.querySelector(".game-score-note");
 
         wrap.appendChild(top);
         wrap.appendChild(boardEl);

@@ -1225,26 +1225,6 @@ body {
     border-radius: 8px;
 }
 
-.g2048-leaderboard {
-    background: #fff;
-    border: 1px solid #e6e1d9;
-    border-radius: 12px;
-    padding: 0.75rem;
-}
-
-.g2048-score-list {
-    list-style: decimal;
-    padding-left: 1.25rem;
-    margin: 0;
-}
-
-.g2048-score-list li {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-    font-size: 0.92rem;
-}
-
 .game-leaderboard {
     background: #fff;
     border: 1px solid #e6e1d9;
