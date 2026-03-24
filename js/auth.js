@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     const SESSION_KEY = "yeshivaChillCurrentUser";
     const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
 
@@ -101,22 +101,22 @@
             const userKey = normalizeName(displayName);
 
             if (!userKey) {
-                showMessage(createMessage, "×œ×™×™×’ ××¨×™×™×Ÿ ××œ×¢ × ××ž×¢×Ÿ ×¤×¢×œ×“×¢×¨.", "error");
+                showMessage(createMessage, "לייג אריין אלע נאמען פעלדער.", "error");
                 return;
             }
 
             if (!email || !email.includes("@")) {
-                showMessage(createMessage, "×œ×™×™×’ ××¨×™×™×Ÿ × ×’×™×œ×˜×™×§×Ÿ ××™×ž×¢×™×œ.", "error");
+                showMessage(createMessage, "לייג אריין א גילטיקן אימעיל.", "error");
                 return;
             }
 
             if (password.length < 4) {
-                showMessage(createMessage, "×§××•×“ ×“××¨×£ ×”××‘×Ÿ 4 ××•×ª×™×•×ª ××“×¢×¨ ×ž×¢×¨.", "error");
+                showMessage(createMessage, "קאוד דארף האבן 4 אותיות אדער מער.", "error");
                 return;
             }
 
             if (password !== confirmInput.value) {
-                showMessage(createMessage, "×‘×™×™×“×¢ ×§××•×“×¡ ×“××¨×¤×Ÿ ×–×™×™×Ÿ ×“×™ ×–×¢×œ×‘×¢.", "error");
+                showMessage(createMessage, "ביידע קאודס דארפן זיין די זעלבע.", "error");
                 return;
             }
 
@@ -135,14 +135,14 @@
             } catch (error) {
                 const message = String(error.message || "").toLowerCase();
                 if (message.includes("nickname")) {
-                    showMessage(createMessage, "×“×¢×¨ ×¤×¢×Ÿ × ××ž×¢×Ÿ ××™×– ×©×•×™×Ÿ ×¤××¨× ×•×ž×¢×Ÿ.", "error");
+                    showMessage(createMessage, "דער פען נאמען איז שוין פארנומען.", "error");
                     return;
                 }
                 if (message.includes("exists") || message.includes("user")) {
-                    showMessage(createMessage, "×“×¢×¨ × ××ž×¢×Ÿ ××™×– ×©×•×™×Ÿ ×¤××¨× ×•×ž×¢×Ÿ.", "error");
+                    showMessage(createMessage, "דער נאמען איז שוין פארנומען.", "error");
                     return;
                 }
-                showMessage(createMessage, "×§×× ×¢×§×©×¢×Ÿ ×¤×¨××‘×œ×¢×. ×¤×¨×•×‘×™×¨ × ××›××ž××œ.", "error");
+                showMessage(createMessage, "קאנעקשען פראבלעם. פרוביר נאכאמאל.", "error");
                 return;
             }
 
@@ -170,7 +170,7 @@
                     : displayName);
             persistSessionUser(backendUserKey);
 
-            showMessage(createMessage, "×—×©×‘×•×Ÿ ×’×¢×©×Ö·×¤Ö¿×Ÿ. ×“×• ×‘×™×¡×˜ ×©×•×™×Ÿ ××¨×™×™× ×’×¢×œ×Ö¸×’×˜.", "success");
+            showMessage(createMessage, "חשבון געשאַפֿן. דו ביסט שוין אריינגעלאָגט.", "success");
             if (!notification.sent && notification.reason !== "missing-endpoint") {
                 console.warn("Signup created, but owner notification failed:", notification.reason);
             }
@@ -218,9 +218,9 @@
                 const user = loginResult.user;
                 const backendUserKey = loginResult.userKey || userKey;
                 persistSessionUser(backendUserKey);
-                showMessage(loginMessage, `${user.displayName}, ×‘×¨×•×š ×”×‘×!`, "success");
+                showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
             } catch {
-                showMessage(loginMessage, "××™×š ×˜×¨×¢×£ × ×™×©×˜ ×§×™×™×Ÿ ×—×©×‘×•×Ÿ ××“×¢×¨ ×“×¢×¨ ×§××•×“ ××™×– × ×™×©×˜ ×¨×™×›×˜×™×’.", "error");
+                showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער קאוד איז נישט ריכטיג.", "error");
                 return;
             }
             setTimeout(() => {

@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     const SESSION_KEY = "yeshivaChillCurrentUser";
     const LOGIN_PAGE = "/login";
     const PUBLIC_PAGES = new Set(["", "login", "nafshi"]);
@@ -174,7 +174,7 @@
         var show = input.type === 'password';
         input.type = show ? 'text' : 'password';
         btn.innerHTML = show ? EYE_SLASH : EYE;
-        btn.setAttribute('aria-label', show ? '×”×¡×ª×¨ ×§××•×“' : '×”×¨××” ×§××•×“');
+        btn.setAttribute('aria-label', show ? 'הסתר קאוד' : 'הראה קאוד');
     });
 })();
 
