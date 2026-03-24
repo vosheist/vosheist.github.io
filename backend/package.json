@@ -6,6 +6,11 @@
     "scripts": {
         "start": "node server.js",
         "dev": "nodemon server.js",
+        "pm2:start": "pm2 start ecosystem.config.cjs --env production",
+        "pm2:restart": "pm2 restart yeshiva-chill-backend",
+        "pm2:stop": "pm2 stop yeshiva-chill-backend",
+        "pm2:logs": "pm2 logs yeshiva-chill-backend",
+        "pm2:save": "pm2 save",
         "seed:test-data": "node scripts/seed-test-data.js",
         "view:test-data": "node scripts/view-test-data.js",
         "rename:test-users": "node scripts/rename-female-to-male.js"
@@ -25,6 +30,7 @@
         "nodemailer": "^6.9.4"
     },
     "devDependencies": {
-        "nodemon": "^3.0.1"
+        "nodemon": "^3.0.1",
+        "pm2": "^5.4.3"
     }
 }

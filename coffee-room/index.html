@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yeshiva Chill | ????? ?????</title>
+    <title>Yeshiva Chill | Coffee Room</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
@@ -22,8 +22,8 @@
                 <a class="navbar-brand" href="/login" aria-label="Yeshiva Chill">
                     <span class="brand-lockup" aria-hidden="true">
                         <span class="brand-words">
-                            <span class="brand-vos">?????</span>
-                            <span class="brand-heist">????</span>
+                            <span class="brand-vos">Yeshiva</span>
+                            <span class="brand-heist">Chill</span>
                         </span>
                         <span class="brand-tes"></span>
                         <span class="brand-marks">
@@ -40,41 +40,41 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="/community">?????</a>
+                            <a class="nav-link" href="/community">Community</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/bais-medrash">??? ????</a>
+                            <a class="nav-link" href="/bais-medrash">Bais Medrash</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/coffee-room">????? ?????</a>
+                            <a class="nav-link active" aria-current="page" href="/coffee-room">Coffee Room</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/bein-hasdarim">??? ??????</a>
+                            <a class="nav-link" href="/bein-hasdarim">Bein Hasdarim</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/hearos">?????</a>
+                            <a class="nav-link" href="/hearos">Feedback</a>
                         </li>
                     </ul>
                 </div>
-                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi">?????</a>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi">Account</a>
             </div>
         </nav>
     </div>
 
     <section class="member-board-section">
         <div class="member-board-wrap">
-            <h1>????? ????? - ??? ??????</h1>
-            <p class="member-board-sub">? ???? ??? ?????? ??????, ?????, ??? ? ????'? ?????.</p>
+            <h1>Coffee Room - Open Discussion</h1>
+            <p class="member-board-sub">Share updates, ideas, and quick thoughts with everyone.</p>
 
             <form id="coffee-form" class="auth-card member-board-form">
-                <label for="coffee-topic" class="form-label">???? (???????)</label>
-                <input id="coffee-topic" class="form-control" type="text" placeholder="???????: ????? ??? ?????">
+                <label for="coffee-topic" class="form-label">Topic (optional)</label>
+                <input id="coffee-topic" class="form-control" type="text" placeholder="Example: Good learning tip">
 
-                <label for="coffee-message" class="form-label mt-2">???? ???????</label>
-                <textarea id="coffee-message" class="form-control" rows="3" placeholder="????? ???? ????..."
+                <label for="coffee-message" class="form-label mt-2">Message</label>
+                <textarea id="coffee-message" class="form-control" rows="3" placeholder="Write your message..."
                     required></textarea>
 
-                <button type="submit" class="btn auth-btn mt-3">??? ?????</button>
+                <button type="submit" class="btn auth-btn mt-3">Post Message</button>
                 <p id="coffee-status" class="auth-message mt-2" aria-live="polite"></p>
             </form>
 
@@ -111,12 +111,12 @@
             const messages = (response.messages || []).slice().reverse();
 
             if (!messages.length) {
-                feed.innerHTML = '<article class="community-card"><p class="community-meta">??????? ???? ?????????.</p></article>';
+                feed.innerHTML = '<article class="community-card"><p class="community-meta">No messages yet. Start the conversation.</p></article>';
                 return;
             }
 
             feed.innerHTML = messages.map((entry) => {
-                const topic = entry.topic ? `<p class="member-board-meta"><strong>????:</strong> ${escapeHtml(entry.topic)}</p>` : "";
+                const topic = entry.topic ? `<p class="member-board-meta"><strong>Topic:</strong> ${escapeHtml(entry.topic)}</p>` : "";
                 return `<article class="community-card"><p class="community-name">${escapeHtml(entry.nickname)}</p>${topic}<p class="member-board-meta">${escapeHtml(entry.message)}</p></article>`;
             }).join("");
         }
@@ -138,19 +138,19 @@
             const message = document.getElementById("coffee-message").value.trim();
 
             if (!user || !message) {
-                status.textContent = "???? ????? ? ???????.";
+                status.textContent = "Please log in and write a message.";
                 status.className = "auth-message error mt-2";
                 return;
             }
 
             await window.yeshivaChillApi.addCoffeeRoom({
-                nickname: user.nickname || user.displayName || "???????",
+                nickname: user.nickname || user.displayName || "Anonymous",
                 topic,
                 message
             });
 
             event.target.reset();
-            status.textContent = "???????????? ??? ????? ?????.";
+            status.textContent = "Your message was posted.";
             status.className = "auth-message success mt-2";
             await renderFeed();
         });
@@ -158,7 +158,7 @@
         renderFeed().catch((error) => {
             console.error(error);
             const feed = document.getElementById("coffee-feed");
-            feed.innerHTML = '<article class="community-card"><p class="community-meta">???? ?????? ????? ????????? ????.</p></article>';
+            feed.innerHTML = '<article class="community-card"><p class="community-meta">Could not load messages right now.</p></article>';
         });
     </script>
 </body>

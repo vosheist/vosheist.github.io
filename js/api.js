@@ -27,6 +27,7 @@
         try {
             savedBaseUrl = normalizeBaseUrl(localStorage.getItem(API_BASE_STORAGE_KEY));
         } catch {
+            // Ignore storage errors (private mode, blocked storage, etc.)
             savedBaseUrl = "";
         }
 
@@ -34,6 +35,7 @@
             return savedBaseUrl;
         }
 
+        // Default to local backend unless explicitly overridden.
         return "http://localhost:3000";
     }
 

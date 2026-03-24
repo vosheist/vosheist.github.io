@@ -14,6 +14,19 @@
         return name.trim().toLowerCase();
     }
 
+    function isWeakPassword(password) {
+        const normalized = String(password || "").trim().toLowerCase();
+        const blocked = new Set([
+            "123456",
+            "12345678",
+            "password",
+            "qwerty",
+            "11111111",
+            "abc12345"
+        ]);
+        return blocked.has(normalized);
+    }
+
     async function hashPassword(password) {
         if (window.crypto && window.crypto.subtle) {
             const data = new TextEncoder().encode(password);
@@ -110,8 +123,13 @@
                 return;
             }
 
-            if (password.length < 4) {
-                showMessage(createMessage, "קאוד דארף האבן 4 אותיות אדער מער.", "error");
+            if (password.length < 8) {
+                showMessage(createMessage, "קאוד דארף האבן כאטש 8 אותיות.", "error");
+                return;
+            }
+
+            if (isWeakPassword(password)) {
+                showMessage(createMessage, "ביטע נוץ א שטערקערן קאוד.", "error");
                 return;
             }
 
@@ -194,16 +212,33 @@
             return;
         }
 
+        const nameInput = document.getElementById("login-name");
+        const passwordInput = document.getElementById("login-password");
+        if (!nameInput || !passwordInput) {
+            return;
+        }
+
+        function submitOnEnter(event) {
+            if (event.key !== "Enter" || event.isComposing) {
+                return;
+            }
+
+            event.preventDefault();
+            if (typeof loginForm.requestSubmit === "function") {
+                loginForm.requestSubmit();
+                return;
+            }
+
+            loginForm.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        }
+
+        nameInput.addEventListener("keydown", submitOnEnter);
+        passwordInput.addEventListener("keydown", submitOnEnter);
+
         loginForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
             const loginMessage = document.getElementById("login-message");
-            const nameInput = document.getElementById("login-name");
-            const passwordInput = document.getElementById("login-password");
-
-            if (!nameInput || !passwordInput) {
-                return;
-            }
 
             const loginIdentifier = nameInput.value.trim();
             const userKey = normalizeName(loginIdentifier);
@@ -219,7 +254,12 @@
                 const backendUserKey = loginResult.userKey || userKey;
                 persistSessionUser(backendUserKey);
                 showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
-            } catch {
+            } catch (error) {
+                const rawMessage = String(error && error.message ? error.message : "").toLowerCase();
+                if (rawMessage.includes("failed to fetch")) {
+                    showMessage(loginMessage, "קען נישט פארבינדן צום סערווירער. פרוביר נאכאמאל אין א פאר מינוט.", "error");
+                    return;
+                }
                 showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער קאוד איז נישט ריכטיג.", "error");
                 return;
             }
