@@ -1772,7 +1772,7 @@ body {
     }
 }
 
-/* ── Modals: scrollable body on small phones ─────────────── */
+/* -- Modals: scrollable body on small phones --------------- */
 @media (max-width: 576px) {
     .modal-dialog {
         max-width: calc(100% - 1rem);
@@ -1791,7 +1791,7 @@ body {
     }
 }
 
-/* ── ≤320 px: e.g. 320 × 480, small flip-phone screens ─── */
+/* -- =320 px: e.g. 320 x 480, small flip-phone screens --- */
 @media (max-width: 320px) {
     :root {
         --nav-height: 56px;
@@ -1930,7 +1930,7 @@ body {
     }
 }
 
-/* ── ≤260 px: 240 px flip-phone screens ─────────────────── */
+/* -- =260 px: 240 px flip-phone screens ------------------- */
 @media (max-width: 260px) {
     :root {
         --nav-height: 50px;
@@ -2027,7 +2027,7 @@ body {
         font-size: 14px;
     }
 
-    /* Connect4: 7 cols × 22 px + 6 gaps × 4 px + 12 px padding ≈ 202 px — fits */
+    /* Connect4: 7 cols x 22 px + 6 gaps x 4 px + 12 px padding = 202 px, fits */
     .c4-cell {
         width: 22px;
         height: 22px;
