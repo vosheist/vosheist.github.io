@@ -1011,8 +1011,7 @@ body {
 }
 
 .preview-math,
-.preview-guess,
-.preview-rps {
+.preview-guess {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1028,11 +1027,6 @@ body {
 .preview-guess {
     font-size: 1.05rem;
     animation: pvBlink 3s infinite;
-}
-
-.preview-rps {
-    font-size: 1.5rem;
-    animation: pvRps 3s infinite ease-in-out;
 }
 
 @keyframes pvPulse {
@@ -1130,22 +1124,6 @@ body {
     }
 }
 
-@keyframes pvRps {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    33% {
-        transform: translateY(-2px) scale(1.04);
-    }
-
-    66% {
-        transform: translateY(2px) scale(0.96);
-    }
-}
-
 .game-card {
     background: #fffdf9;
     border: 1px solid var(--logo-border);
@@ -1212,7 +1190,7 @@ body {
 }
 
 .ng-status,
-.rps-status {
+.ng-status {
     font-weight: 600;
     color: var(--logo-blue-deep);
 }
@@ -2442,5 +2420,51 @@ textarea:focus-visible {
 
     .game-companion-shell {
         padding: 0.95rem;
+    }
+}
+
+/* Individual game pages should be English/LTR and easy to scan. */
+.is-game-page {
+    direction: ltr;
+    text-align: left;
+}
+
+.is-game-page main,
+.is-game-page .container,
+.is-game-page .game-card,
+.is-game-page .game-root {
+    direction: ltr;
+    text-align: left;
+}
+
+.is-game-page #my-navbar .navbar-nav {
+    gap: 0.1rem;
+}
+
+.game-quick-tools {
+    margin-bottom: 0.9rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #d6e2ec;
+    border-radius: 12px;
+    background: linear-gradient(140deg, #f8fbff, #eef4fb);
+}
+
+.game-quick-tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+}
+
+.game-quick-best {
+    margin-inline-start: auto;
+    color: #4b6071;
+    font-size: 0.92rem;
+}
+
+@media (max-width: 767px) {
+    .game-quick-best {
+        margin-inline-start: 0;
+        width: 100%;
     }
 }

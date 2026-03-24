@@ -33,8 +33,7 @@ const INVITE_GAME_ROUTES = {
     "memory-match": "/games/memory-match",
     "reaction-timer": "/games/reaction-timer",
     "quick-math": "/games/quick-math",
-    "number-guess": "/games/number-guess",
-    "rps": "/games/rps"
+    "number-guess": "/games/number-guess"
 };
 
 function normalizeName(name) {

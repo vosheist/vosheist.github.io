@@ -84,6 +84,153 @@
         });
     }
 
+    function normalizeCommunityNavLabel() {
+        const links = document.querySelectorAll('#my-navbar a[href="/community"]');
+        links.forEach((link) => {
+            link.textContent = "Members מעמבערס";
+        });
+    }
+
+    function ensureConsistentFooter() {
+        const currentYear = new Date().getFullYear();
+        const footerMarkup = '<div class="container-fluid d-flex justify-content-center align-items-center py-3"><p class="site-footer-text">&copy; ' + currentYear + ' Yeshiva Chill</p></div>';
+
+        let footer = document.querySelector("footer.site-footer");
+        if (!footer) {
+            footer = document.createElement("footer");
+            footer.className = "site-footer mt-5";
+            footer.innerHTML = footerMarkup;
+            document.body.appendChild(footer);
+            return;
+        }
+
+        footer.innerHTML = footerMarkup;
+    }
+
+    function isIndividualGamePage() {
+        const currentPage = getCurrentPageKey();
+        return currentPage.startsWith("games/");
+    }
+
+    function enforceEnglishGameLayout() {
+        if (!isIndividualGamePage()) {
+            return;
+        }
+
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+        document.body.classList.add("is-game-page");
+
+        const navbar = document.querySelector("#my-navbar nav");
+        if (navbar) {
+            navbar.classList.remove("rtl-navbar");
+            navbar.classList.add("ltr-navbar");
+        }
+
+        const englishLabels = {
+            "/community": "Members מעמבערס",
+            "/bais-medrash": "Bais Medrash",
+            "/coffee-room": "Coffee Room",
+            "/bein-hasdarim": "Games Hub",
+            "/hearos": "Feedback",
+            "/inbox": "Inbox"
+        };
+
+        const navLinks = document.querySelectorAll("#my-navbar .nav-link");
+        navLinks.forEach((link) => {
+            const href = (link.getAttribute("href") || "").trim();
+            if (englishLabels[href]) {
+                link.textContent = englishLabels[href];
+            }
+        });
+
+        const accountShortcut = document.querySelector("#my-navbar .js-account-shortcut");
+        if (accountShortcut) {
+            accountShortcut.textContent = "Account";
+        }
+
+        const backToGamesBtn = document.querySelector('main a.btn[href="/bein-hasdarim"]');
+        if (backToGamesBtn) {
+            backToGamesBtn.textContent = "Back to Games";
+        }
+    }
+
+    function enhanceIndividualGamePage() {
+        if (!isIndividualGamePage()) {
+            return;
+        }
+
+        const gameCard = document.querySelector("article.game-card");
+        if (!gameCard || gameCard.querySelector(".game-quick-tools")) {
+            return;
+        }
+
+        const route = getCurrentPageKey();
+        const stateKey = "yeshivaChillGameCompanion." + route;
+        let bestXp = 0;
+
+        try {
+            const saved = JSON.parse(localStorage.getItem(stateKey) || "{}");
+            bestXp = Number(saved.bestXp || 0);
+        } catch {
+            bestXp = 0;
+        }
+
+        const randomGames = [
+            "/games/2048",
+            "/games/tictactoe",
+            "/games/connect4",
+            "/games/snake",
+            "/games/lane-racer",
+            "/games/memory-match",
+            "/games/reaction-timer",
+            "/games/quick-math",
+            "/games/number-guess"
+        ];
+
+        const tools = document.createElement("section");
+        tools.className = "game-quick-tools";
+        tools.innerHTML = [
+            '<div class="game-quick-tools-row">',
+            '<button type="button" class="btn btn-sm btn-outline-primary js-game-restart">Restart This Game</button>',
+            '<button type="button" class="btn btn-sm btn-outline-secondary js-game-random">Play Random Game</button>',
+            '<button type="button" class="btn btn-sm btn-outline-secondary js-game-focus">Open Focus Panel</button>',
+            '<span class="game-quick-best">Best Focus XP: <strong class="js-best-xp">' + bestXp + '</strong></span>',
+            '</div>'
+        ].join("");
+
+        const restartBtn = tools.querySelector(".js-game-restart");
+        const randomBtn = tools.querySelector(".js-game-random");
+        const focusBtn = tools.querySelector(".js-game-focus");
+
+        restartBtn.addEventListener("click", () => {
+            window.location.reload();
+        });
+
+        randomBtn.addEventListener("click", () => {
+            const currentPath = (window.location.pathname || "").toLowerCase();
+            const pool = randomGames.filter((path) => path !== currentPath);
+            const target = pool[Math.floor(Math.random() * pool.length)] || "/bein-hasdarim";
+            window.location.href = target;
+        });
+
+        focusBtn.addEventListener("click", () => {
+            const panel = gameCard.querySelector(".game-companion");
+            if (panel) {
+                panel.scrollIntoView({ behavior: "smooth", block: "start" });
+                return;
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        const gameRoot = gameCard.querySelector(".game-root");
+        if (gameRoot) {
+            gameRoot.insertAdjacentElement("beforebegin", tools);
+        } else {
+            gameCard.appendChild(tools);
+        }
+    }
+
     function setUnreadBadge(shortcut, unreadCount) {
         if (!shortcut) {
             return;
@@ -150,6 +297,10 @@
         syncNavbarScrollState();
         syncAccountShortcut();
         syncGuestNavTargets();
+        normalizeCommunityNavLabel();
+        enforceEnglishGameLayout();
+        ensureConsistentFooter();
+        enhanceIndividualGamePage();
         syncInboxUnreadBadge();
 
         if (sessionStorage.getItem(SESSION_KEY)) {
@@ -279,17 +430,6 @@
             challenge: "Use sharp narrowing logic and earn 80 focus XP.",
             targetXp: 80,
             tips: ["Binary search is your fastest strategy.", "Track min and max mentally every guess.", "Do not repeat near-duplicate guesses."]
-        },
-        "games/rps": {
-            steps: [
-                "Pick rock, paper, or scissors.",
-                "Computer reveals its choice.",
-                "Track streaks and adapt your picks."
-            ],
-            demo: "Demo: Try 5 rounds and switch after every loss.",
-            challenge: "Read momentum patterns and achieve 70 focus XP.",
-            targetXp: 70,
-            tips: ["Do not repeat predictable triples.", "After a loss, vary tempo and pick.", "Track 3-round tendencies."]
         }
     };
 
