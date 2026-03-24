@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yeshiva Chill | Bais Medrash</title>
+    <title>Yeshiva Chill | בית מדרש</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
@@ -22,8 +22,8 @@
                 <a class="navbar-brand" href="/login" aria-label="Yeshiva Chill">
                     <span class="brand-lockup" aria-hidden="true">
                         <span class="brand-words">
-                            <span class="brand-vos">Yeshiva</span>
-                            <span class="brand-heist">Chill</span>
+                            <span class="brand-vos">ישיבה</span>
+                            <span class="brand-heist">טשיל</span>
                         </span>
                         <span class="brand-tes"></span>
                         <span class="brand-marks">
@@ -40,63 +40,64 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="/community">Community</a>
+                            <a class="nav-link" href="/community">קהילה</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/bais-medrash">Bais Medrash</a>
+                            <a class="nav-link active" aria-current="page" href="/bais-medrash">בית מדרש</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/coffee-room">Coffee Room</a>
+                            <a class="nav-link" href="/coffee-room">קאווע צימער</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/bein-hasdarim">Bein Hasdarim</a>
+                            <a class="nav-link" href="/bein-hasdarim">בין הסדרים</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/hearos">Feedback</a>
+                            <a class="nav-link" href="/hearos">הערות</a>
                         </li>
                     </ul>
                 </div>
-                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi">Account</a>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi">חשבון</a>
             </div>
         </nav>
     </div>
 
     <section class="member-board-section">
         <div class="member-board-wrap">
-            <h1>Bais Medrash - Find a Chavrusa</h1>
-            <p class="member-board-sub">Post your learning schedule and connect with the right partner.</p>
+            <h1>בית מדרש - טרעף א חברותא</h1>
+            <p class="member-board-sub">לייג ארויף דיינע שעות לימוד און טרעף דעם ריכטיגן שותף.</p>
 
             <form id="chavrusa-form" class="auth-card member-board-form">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="bm-time" class="form-label">Time</label>
-                        <input id="bm-time" class="form-control" type="text" placeholder="Example: 8:00-9:00 PM"
+                        <label for="bm-time" class="form-label">צייט</label>
+                        <input id="bm-time" class="form-control" type="text" placeholder="ביישפיל: 8:00-9:00 אוונט"
                             required>
                     </div>
                     <div class="col-md-6">
-                        <label for="bm-length" class="form-label">Length</label>
-                        <input id="bm-length" class="form-control" type="text" placeholder="Example: 45 minutes" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="bm-limud" class="form-label">Limud</label>
-                        <input id="bm-limud" class="form-control" type="text" placeholder="Example: Gemara, Halacha, Mussar"
+                        <label for="bm-length" class="form-label">לענג</label>
+                        <input id="bm-length" class="form-control" type="text" placeholder="ביישפיל: 45 מינוט"
                             required>
                     </div>
                     <div class="col-md-6">
-                        <label for="bm-style" class="form-label">In-person / Online</label>
+                        <label for="bm-limud" class="form-label">לימוד</label>
+                        <input id="bm-limud" class="form-control" type="text"
+                            placeholder="ביישפיל: גמרא, הלכה, מוסר" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bm-style" class="form-label">אופן לימוד</label>
                         <select id="bm-style" class="form-select" required>
-                            <option value="">Choose...</option>
-                            <option value="In-person">In-person</option>
-                            <option value="By phone">By phone</option>
+                            <option value="">וועל...</option>
+                            <option value="אין פנים">אין פנים</option>
+                            <option value="טעלעפאן">טעלעפאן</option>
                         </select>
                     </div>
                     <div class="col-md-12">
-                        <label for="bm-notes" class="form-label">Notes</label>
+                        <label for="bm-notes" class="form-label">הערות</label>
                         <textarea id="bm-notes" class="form-control" rows="3"
-                            placeholder="Any details about what you are looking for..."></textarea>
+                            placeholder="לייג צו פרטים וואס דו זוכסט..."></textarea>
                     </div>
                 </div>
-                <button type="submit" class="btn auth-btn mt-3">Post Chavrusa Request</button>
+                <button type="submit" class="btn auth-btn mt-3">לייג ארויף בעקשה</button>
                 <p id="bm-message" class="auth-message mt-2" aria-live="polite"></p>
             </form>
 
@@ -133,13 +134,13 @@
             const list = document.getElementById("bm-list");
 
             if (!posts.length) {
-                list.innerHTML = '<article class="community-card"><p class="community-meta">No posts yet. Be the first to post.</p></article>';
+                list.innerHTML = '<article class="community-card"><p class="community-meta">נאך נישט דא קיין מודעות.</p></article>';
                 return;
             }
 
             list.innerHTML = posts.map((post) => {
-                const notes = post.notes ? `<p class="member-board-meta"><strong>Notes:</strong> ${escapeHtml(post.notes)}</p>` : "";
-                return `<article class="community-card"><p class="community-name">${escapeHtml(post.nickname)}</p><p class="member-board-meta"><strong>Time:</strong> ${escapeHtml(post.time)}</p><p class="member-board-meta"><strong>Length:</strong> ${escapeHtml(post.length)}</p><p class="member-board-meta"><strong>Limud:</strong> ${escapeHtml(post.limud)}</p><p class="member-board-meta"><strong>Style:</strong> ${escapeHtml(post.style)}</p>${notes}</article>`;
+                const notes = post.notes ? `<p class="member-board-meta"><strong>הערות:</strong> ${escapeHtml(post.notes)}</p>` : "";
+                return `<article class="community-card"><p class="community-name">${escapeHtml(post.nickname)}</p><p class="member-board-meta"><strong>צייט:</strong> ${escapeHtml(post.time)}</p><p class="member-board-meta"><strong>לענג:</strong> ${escapeHtml(post.length)}</p><p class="member-board-meta"><strong>לימוד:</strong> ${escapeHtml(post.limud)}</p><p class="member-board-meta"><strong>אופן:</strong> ${escapeHtml(post.style)}</p>${notes}</article>`;
             }).join("");
         }
 
@@ -163,13 +164,13 @@
             const notes = document.getElementById("bm-notes").value.trim();
 
             if (!currentUser || !time || !length || !limud || !style) {
-                message.textContent = "Please log in and fill all required fields.";
+                message.textContent = "ביטע לאָג אריין און פיל אויס אלע פעלדער.";
                 message.className = "auth-message error mt-2";
                 return;
             }
 
             await window.yeshivaChillApi.addBaisMedrash({
-                nickname: currentUser.nickname || currentUser.displayName || "Anonymous",
+                nickname: currentUser.nickname || currentUser.displayName || "אנאנימ",
                 time,
                 length,
                 limud,
@@ -178,7 +179,7 @@
             });
 
             event.target.reset();
-            message.textContent = "Your post was published successfully.";
+            message.textContent = "די מודעה איז געלייגט געווארן מיט הצלחה.";
             message.className = "auth-message success mt-2";
             await renderPosts();
         });
@@ -186,7 +187,7 @@
         renderPosts().catch((error) => {
             console.error(error);
             const list = document.getElementById("bm-list");
-            list.innerHTML = '<article class="community-card"><p class="community-meta">Could not load posts right now.</p></article>';
+            list.innerHTML = '<article class="community-card"><p class="community-meta">מען קען יעצט נישט לאדענען די מודעות.</p></article>';
         });
     </script>
 </body>

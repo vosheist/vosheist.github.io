@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yeshiva Chill | Feedback</title>
+    <title>Yeshiva Chill | הערות</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
@@ -22,8 +22,8 @@
                 <a class="navbar-brand" href="/login" aria-label="Yeshiva Chill">
                     <span class="brand-lockup" aria-hidden="true">
                         <span class="brand-words">
-                            <span class="brand-vos">Yeshiva</span>
-                            <span class="brand-heist">Chill</span>
+                            <span class="brand-vos">ישיבה</span>
+                            <span class="brand-heist">טשיל</span>
                         </span>
                         <span class="brand-tes"></span>
                         <span class="brand-marks">
@@ -40,23 +40,23 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="/community">Community</a>
+                            <a class="nav-link" href="/community">קהילה</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/bais-medrash">Bais Medrash</a>
+                            <a class="nav-link" href="/bais-medrash">בית מדרש</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/coffee-room">Coffee Room</a>
+                            <a class="nav-link" href="/coffee-room">קאווע צימער</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/bein-hasdarim">Bein Hasdarim</a>
+                            <a class="nav-link" href="/bein-hasdarim">בין הסדרים</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/hearos">Feedback</a>
+                            <a class="nav-link active" aria-current="page" href="/hearos">הערות</a>
                         </li>
                     </ul>
                 </div>
-                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi">Account</a>
+                <a class="nav-link account-shortcut js-account-shortcut d-none" href="/nafshi">חשבון</a>
             </div>
         </nav>
     </div>
@@ -69,31 +69,31 @@
                         <div class="card-body p-5">
                             <h1 class="card-title text-center mb-4"
                                 style="font-family: 'Playpen Sans Hebrew', sans-serif; font-size: 2rem;">
-                                Send Feedback</h1>
-                            <p class="text-center text-secondary mb-4">Share ideas, issues, or suggestions to help improve Yeshiva Chill.</p>
+                                שיק הערות</h1>
+                            <p class="text-center text-secondary mb-4">טייל מיט אונז געדאנקען, פראבלעמען און הצעות צו בעסערן ישיבה טשיל.</p>
 
                             <form id="feedback-form">
                                 <div class="mb-4">
-                                    <label for="feedback-name" class="form-label fw-bold">Your Name</label>
+                                    <label for="feedback-name" class="form-label fw-bold">דיין נאמען</label>
                                     <input id="feedback-name" name="name" class="form-control form-control-lg"
-                                        type="text" placeholder="Write your full name..." required>
+                                        type="text" placeholder="שרייב דיין פולע נאמען..." required>
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="feedback-email" class="form-label fw-bold">Email Address
-                                        (optional)</label>
+                                    <label for="feedback-email" class="form-label fw-bold">אימעיל
+                                        (אפשאנעל)</label>
                                     <input id="feedback-email" name="email" class="form-control form-control-lg"
-                                        type="email" placeholder="Write your email...">
+                                        type="email" placeholder="שרייב דיין אימעיל...">
                                 </div>
 
                                 <div class="mb-5">
-                                    <label for="feedback-message" class="form-label fw-bold">Message</label>
+                                    <label for="feedback-message" class="form-label fw-bold">הודעה</label>
                                     <textarea id="feedback-message" name="message" class="form-control form-control-lg"
-                                        rows="6" placeholder="Write your feedback here..." required></textarea>
+                                        rows="6" placeholder="שרייב דא דיין הערה..." required></textarea>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary btn-lg w-100 auth-btn fw-bold">
-                                    Send Message
+                                    שיק הודעה
                                 </button>
 
                                 <p id="feedback-message-status" class="auth-message mt-3 text-center"
@@ -132,14 +132,14 @@
             const message = messageInput.value.trim();
 
             if (!name || !message) {
-                statusEl.textContent = "Please fill name and message.";
+                statusEl.textContent = "ביטע פיל אויס נאמען און הודעה.";
                 statusEl.className = "auth-message error mt-3 text-center";
                 return;
             }
 
             // Show loading state
             submitBtn.disabled = true;
-            statusEl.textContent = "Sending...";
+            statusEl.textContent = "שיקט...";
             statusEl.className = "auth-message mt-3 text-center";
 
             try {
@@ -169,7 +169,7 @@
                 }
 
                 // Success
-                statusEl.textContent = "Thanks. Your feedback was sent successfully.";
+                statusEl.textContent = "א דאנק. דיין הערה איז געשיקט געווארן.";
                 statusEl.className = "auth-message success mt-3 text-center";
 
                 // Clear form
@@ -184,7 +184,7 @@
 
             } catch (error) {
                 console.error("Feedback error:", error);
-                statusEl.textContent = "Could not send feedback right now. Please try again.";
+                statusEl.textContent = "מען קען יעצט נישט שיקן. פרוביר נאכאמאל.";
                 statusEl.className = "auth-message error mt-3 text-center";
             } finally {
                 submitBtn.disabled = false;
