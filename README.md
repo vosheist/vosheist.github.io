@@ -1,23 +1,31 @@
 # Yeshiva Chill
 
-Organized monorepo-style layout for the Yeshiva Chill web platform.
+Yeshiva Chill web platform (frontend pages + Express/Mongo backend).
 
 ## Project Layout
 
-- `frontend/` - Main client app pages and shared assets
-- `frontend/games/` - All game pages and game scripts
+- Route folders: `login/`, `community/`, `inbox/`, `account/`, `bais-medrash/`, `coffee-room/`, `bein-hasdarim/`, `hearos/`, `prices/`, `admin/`, `nafshi/`
+- `games/` - Game pages and game scripts
+- `js/` - Shared frontend scripts (`script.js`, `api.js`, `auth.js`)
+- `css/` - Shared styles (`styles.css`)
 - `backend/` - Express + MongoDB API
 - `backend/scripts/` - Operational/test utility scripts
 - `public/` - Shared static assets
-- `docs/` - Setup, testing, and audit documentation
+- `docs/` - Setup, testing, and architecture documentation
 - `mashbak/` - SMS compliance/support page
-- `archive/legacy-root/` - Historical root files kept for reference
+- `archive/legacy-root/` - Historical archived files
 
 ## Entry Points
 
-- Main site: `index.html` (redirects to `frontend/index.html`)
-- Frontend app: `frontend/index.html`
+- Main site: `index.html` (redirects to `/login`)
+- Login page route: `/login` (`login/index.html`)
 - Backend API: `backend/server.js`
+
+## URL Strategy
+
+- Clean URLs are now live (no `.html` in navigation routes).
+- Examples: `/community`, `/inbox`, `/account`, `/games/connect4`.
+- See `docs/URL_ROUTING_PLAN.md` for full route map and migration notes.
 
 ## Backend Commands
 
@@ -31,5 +39,5 @@ Run from `backend/`:
 
 ## Notes
 
-- Legacy or one-off root files were moved into `archive/legacy-root/` to keep the root clean.
-- Existing routes and runtime behavior were not changed by this organization pass.
+- Duplicate `frontend/` tree has been removed from the active project structure.
+- URL migration details are documented in `docs/URL_ROUTING_PLAN.md`.

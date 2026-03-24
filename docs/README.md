@@ -4,8 +4,10 @@ This repository contains the Yeshiva Chill member platform (frontend + backend) 
 
 ## Current Structure
 
-- `frontend/` - Main web app pages and shared assets
-- `frontend/games/` - All game pages and game logic scripts
+- Route folders - Main web app pages (`login/`, `community/`, `inbox/`, `account/`, etc.)
+- `games/` - Game pages and game logic scripts
+- `js/` - Shared frontend scripts
+- `css/` - Shared frontend stylesheet
 - `backend/` - Express + MongoDB API server
 - `backend/scripts/` - Utility and seed scripts
 - `public/` - Shared static images/assets
@@ -14,14 +16,20 @@ This repository contains the Yeshiva Chill member platform (frontend + backend) 
 
 ## Frontend Overview
 
-- Core app pages (auth, account, community, etc.) live in `frontend/`
-- Games hub is `frontend/bein-hasdarim.html`
-- Individual game pages are now grouped in `frontend/games/`
+- Core app pages are served via clean routes using folder `index.html` files.
+- Games hub route: `/bein-hasdarim`
+- Individual game routes are grouped under `/games/*`
 - Shared frontend logic:
-	- `frontend/script.js`
-	- `frontend/api.js`
-	- `frontend/auth.js`
-	- `frontend/styles.css`
+	- `js/script.js`
+	- `js/api.js`
+	- `js/auth.js`
+	- `css/styles.css`
+
+## URL Routing Plan
+
+- Clean URLs are implemented and active.
+- No `.html` route paths are used in active navigation.
+- Route map and migration details: `docs/URL_ROUTING_PLAN.md`.
 
 ## Backend Overview
 
@@ -41,7 +49,7 @@ This repository contains the Yeshiva Chill member platform (frontend + backend) 
 	 - copy `.env.example` to `.env` and fill values
 	 - `npm run dev`
 2. Open the frontend entrypoint:
-	 - `index.html` (redirects to `frontend/index.html`)
+	 - `index.html` (redirects to login)
 
 ## Related Docs
 

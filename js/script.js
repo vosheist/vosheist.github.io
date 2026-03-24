@@ -1,16 +1,22 @@
-(() => {
+﻿(() => {
     const SESSION_KEY = "yeshivaChillCurrentUser";
-    const LOGIN_PAGE = "/nafshi.html";
-    const PUBLIC_PAGES = new Set(["login.html", "nafshi.html"]);
+    const LOGIN_PAGE = "/login";
+    const PUBLIC_PAGES = new Set(["", "login", "nafshi"]);
 
-    function getCurrentPageName() {
-        const path = window.location.pathname || "";
-        const fileName = path.split("/").pop();
-        return fileName || "login.html";
+    function getCurrentPageKey() {
+        const path = (window.location.pathname || "/").toLowerCase();
+        const segments = path.split("/").filter(Boolean);
+        if (!segments.length) {
+            return "";
+        }
+        if (segments[0] === "games" && segments[1]) {
+            return "games/" + segments[1];
+        }
+        return segments[0];
     }
 
     function enforceMemberAccess() {
-        const currentPage = getCurrentPageName().toLowerCase();
+        const currentPage = getCurrentPageKey();
         const isLoggedIn = Boolean(sessionStorage.getItem(SESSION_KEY));
 
         if (!isLoggedIn && !PUBLIC_PAGES.has(currentPage)) {
@@ -44,10 +50,10 @@
         shortcuts.forEach((shortcut) => {
             if (isLoggedIn) {
                 shortcut.classList.remove("d-none");
-                shortcut.setAttribute("href", "/account.html");
+                shortcut.setAttribute("href", "/account");
             } else {
                 shortcut.classList.add("d-none");
-                shortcut.setAttribute("href", "/nafshi.html");
+                shortcut.setAttribute("href", LOGIN_PAGE);
             }
         });
     }
@@ -168,14 +174,14 @@
         var show = input.type === 'password';
         input.type = show ? 'text' : 'password';
         btn.innerHTML = show ? EYE_SLASH : EYE;
-        btn.setAttribute('aria-label', show ? 'הסתר קאוד' : 'הראה קאוד');
+        btn.setAttribute('aria-label', show ? '×”×¡×ª×¨ ×§××•×“' : '×”×¨××” ×§××•×“');
     });
 })();
 
 // Game help + demo panel
 (function () {
     var HELP = {
-        "game-2048.html": {
+        "games/2048": {
             steps: [
                 "Use arrow keys to slide all tiles.",
                 "Matching numbers merge into one bigger tile.",
@@ -186,7 +192,7 @@
             targetXp: 120,
             tips: ["Keep your highest tile near a corner.", "Avoid full rows with mixed values.", "Plan 2 moves ahead before swiping."]
         },
-        "game-tictactoe.html": {
+        "games/tictactoe": {
             steps: [
                 "Click any empty square to place X.",
                 "Computer responds with O.",
@@ -197,7 +203,7 @@
             targetXp: 75,
             tips: ["Center gives the most fork opportunities.", "Block double-threats before attacking.", "Corners are stronger than edges."]
         },
-        "game-connect4.html": {
+        "games/connect4": {
             steps: [
                 "Click a column to drop your piece.",
                 "Computer drops after your move.",
@@ -208,7 +214,7 @@
             targetXp: 95,
             tips: ["Center columns unlock more diagonal paths.", "Set traps where two wins open at once.", "Do not hand free vertical stacks."]
         },
-        "game-snake.html": {
+        "games/snake": {
             steps: [
                 "Use arrow keys to move the snake.",
                 "Eat food to grow and increase score.",
@@ -219,7 +225,7 @@
             targetXp: 140,
             tips: ["Create long safe lanes before chasing food.", "Avoid tight U-turns in late game.", "Use wall tracking to reduce panic turns."]
         },
-        "game-lane-racer.html": {
+        "games/lane-racer": {
             steps: [
                 "Use left/right arrows to switch lanes.",
                 "Avoid red obstacle blocks.",
@@ -230,7 +236,7 @@
             targetXp: 110,
             tips: ["Middle lane gives the best reaction window.", "Switch once, then stabilize.", "Avoid over-correcting across lanes."]
         },
-        "game-memory-match.html": {
+        "games/memory-match": {
             steps: [
                 "Click cards to reveal symbols.",
                 "Match pairs before the board resets your memory.",
@@ -241,7 +247,7 @@
             targetXp: 85,
             tips: ["Use a scan pattern instead of random flips.", "Lock pair positions mentally by row.", "Prefer confident matches before exploration."]
         },
-        "game-reaction-timer.html": {
+        "games/reaction-timer": {
             steps: [
                 "Press start and wait for green state.",
                 "Click immediately when ready signal appears.",
@@ -252,7 +258,7 @@
             targetXp: 90,
             tips: ["Relax your grip before each round.", "Watch color, not text.", "Reset quickly after an early click."]
         },
-        "game-quick-math.html": {
+        "games/quick-math": {
             steps: [
                 "Solve each math question quickly.",
                 "Submit answers before timer runs down.",
@@ -263,7 +269,7 @@
             targetXp: 100,
             tips: ["Estimate sign and size before final answer.", "Break hard sums into chunks.", "Keep a steady answer rhythm."]
         },
-        "game-number-guess.html": {
+        "games/number-guess": {
             steps: [
                 "Guess the hidden number.",
                 "Use high/low feedback to narrow the range.",
@@ -274,7 +280,7 @@
             targetXp: 80,
             tips: ["Binary search is your fastest strategy.", "Track min and max mentally every guess.", "Do not repeat near-duplicate guesses."]
         },
-        "game-rps.html": {
+        "games/rps": {
             steps: [
                 "Pick rock, paper, or scissors.",
                 "Computer reveals its choice.",
@@ -294,9 +300,14 @@
         { threshold: 90, label: "Elite Focus" }
     ];
 
-    function currentFileName() {
-        var path = window.location.pathname || "";
-        return (path.split("/").pop() || "").toLowerCase();
+    function currentRouteKey() {
+        var path = (window.location.pathname || "/").toLowerCase();
+        var parts = path.split("/").filter(Boolean);
+        if (!parts.length) return "";
+        if (parts[0] === "games" && parts[1]) {
+            return "games/" + parts[1];
+        }
+        return parts[0];
     }
 
     function formatDuration(totalSeconds) {
@@ -558,16 +569,18 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        var fileName = currentFileName();
-        var info = HELP[fileName];
+        var routeKey = currentRouteKey();
+        var info = HELP[routeKey];
         if (!info) return;
 
         var gameCard = document.querySelector("article.game-card");
         if (!gameCard) return;
 
-        var panelId = "game-help-" + fileName.replace(/[^a-z0-9]/g, "-");
-        var stateKey = "yeshivaChillGameCompanion." + fileName;
+        var panelId = "game-help-" + routeKey.replace(/[^a-z0-9]/g, "-");
+        var stateKey = "yeshivaChillGameCompanion." + routeKey;
         var panel = createHelpPanel(info, panelId, stateKey);
         gameCard.appendChild(panel);
     });
 })();
+
+

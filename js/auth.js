@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     const SESSION_KEY = "yeshivaChillCurrentUser";
     const SIGNUP_NOTIFY_ENDPOINT = "http://localhost:3000/api/notify-signup";
 
@@ -101,22 +101,22 @@
             const userKey = normalizeName(displayName);
 
             if (!userKey) {
-                showMessage(createMessage, "לייג אריין אלע נאמען פעלדער.", "error");
+                showMessage(createMessage, "×œ×™×™×’ ××¨×™×™×Ÿ ××œ×¢ × ××ž×¢×Ÿ ×¤×¢×œ×“×¢×¨.", "error");
                 return;
             }
 
             if (!email || !email.includes("@")) {
-                showMessage(createMessage, "לייג אריין א גילטיקן אימעיל.", "error");
+                showMessage(createMessage, "×œ×™×™×’ ××¨×™×™×Ÿ × ×’×™×œ×˜×™×§×Ÿ ××™×ž×¢×™×œ.", "error");
                 return;
             }
 
             if (password.length < 4) {
-                showMessage(createMessage, "קאוד דארף האבן 4 אותיות אדער מער.", "error");
+                showMessage(createMessage, "×§××•×“ ×“××¨×£ ×”××‘×Ÿ 4 ××•×ª×™×•×ª ××“×¢×¨ ×ž×¢×¨.", "error");
                 return;
             }
 
             if (password !== confirmInput.value) {
-                showMessage(createMessage, "ביידע קאודס דארפן זיין די זעלבע.", "error");
+                showMessage(createMessage, "×‘×™×™×“×¢ ×§××•×“×¡ ×“××¨×¤×Ÿ ×–×™×™×Ÿ ×“×™ ×–×¢×œ×‘×¢.", "error");
                 return;
             }
 
@@ -135,14 +135,14 @@
             } catch (error) {
                 const message = String(error.message || "").toLowerCase();
                 if (message.includes("nickname")) {
-                    showMessage(createMessage, "דער פען נאמען איז שוין פארנומען.", "error");
+                    showMessage(createMessage, "×“×¢×¨ ×¤×¢×Ÿ × ××ž×¢×Ÿ ××™×– ×©×•×™×Ÿ ×¤××¨× ×•×ž×¢×Ÿ.", "error");
                     return;
                 }
                 if (message.includes("exists") || message.includes("user")) {
-                    showMessage(createMessage, "דער נאמען איז שוין פארנומען.", "error");
+                    showMessage(createMessage, "×“×¢×¨ × ××ž×¢×Ÿ ××™×– ×©×•×™×Ÿ ×¤××¨× ×•×ž×¢×Ÿ.", "error");
                     return;
                 }
-                showMessage(createMessage, "קאנעקשען פראבלעם. פרוביר נאכאמאל.", "error");
+                showMessage(createMessage, "×§×× ×¢×§×©×¢×Ÿ ×¤×¨××‘×œ×¢×. ×¤×¨×•×‘×™×¨ × ××›××ž××œ.", "error");
                 return;
             }
 
@@ -170,7 +170,7 @@
                     : displayName);
             persistSessionUser(backendUserKey);
 
-            showMessage(createMessage, "חשבון געשאַפֿן. דו ביסט שוין אריינגעלאָגט.", "success");
+            showMessage(createMessage, "×—×©×‘×•×Ÿ ×’×¢×©×Ö·×¤Ö¿×Ÿ. ×“×• ×‘×™×¡×˜ ×©×•×™×Ÿ ××¨×™×™× ×’×¢×œ×Ö¸×’×˜.", "success");
             if (!notification.sent && notification.reason !== "missing-endpoint") {
                 console.warn("Signup created, but owner notification failed:", notification.reason);
             }
@@ -183,7 +183,7 @@
             confirmInput.value = "";
 
             setTimeout(() => {
-                window.location.href = "/account.html";
+                window.location.href = "/account";
             }, 450);
         });
     }
@@ -218,13 +218,13 @@
                 const user = loginResult.user;
                 const backendUserKey = loginResult.userKey || userKey;
                 persistSessionUser(backendUserKey);
-                showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
+                showMessage(loginMessage, `${user.displayName}, ×‘×¨×•×š ×”×‘×!`, "success");
             } catch {
-                showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער קאוד איז נישט ריכטיג.", "error");
+                showMessage(loginMessage, "××™×š ×˜×¨×¢×£ × ×™×©×˜ ×§×™×™×Ÿ ×—×©×‘×•×Ÿ ××“×¢×¨ ×“×¢×¨ ×§××•×“ ××™×– × ×™×©×˜ ×¨×™×›×˜×™×’.", "error");
                 return;
             }
             setTimeout(() => {
-                window.location.href = "/account.html";
+                window.location.href = "/account";
             }, 400);
         });
     }
@@ -232,3 +232,4 @@
     wireCreateAccountForm();
     wireLoginForm();
 })();
+

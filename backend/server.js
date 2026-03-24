@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const fs = require("fs/promises");
@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
 const ADMIN_ACCESS_KEY = String(process.env.ADMIN_ACCESS_KEY || "").trim();
-const FRONTEND_LOGIN_URL = String(process.env.FRONTEND_LOGIN_URL || "https://vosheist.github.io/nafshi.html").trim();
+const FRONTEND_LOGIN_URL = String(process.env.FRONTEND_LOGIN_URL || "https://vosheist.github.io/nafshi").trim();
 const LEGACY_STORE_PATH = path.join(__dirname, "data", "store.json");
 
 let mongoClient;
@@ -25,16 +25,16 @@ let privateMessagesCollection;
 let gameInvitesCollection;
 
 const INVITE_GAME_ROUTES = {
-    "2048": "/games/game-2048.html",
-    "tictactoe": "/games/game-tictactoe.html",
-    "connect4": "/games/game-connect4.html",
-    "snake": "/games/game-snake.html",
-    "lane-racer": "/games/game-lane-racer.html",
-    "memory-match": "/games/game-memory-match.html",
-    "reaction-timer": "/games/game-reaction-timer.html",
-    "quick-math": "/games/game-quick-math.html",
-    "number-guess": "/games/game-number-guess.html",
-    "rps": "/games/game-rps.html"
+    "2048": "/games/2048",
+    "tictactoe": "/games/tictactoe",
+    "connect4": "/games/connect4",
+    "snake": "/games/snake",
+    "lane-racer": "/games/lane-racer",
+    "memory-match": "/games/memory-match",
+    "reaction-timer": "/games/reaction-timer",
+    "quick-math": "/games/quick-math",
+    "number-guess": "/games/number-guess",
+    "rps": "/games/rps"
 };
 
 function normalizeName(name) {
@@ -215,9 +215,9 @@ async function migrateLegacyStoreIfNeeded() {
             await coffeeRoomCollection.insertMany(coffeeDocs, { ordered: false });
         }
 
-        console.log("✓ Migrated legacy JSON store into MongoDB");
+        console.log("âœ“ Migrated legacy JSON store into MongoDB");
     } catch {
-        console.log("ℹ No legacy store to migrate");
+        console.log("â„¹ No legacy store to migrate");
     }
 }
 
@@ -1151,14 +1151,14 @@ async function startServer() {
         await migrateLegacyStoreIfNeeded();
 
         app.listen(PORT, () => {
-            console.log(`✓ Yeshiva Chill Backend running on http://localhost:${PORT}`);
-            console.log(`✓ MongoDB connected: ${MONGODB_DB_NAME}`);
+            console.log(`âœ“ Yeshiva Chill Backend running on http://localhost:${PORT}`);
+            console.log(`âœ“ MongoDB connected: ${MONGODB_DB_NAME}`);
             if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-                console.log("✓ Email service configured");
+                console.log("âœ“ Email service configured");
             } else {
-                console.warn("⚠ Email service NOT configured - set EMAIL_USER and EMAIL_PASSWORD in .env");
+                console.warn("âš  Email service NOT configured - set EMAIL_USER and EMAIL_PASSWORD in .env");
             }
-            console.log("✓ Endpoints: auth, users, community, bais-medrash, coffee-room");
+            console.log("âœ“ Endpoints: auth, users, community, bais-medrash, coffee-room");
         });
     } catch (error) {
         console.error("Failed to start server:", error.message);
@@ -1167,3 +1167,4 @@ async function startServer() {
 }
 
 startServer();
+

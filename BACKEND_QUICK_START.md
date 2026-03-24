@@ -1,5 +1,16 @@
 # Backend Setup Guide - Complete Instructions
 
+> Note: This guide still shows some historical `frontend/` structure examples.
+> The active cleanup and clean-URL migration plan is documented in `docs/URL_ROUTING_PLAN.md`.
+> Use that file as source of truth for current route direction.
+
+## Current Route Structure (Active)
+
+- Core pages now use folder routes (for example: `/login`, `/community`, `/inbox`, `/account`).
+- Game pages now use clean routes under `/games/*` (for example: `/games/connect4`).
+- Each clean route maps to an `index.html` file in a matching folder.
+- Legacy `.html` page links are no longer the canonical navigation format.
+
 ## 📁 Project Structure
 
 ```

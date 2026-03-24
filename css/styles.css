@@ -2216,6 +2216,7 @@ textarea:focus-visible {
 
 /* Large desktops and ultra-wide screens: keep composition intentional */
 @media (min-width: 1600px) {
+
     .pricing-wrap,
     .account-shell,
     .community-wrap,
@@ -2258,6 +2259,7 @@ textarea:focus-visible {
 
 /* Desktop enjoyment: richer hover states where a mouse exists */
 @media (hover: hover) and (pointer: fine) {
+
     .community-card,
     .account-panel,
     .inbox-list-shell,
@@ -2278,5 +2280,167 @@ textarea:focus-visible {
         transform: translateY(-2px);
         box-shadow: 0 12px 28px rgba(47, 81, 101, 0.12);
         border-color: #c4d6e5;
+    }
+}
+
+/* Game UX baseline: comfortable controls and centered play area */
+.game-card {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+}
+
+.game-root {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.game-root .btn,
+.game-root button,
+.game-root input,
+.game-root select {
+    min-height: 40px;
+}
+
+.ttt-controls,
+.g2048-top,
+.game-companion-head,
+.game-companion-actions {
+    row-gap: 0.5rem;
+}
+
+/* Tablet and in-between widths */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .game-card {
+        padding: 1rem;
+    }
+
+    .ttt-cell {
+        width: 78px;
+        height: 78px;
+        font-size: 30px;
+    }
+
+    .c4-cell {
+        width: 44px;
+        height: 44px;
+    }
+
+    .snake-cell {
+        width: 19px;
+        height: 19px;
+    }
+
+    .lr-cell {
+        width: 46px;
+        height: 24px;
+    }
+
+    .g2048-tile {
+        min-height: 56px;
+        font-size: 1rem;
+    }
+
+    .mm-card {
+        min-height: 52px;
+        font-size: 1.2rem;
+    }
+}
+
+/* Desktop game scaling */
+@media (min-width: 1200px) {
+    .game-title {
+        font-size: 1.42rem;
+    }
+
+    .game-card {
+        padding: 1.2rem;
+    }
+
+    .ttt-cell {
+        width: 88px;
+        height: 88px;
+        font-size: 34px;
+    }
+
+    .c4-cell {
+        width: 50px;
+        height: 50px;
+    }
+
+    .snake-cell {
+        width: 21px;
+        height: 21px;
+    }
+
+    .lr-cell {
+        width: 52px;
+        height: 25px;
+    }
+
+    .g2048-tile {
+        min-height: 60px;
+        font-size: 1.06rem;
+    }
+
+    .mm-card {
+        min-height: 56px;
+        font-size: 1.24rem;
+    }
+
+    .ng-input,
+    .qm-input {
+        width: 150px;
+    }
+
+    .rt-panel {
+        min-height: 96px;
+        font-size: 1.05rem;
+    }
+
+    .game-companion-title {
+        font-size: 1.05rem;
+    }
+}
+
+/* Ultra-wide desktop: richer spacing without wasting space */
+@media (min-width: 1600px) {
+    .game-card {
+        padding: 1.35rem;
+    }
+
+    .ttt-cell {
+        width: 98px;
+        height: 98px;
+        font-size: 38px;
+    }
+
+    .c4-cell {
+        width: 56px;
+        height: 56px;
+    }
+
+    .snake-cell {
+        width: 23px;
+        height: 23px;
+    }
+
+    .lr-cell {
+        width: 58px;
+        height: 28px;
+    }
+
+    .g2048-tile {
+        min-height: 66px;
+        font-size: 1.12rem;
+    }
+
+    .mm-card {
+        min-height: 60px;
+        font-size: 1.3rem;
+    }
+
+    .game-companion-shell {
+        padding: 0.95rem;
     }
 }
