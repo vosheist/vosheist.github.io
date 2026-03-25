@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Bona+Nova:ital,wght@0,400;0,700;1,400&family=Heebo:wght@100..900&family=Huninn&family=Karantina:wght@300;400;700&display=swap");
+
 :root {
     --nav-height: 76px;
     --logo-cream: #fef9c8;
@@ -7,11 +9,16 @@
     --logo-sage: #b2d0ac;
     --logo-sage-deep: #87ad80;
     --logo-border: #d3dcdb;
+    --font-main: "Heebo", "Playpen Sans Hebrew", sans-serif;
+    --font-heading: "Bona Nova", "Heebo", serif;
+    --font-game: "Huninn", "Heebo", sans-serif;
+    --font-hero: "Karantina", "Rubik Marker Hatch", cursive;
 }
 
 body {
     margin: 0;
     padding-top: var(--nav-height);
+    font-family: var(--font-main);
 }
 
 #my-navbar {
@@ -50,7 +57,7 @@ body {
 }
 
 #my-navbar .nav-link {
-    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-family: var(--font-main);
     color: var(--logo-blue-deep);
     font-size: 1.2rem;
 }
@@ -209,7 +216,7 @@ body {
 }
 
 .hero h1 {
-    font-family: 'Rubik Marker Hatch', cursive;
+    font-family: var(--font-hero);
     font-size: clamp(3rem, 7vw, 7rem);
     line-height: 1;
     margin: 0;
@@ -521,7 +528,7 @@ body {
 
 .community-wrap h1 {
     margin: 0 0 1rem;
-    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-family: var(--font-heading);
     color: var(--logo-blue-deep);
 }
 
@@ -529,6 +536,42 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 0.8rem;
+}
+
+.community-list-shell {
+    background: #fffdf9;
+    border: 1px solid var(--logo-border);
+    border-radius: 12px;
+    padding: 0.35rem;
+}
+
+.community-member-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.community-member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    padding: 0.7rem 0.6rem;
+    border-bottom: 1px solid #e8edf3;
+}
+
+.community-member-item:last-child {
+    border-bottom: 0;
+}
+
+.community-member-main {
+    min-width: 0;
+}
+
+.community-list-empty {
+    margin: 0;
+    padding: 0.9rem 0.7rem;
+    color: #5f7180;
 }
 
 .community-card {
@@ -621,7 +664,7 @@ body {
 
 .login-center-wrap h1 {
     margin: 0;
-    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-family: var(--font-heading);
     color: #2f5165;
 }
 
@@ -644,7 +687,7 @@ body {
 .member-board-wrap h1 {
     margin: 0;
     color: var(--logo-blue-deep);
-    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-family: var(--font-heading);
 }
 
 .member-board-sub {
@@ -675,7 +718,7 @@ body {
 }
 
 .site-footer-text {
-    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-family: var(--font-heading);
     color: #5f7180;
     font-size: 0.92rem;
 }
@@ -1134,7 +1177,8 @@ body {
 
 .game-title {
     margin: 0 0 0.5rem;
-    font-family: "Playpen Sans Hebrew", sans-serif;
+    font-family: var(--font-game);
+    letter-spacing: 0.01em;
     color: var(--logo-blue-deep);
 }
 
@@ -1205,6 +1249,18 @@ body {
     display: flex;
     gap: 0.4rem;
     align-items: center;
+
+    @media (max-width: 768px) {
+        .community-member-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .community-card-actions {
+            width: 100%;
+        }
+    }
+
     justify-content: space-between;
     flex-wrap: wrap;
 }

@@ -66,7 +66,7 @@
                 <p id="member-search-meta" class="community-meta mb-0 mt-2"></p>
             </div>
 
-            <div id="community-grid" class="community-grid"></div>
+            <div id="community-grid" class="community-list-shell"></div>
         </div>
     </section>
 
@@ -196,26 +196,30 @@
             meta.textContent = `Showing ${filtered.length} of ${allMembers.length} members`;
 
             if (!filtered.length) {
-                grid.innerHTML = '<div class="community-card"><p class="community-meta mb-0">No members match your search.</p></div>';
+                grid.innerHTML = '<p class="community-list-empty">No members match your search.</p>';
                 return;
             }
 
-            grid.innerHTML = filtered.map(({ key, user }) => {
-                const publicName = getMemberLabel(user, key);
-                const joined = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-";
-                return [
-                    `<article class="community-card">`,
-                    `<p class="community-name mb-1">${escapeHtml(publicName)}</p>`,
-                    `<p class="community-meta mb-1">Nickname: ${escapeHtml(user.nickname || "-")}</p>`,
-                    `<p class="community-meta mb-1">Name: ${escapeHtml(user.displayName || "-")}</p>`,
-                    `<p class="community-meta mb-1">Joined: ${escapeHtml(joined)}</p>`,
-                    `<div class="community-card-actions mt-2">`,
-                    `<button type="button" class="btn btn-sm btn-outline-primary js-message-btn" data-member-key="${escapeHtml(key)}">Message</button>`,
-                    `<button type="button" class="btn btn-sm auth-btn js-invite-btn" data-member-key="${escapeHtml(key)}">Invite</button>`,
-                    `</div>`,
-                    `</article>`
-                ].join("");
-            }).join("");
+            grid.innerHTML = [
+                '<ul class="community-member-list" role="list">',
+                filtered.map(({ key, user }) => {
+                    const publicName = getMemberLabel(user, key);
+                    const joined = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-";
+                    return [
+                        `<li class="community-member-item">`,
+                        `<div class="community-member-main">`,
+                        `<p class="community-name mb-1">${escapeHtml(publicName)}</p>`,
+                        `<p class="community-meta mb-0">Nickname: ${escapeHtml(user.nickname || "-")} | Name: ${escapeHtml(user.displayName || "-")} | Joined: ${escapeHtml(joined)}</p>`,
+                        `</div>`,
+                        `<div class="community-card-actions">`,
+                        `<button type="button" class="btn btn-sm btn-outline-primary js-message-btn" data-member-key="${escapeHtml(key)}">Message</button>`,
+                        `<button type="button" class="btn btn-sm auth-btn js-invite-btn" data-member-key="${escapeHtml(key)}">Invite</button>`,
+                        `</div>`,
+                        `</li>`
+                    ].join("");
+                }).join(""),
+                '</ul>'
+            ].join("");
 
             grid.querySelectorAll(".js-message-btn").forEach((button) => {
                 button.addEventListener("click", () => {
@@ -316,7 +320,7 @@
         loadCommunity().catch((error) => {
             console.error(error);
             const grid = document.getElementById("community-grid");
-            grid.innerHTML = '<div class="community-card"><p class="community-meta mb-0">Could not load members right now.</p></div>';
+            grid.innerHTML = '<p class="community-list-empty">Could not load members right now.</p>';
         });
     </script>
 </body>

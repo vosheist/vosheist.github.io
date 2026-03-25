@@ -84,11 +84,66 @@
         });
     }
 
-    function normalizeCommunityNavLabel() {
-        const links = document.querySelectorAll('#my-navbar a[href="/community"]');
-        links.forEach((link) => {
-            link.textContent = "Members מעמבערס";
-        });
+    function syncNavbarStructure() {
+        const navList = document.querySelector("#my-navbar .navbar-nav");
+        if (!navList) {
+            return;
+        }
+
+        const currentPage = getCurrentPageKey();
+        const items = [
+            { href: "/community", label: "מעמבערס", keys: ["community"] },
+            { href: "/bais-medrash", label: "בית מדרש", keys: ["bais-medrash"] },
+            { href: "/coffee-room", label: "קאווע צימער", keys: ["coffee-room"] },
+            { href: "/bein-hasdarim", label: "בין הסדרים", keys: ["bein-hasdarim", "games"] },
+            { href: "/hearos", label: "הערות", keys: ["hearos"] },
+            { href: "/inbox", label: "Inbox", keys: ["inbox"] }
+        ];
+
+        const isActive = (item) => {
+            if (currentPage.startsWith("games/")) {
+                return item.keys.includes("games");
+            }
+            return item.keys.includes(currentPage);
+        };
+
+        navList.innerHTML = items.map((item) => {
+            const active = isActive(item);
+            const current = active ? ' aria-current="page"' : "";
+            const activeClass = active ? " active" : "";
+            return '<li class="nav-item"><a class="nav-link' + activeClass + '" href="' + item.href + '"' + current + '>' + item.label + '</a></li>';
+        }).join("");
+
+        const accountShortcut = document.querySelector("#my-navbar .js-account-shortcut");
+        if (accountShortcut) {
+            accountShortcut.textContent = "חשבון";
+            const accountActive = currentPage === "account";
+            accountShortcut.classList.toggle("active", accountActive);
+            if (accountActive) {
+                accountShortcut.setAttribute("aria-current", "page");
+            } else {
+                accountShortcut.removeAttribute("aria-current");
+            }
+        }
+    }
+
+    function syncNavbarBrand() {
+        const brandLink = document.querySelector("#my-navbar .navbar-brand");
+        if (!brandLink) {
+            return;
+        }
+
+        brandLink.setAttribute("href", LOGIN_PAGE);
+        brandLink.setAttribute("aria-label", "Yeshiva Chill");
+        brandLink.innerHTML = [
+            '<span class="brand-lockup" aria-hidden="true">',
+            '<span class="brand-words">',
+            '<span class="brand-vos">ישיבה</span>',
+            '<span class="brand-heist">טשיל</span>',
+            '</span>',
+            '<span class="brand-tes"></span>',
+            '</span>'
+        ].join("");
     }
 
     function ensureConsistentFooter() {
@@ -128,7 +183,7 @@
         }
 
         const englishLabels = {
-            "/community": "Members מעמבערס",
+            "/community": "מעמבערס",
             "/bais-medrash": "Bais Medrash",
             "/coffee-room": "Coffee Room",
             "/bein-hasdarim": "Games Hub",
@@ -295,9 +350,10 @@
         }
 
         syncNavbarScrollState();
+        syncNavbarBrand();
+        syncNavbarStructure();
         syncAccountShortcut();
         syncGuestNavTargets();
-        normalizeCommunityNavLabel();
         enforceEnglishGameLayout();
         ensureConsistentFooter();
         enhanceIndividualGamePage();

@@ -3,6 +3,7 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const fs = require("fs/promises");
 const path = require("path");
+const crypto = require("crypto");
 const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
 
@@ -60,6 +61,14 @@ function escapeHtml(value) {
 function normalizeDisplayAs(value) {
     const normalized = String(value || "").trim().toLowerCase();
     return normalized === "real-name" ? "real-name" : "nickname";
+}
+
+function isSha256Hash(value) {
+    return /^[a-f0-9]{64}$/i.test(String(value || "").trim());
+}
+
+function sha256(value) {
+    return crypto.createHash("sha256").update(String(value || "")).digest("hex");
 }
 
 function resolvePublicName(user) {
@@ -337,7 +346,19 @@ app.post("/api/auth/login", async (req, res) => {
             { email: exactIdentifier }
         ]
     });
-    if (!user || user.passwordHash !== passwordHash) {
+
+    if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    let normalizedStoredHash = String(user.passwordHash || "").trim();
+    let shouldUpgradeLegacyHash = false;
+    if (!isSha256Hash(normalizedStoredHash) && normalizedStoredHash) {
+        normalizedStoredHash = sha256(normalizedStoredHash);
+        shouldUpgradeLegacyHash = true;
+    }
+
+    if (!normalizedStoredHash || normalizedStoredHash !== passwordHash) {
         return res.status(401).json({ error: "Invalid credentials" });
     }
 
@@ -346,7 +367,11 @@ app.post("/api/auth/login", async (req, res) => {
     }
 
     const lastLoginAt = new Date().toISOString();
-    await usersCollection.updateOne({ userKey: user.userKey }, { $set: { lastLoginAt } });
+    const updateFields = { lastLoginAt };
+    if (shouldUpgradeLegacyHash) {
+        updateFields.passwordHash = normalizedStoredHash;
+    }
+    await usersCollection.updateOne({ userKey: user.userKey }, { $set: updateFields });
 
     return res.json({
         success: true,
@@ -359,7 +384,7 @@ app.post("/api/auth/login", async (req, res) => {
             email: user.email,
             displayAs: normalizeDisplayAs(user.displayAs),
             publicName: resolvePublicName(user),
-            passwordHash: user.passwordHash
+            passwordHash: normalizedStoredHash
         }
     });
 });
