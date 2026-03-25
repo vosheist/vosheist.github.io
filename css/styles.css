@@ -631,12 +631,14 @@ body {
     box-shadow: 0 16px 40px rgba(47, 81, 101, 0.12);
 }
 
+.login-page-en #my-navbar,
 .login-page-en .members-home-login-pane,
 .login-page-en .members-home-login-card,
 .login-page-en .members-home-form,
 .login-page-en .form-label,
 .login-page-en .auth-switch-text,
-.login-page-en .members-home-subtitle {
+.login-page-en .members-home-subtitle,
+.login-page-en .modal-content {
     direction: ltr;
     text-align: left;
 }
