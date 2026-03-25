@@ -543,6 +543,8 @@ body {
     border: 1px solid var(--logo-border);
     border-radius: 12px;
     padding: 0.35rem;
+    direction: ltr;
+    text-align: left;
 }
 
 .community-member-list {
@@ -566,6 +568,8 @@ body {
 
 .community-member-main {
     min-width: 0;
+    direction: ltr;
+    text-align: left;
 }
 
 .community-list-empty {
@@ -625,6 +629,16 @@ body {
     width: min(560px, 100%);
     border-radius: 18px;
     box-shadow: 0 16px 40px rgba(47, 81, 101, 0.12);
+}
+
+.login-page-en .members-home-login-pane,
+.login-page-en .members-home-login-card,
+.login-page-en .members-home-form,
+.login-page-en .form-label,
+.login-page-en .auth-switch-text,
+.login-page-en .members-home-subtitle {
+    direction: ltr;
+    text-align: left;
 }
 
 .members-home-title {
@@ -1380,12 +1394,18 @@ body {
     border: 1px solid var(--logo-border);
     border-radius: 12px;
     padding: 0.8rem;
+    direction: ltr;
+    text-align: left;
 }
 
 .community-card-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
+}
+
+.community-card-actions .btn {
+    width: 110px;
 }
 
 .inbox-layout {

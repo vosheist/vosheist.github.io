@@ -14,6 +14,7 @@ const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "vos_heist";
 const ADMIN_ACCESS_KEY = String(process.env.ADMIN_ACCESS_KEY || "").trim();
 const FRONTEND_LOGIN_URL = String(process.env.FRONTEND_LOGIN_URL || "https://vosheist.github.io/nafshi").trim();
 const LEGACY_STORE_PATH = path.join(__dirname, "data", "store.json");
+const FRONTEND_ROOT = path.resolve(__dirname, "..");
 
 let mongoClient;
 let db;
@@ -1030,7 +1031,7 @@ app.post("/api/games/:gameKey/scores", async (req, res) => {
 
 app.post("/api/feedback", async (req, res) => {
     try {
-        const { name, email, message } = req.body;
+        const { name, email, message, userKey, memberDisplayName, memberNickname, memberEmail } = req.body || {};
         if (!name || !message) {
             return res.status(400).json({ error: "Name and message are required" });
         }
@@ -1040,6 +1041,22 @@ app.post("/api/feedback", async (req, res) => {
             return res.status(400).json({ error: "Invalid email format" });
         }
 
+        const normalizedUserKey = normalizeName(userKey || "");
+        let matchedUser = null;
+        if (normalizedUserKey) {
+            matchedUser = await usersCollection.findOne({ userKey: normalizedUserKey });
+        }
+
+        const resolvedDisplayName = matchedUser
+            ? String(matchedUser.displayName || "")
+            : String(memberDisplayName || "").trim();
+        const resolvedNickname = matchedUser
+            ? String(matchedUser.nickname || "")
+            : String(memberNickname || "").trim();
+        const resolvedMemberEmail = matchedUser
+            ? String(matchedUser.email || "")
+            : String(memberEmail || "").trim();
+
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: "vosheist@gmail.com",
@@ -1048,8 +1065,12 @@ app.post("/api/feedback", async (req, res) => {
                 <h2>New Feedback Received</h2>
                 <p><strong>From:</strong> ${name}</p>
                 ${email ? `<p><strong>Reply-to:</strong> ${email}</p>` : ""}
+                ${normalizedUserKey ? `<p><strong>User Key:</strong> ${escapeHtml(normalizedUserKey)}</p>` : ""}
+                ${resolvedDisplayName ? `<p><strong>Account Name:</strong> ${escapeHtml(resolvedDisplayName)}</p>` : ""}
+                ${resolvedNickname ? `<p><strong>Nickname:</strong> ${escapeHtml(resolvedNickname)}</p>` : ""}
+                ${resolvedMemberEmail ? `<p><strong>Account Email:</strong> ${escapeHtml(resolvedMemberEmail)}</p>` : ""}
                 <p><strong>Message:</strong></p>
-                <p>${String(message).replace(/\n/g, "<br>")}</p>
+                <p>${escapeHtml(String(message)).replace(/\n/g, "<br>")}</p>
                 <hr>
                 <p><small>Submitted at: ${new Date().toISOString()}</small></p>
             `,
@@ -1167,6 +1188,37 @@ app.post("/api/welcome-email", async (req, res) => {
             details: process.env.NODE_ENV === "development" ? error.message : undefined
         });
     }
+});
+
+app.use(express.static(FRONTEND_ROOT));
+
+app.get(/^\/(?!api\/).*/, async (req, res) => {
+    const rawPath = String(req.path || "/");
+    const trimmedPath = rawPath.replace(/^\/+|\/+$/g, "");
+
+    const candidates = [];
+    if (!trimmedPath) {
+        candidates.push(path.join(FRONTEND_ROOT, "index.html"));
+    } else {
+        candidates.push(path.join(FRONTEND_ROOT, trimmedPath, "index.html"));
+        candidates.push(path.join(FRONTEND_ROOT, `${trimmedPath}.html`));
+    }
+
+    for (const candidate of candidates) {
+        const resolved = path.resolve(candidate);
+        if (!resolved.startsWith(FRONTEND_ROOT)) {
+            continue;
+        }
+
+        try {
+            await fs.access(resolved);
+            return res.sendFile(resolved);
+        } catch {
+            // Try next candidate.
+        }
+    }
+
+    return res.status(404).send("Not Found");
 });
 
 async function startServer() {

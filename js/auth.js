@@ -114,27 +114,27 @@
             const userKey = normalizeName(displayName);
 
             if (!userKey) {
-                showMessage(createMessage, "לייג אריין אלע נאמען פעלדער.", "error");
+                showMessage(createMessage, "Please complete all name fields.", "error");
                 return;
             }
 
             if (!email || !email.includes("@")) {
-                showMessage(createMessage, "לייג אריין א גילטיקן אימעיל.", "error");
+                showMessage(createMessage, "Enter a valid email address.", "error");
                 return;
             }
 
             if (password.length < 8) {
-                showMessage(createMessage, "קאוד דארף האבן כאטש 8 אותיות.", "error");
+                showMessage(createMessage, "Password must be at least 8 characters.", "error");
                 return;
             }
 
             if (isWeakPassword(password)) {
-                showMessage(createMessage, "ביטע נוץ א שטערקערן קאוד.", "error");
+                showMessage(createMessage, "Please choose a stronger password.", "error");
                 return;
             }
 
             if (password !== confirmInput.value) {
-                showMessage(createMessage, "ביידע קאודס דארפן זיין די זעלבע.", "error");
+                showMessage(createMessage, "Passwords must match.", "error");
                 return;
             }
 
@@ -153,14 +153,14 @@
             } catch (error) {
                 const message = String(error.message || "").toLowerCase();
                 if (message.includes("nickname")) {
-                    showMessage(createMessage, "דער פען נאמען איז שוין פארנומען.", "error");
+                    showMessage(createMessage, "That nickname is already taken.", "error");
                     return;
                 }
                 if (message.includes("exists") || message.includes("user")) {
-                    showMessage(createMessage, "דער נאמען איז שוין פארנומען.", "error");
+                    showMessage(createMessage, "That account name is already taken.", "error");
                     return;
                 }
-                showMessage(createMessage, "קאנעקשען פראבלעם. פרוביר נאכאמאל.", "error");
+                showMessage(createMessage, "Connection problem. Please try again.", "error");
                 return;
             }
 
@@ -188,7 +188,7 @@
                     : displayName);
             persistSessionUser(backendUserKey);
 
-            showMessage(createMessage, "חשבון געשאַפֿן. דו ביסט שוין אריינגעלאָגט.", "success");
+            showMessage(createMessage, "Account created. You are now signed in.", "success");
             if (!notification.sent && notification.reason !== "missing-endpoint") {
                 console.warn("Signup created, but owner notification failed:", notification.reason);
             }
@@ -253,14 +253,14 @@
                 const user = loginResult.user;
                 const backendUserKey = loginResult.userKey || userKey;
                 persistSessionUser(backendUserKey);
-                showMessage(loginMessage, `${user.displayName}, ברוך הבא!`, "success");
+                showMessage(loginMessage, `Welcome back, ${user.displayName}!`, "success");
             } catch (error) {
                 const rawMessage = String(error && error.message ? error.message : "").toLowerCase();
                 if (rawMessage.includes("failed to fetch")) {
-                    showMessage(loginMessage, "קען נישט פארבינדן צום סערווירער. פרוביר נאכאמאל אין א פאר מינוט.", "error");
+                    showMessage(loginMessage, "Could not connect to the server. Try again in a few minutes.", "error");
                     return;
                 }
-                showMessage(loginMessage, "איך טרעף נישט קיין חשבון אדער דער קאוד איז נישט ריכטיג.", "error");
+                showMessage(loginMessage, "Could not find that account or the password is incorrect.", "error");
                 return;
             }
             setTimeout(() => {

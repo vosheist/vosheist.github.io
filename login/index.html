@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="yi" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yeshiva Chill | היים</title>
+    <title>Yeshiva Chill | Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
@@ -15,7 +15,7 @@
         rel="stylesheet">
 </head>
 
-<body>
+<body class="login-page-en">
     <div id="my-navbar">
         <nav class="navbar navbar-expand-lg rtl-navbar">
             <div class="container-fluid">
@@ -60,19 +60,19 @@
         </div>
         <div class="members-home-login-pane">
             <div class="members-home-login-card auth-card auth-single">
-                <h1 class="members-home-title">ברוכים הבאים צו ישיבה טשיל</h1>
-                <p class="members-home-subtitle">נאר מיטגלידער האבן פולע צוטריט. לאָג אריין אדער שאף א חשבון.</p>
+                <h1 class="members-home-title">Welcome to Yeshiva Chill</h1>
+                <p class="members-home-subtitle">Members get full access. Sign in or create an account.</p>
                 <form id="login-form" class="members-home-form">
-                    <label for="login-name" class="form-label">נאמען</label>
+                    <label for="login-name" class="form-label">Email or Name</label>
                     <div class="anim-ph-wrap">
                         <input id="login-name" name="name" class="form-control" type="text" autocomplete="username"
                             required>
                         <span class="anim-ph" aria-hidden="true"></span>
                     </div>
-                    <label for="login-password" class="form-label">קאוד</label>
+                    <label for="login-password" class="form-label">Password</label>
                     <div class="pw-wrap">
                         <input id="login-password" name="password" class="form-control" type="password" required>
-                        <button class="pw-toggle" type="button" tabindex="-1" aria-label="הראה קאוד"><svg
+                        <button class="pw-toggle" type="button" tabindex="-1" aria-label="Show password"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path
@@ -81,10 +81,10 @@
                                     d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                             </svg></button>
                     </div>
-                    <button type="submit" class="btn btn-primary auth-btn w-100">אַרײַנגיין</button>
-                    <p class="auth-switch-text">האסט נישט קיין חשבון?</p>
+                    <button type="submit" class="btn btn-primary auth-btn w-100">Sign In</button>
+                    <p class="auth-switch-text">Do not have an account?</p>
                     <button type="button" class="btn btn-outline-secondary auth-switch-btn w-100" data-bs-toggle="modal"
-                        data-bs-target="#createAccountModal">שאַף אַ נײַעם חשבון</button>
+                        data-bs-target="#createAccountModal">Create Account</button>
                     <p id="login-message" class="auth-message" aria-live="polite"></p>
                 </form>
             </div>
@@ -96,24 +96,24 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="createAccountModalLabel">שאַף אַ נײַעם חשבון</h4>
+                    <h4 class="modal-title" id="createAccountModalLabel">Create New Account</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="create-account-form">
                     <div class="modal-body">
-                        <label for="create-firstname" class="form-label">ערשטע נאמען</label>
+                        <label for="create-firstname" class="form-label">First Name</label>
                         <input id="create-firstname" name="firstname" class="form-control" type="text" required>
-                        <label for="create-lastname" class="form-label mt-2">לעצטע נאמען</label>
+                        <label for="create-lastname" class="form-label mt-2">Last Name</label>
                         <input id="create-lastname" name="lastname" class="form-control" type="text" required>
-                        <label for="create-nickname" class="form-label mt-2">פען נאמען (אפשאנעל)</label>
+                        <label for="create-nickname" class="form-label mt-2">Nickname (optional)</label>
                         <input id="create-nickname" name="nickname" class="form-control" type="text" maxlength="24">
-                        <label for="create-email" class="form-label mt-2">אימעיל</label>
+                        <label for="create-email" class="form-label mt-2">Email</label>
                         <input id="create-email" name="email" class="form-control" type="email" required>
-                        <label for="create-password" class="form-label mt-2">קאוד</label>
+                        <label for="create-password" class="form-label mt-2">Password</label>
                         <div class="pw-wrap">
                             <input id="create-password" name="password" class="form-control" type="password"
                                 minlength="8" required>
-                            <button class="pw-toggle" type="button" tabindex="-1" aria-label="הראה קאוד"><svg
+                            <button class="pw-toggle" type="button" tabindex="-1" aria-label="Show password"><svg
                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     viewBox="0 0 16 16">
                                     <path
@@ -122,11 +122,11 @@
                                         d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                                 </svg></button>
                         </div>
-                        <label for="create-password-confirm" class="form-label mt-2">באשטעטיג קאוד</label>
+                        <label for="create-password-confirm" class="form-label mt-2">Confirm Password</label>
                         <div class="pw-wrap">
                             <input id="create-password-confirm" name="passwordConfirm" class="form-control"
                                 type="password" minlength="8" required>
-                            <button class="pw-toggle" type="button" tabindex="-1" aria-label="הראה קאוד"><svg
+                            <button class="pw-toggle" type="button" tabindex="-1" aria-label="Show password"><svg
                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     viewBox="0 0 16 16">
                                     <path
@@ -138,8 +138,8 @@
                         <p id="create-message" class="auth-message mt-2" aria-live="polite"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">פארמאכן</button>
-                        <button type="submit" class="btn btn-primary auth-btn">שאַפֿן חשבון</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary auth-btn">Create Account</button>
                     </div>
                 </form>
             </div>
@@ -156,7 +156,7 @@
     <script src="/js/auth.js"></script>
     <script>
         (function () {
-            var options = ['אימעיל', 'נאמען', 'פען נאמען'];
+            var options = ['Email', 'Full Name', 'Nickname'];
             var input = document.getElementById('login-name');
             var ph = input && input.parentElement.querySelector('.anim-ph');
             if (!input || !ph) return;

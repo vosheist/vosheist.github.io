@@ -91,14 +91,25 @@
         }
 
         const currentPage = getCurrentPageKey();
-        const items = [
+        const defaultItems = [
             { href: "/community", label: "מעמבערס", keys: ["community"] },
             { href: "/bais-medrash", label: "בית מדרש", keys: ["bais-medrash"] },
             { href: "/coffee-room", label: "קאווע צימער", keys: ["coffee-room"] },
             { href: "/bein-hasdarim", label: "בין הסדרים", keys: ["bein-hasdarim", "games"] },
             { href: "/hearos", label: "הערות", keys: ["hearos"] },
+            { href: "/inbox", label: "אינבאקס", keys: ["inbox"] }
+        ];
+
+        const englishItems = [
+            { href: "/community", label: "Members", keys: ["community"] },
+            { href: "/bais-medrash", label: "Bais Medrash", keys: ["bais-medrash"] },
+            { href: "/coffee-room", label: "Coffee Room", keys: ["coffee-room"] },
+            { href: "/bein-hasdarim", label: "Games", keys: ["bein-hasdarim", "games"] },
+            { href: "/hearos", label: "Feedback", keys: ["hearos"] },
             { href: "/inbox", label: "Inbox", keys: ["inbox"] }
         ];
+
+        const items = currentPage === "login" ? englishItems : defaultItems;
 
         const isActive = (item) => {
             if (currentPage.startsWith("games/")) {
@@ -116,7 +127,7 @@
 
         const accountShortcut = document.querySelector("#my-navbar .js-account-shortcut");
         if (accountShortcut) {
-            accountShortcut.textContent = "חשבון";
+            accountShortcut.textContent = currentPage === "login" ? "Account" : "חשבון";
             const accountActive = currentPage === "account";
             accountShortcut.classList.toggle("active", accountActive);
             if (accountActive) {
@@ -133,8 +144,23 @@
             return;
         }
 
+        const currentPage = getCurrentPageKey();
+
         brandLink.setAttribute("href", LOGIN_PAGE);
         brandLink.setAttribute("aria-label", "Yeshiva Chill");
+        if (currentPage === "login") {
+            brandLink.innerHTML = [
+                '<span class="brand-lockup" aria-hidden="true">',
+                '<span class="brand-words">',
+                '<span class="brand-vos">Yeshiva</span>',
+                '<span class="brand-heist">Chill</span>',
+                '</span>',
+                '<span class="brand-tes"></span>',
+                '</span>'
+            ].join("");
+            return;
+        }
+
         brandLink.innerHTML = [
             '<span class="brand-lockup" aria-hidden="true">',
             '<span class="brand-words">',

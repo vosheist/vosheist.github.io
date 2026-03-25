@@ -114,11 +114,46 @@
     </footer>
 
     <script src="/js/script.js"></script>
+    <script src="/js/api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
         const FEEDBACK_ENDPOINT = "http://localhost:3000/api/feedback"; // Backend feedback endpoint
+        const SESSION_KEY = "yeshivaChillCurrentUser";
+        let feedbackMember = null;
+
+        async function hydrateMemberFeedbackInfo() {
+            const userKey = sessionStorage.getItem(SESSION_KEY);
+            if (!userKey || !window.yeshivaChillApi || !window.yeshivaChillApi.getUser) {
+                return;
+            }
+
+            try {
+                const response = await window.yeshivaChillApi.getUser(userKey);
+                if (!response || !response.user) {
+                    return;
+                }
+
+                feedbackMember = {
+                    userKey,
+                    displayName: response.user.displayName || "",
+                    nickname: response.user.nickname || "",
+                    email: response.user.email || ""
+                };
+
+                const nameInput = document.getElementById("feedback-name");
+                const emailInput = document.getElementById("feedback-email");
+                if (nameInput && !nameInput.value.trim()) {
+                    nameInput.value = feedbackMember.displayName || feedbackMember.nickname || "";
+                }
+                if (emailInput && !emailInput.value.trim() && feedbackMember.email) {
+                    emailInput.value = feedbackMember.email;
+                }
+            } catch {
+                // Keep feedback form usable even if member lookup fails.
+            }
+        }
 
         document.getElementById("feedback-form").addEventListener("submit", async (event) => {
             event.preventDefault();
@@ -150,7 +185,11 @@
                     email,
                     message,
                     timestamp: new Date().toISOString(),
-                    source: "hearos-form"
+                    source: "hearos-form",
+                    userKey: feedbackMember && feedbackMember.userKey ? feedbackMember.userKey : sessionStorage.getItem(SESSION_KEY) || "",
+                    memberDisplayName: feedbackMember && feedbackMember.displayName ? feedbackMember.displayName : "",
+                    memberNickname: feedbackMember && feedbackMember.nickname ? feedbackMember.nickname : "",
+                    memberEmail: feedbackMember && feedbackMember.email ? feedbackMember.email : ""
                 };
 
                 // If endpoint is configured, send to backend
@@ -191,6 +230,8 @@
                 submitBtn.disabled = false;
             }
         });
+
+        hydrateMemberFeedbackInfo();
     </script>
 </body>
 
