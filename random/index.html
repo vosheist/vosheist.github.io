@@ -98,6 +98,23 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
+
+        .card-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .card-placeholder {
+            background: var(--accent-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
     </style>
 </head>
 
@@ -112,13 +129,13 @@
         <div class="cards">
             <!-- Example card -->
             <div class="card">
-                <img src="./digestive-system/image" alt="Digestive System" class="card-image" />
+                <img src="./digestiveSystem/image/scientist.png" alt="Digestive System" class="card-image" />
                 <h2>Digestive System</h2>
                 <p>An interactive exploration of the digestive system.</p>
                 <a href="./digestive-system/">View Project</a>
             </div>
             <div class="card">
-                <img src="./digestive-system/image" alt="Mashbak" class="card-image" />
+                <div class="card-image card-placeholder">🎨</div>
                 <h2>Mashbak</h2>
                 <p>A creative project showcasing design and functionality.</p>
                 <a href="./mashbak/">View Project</a>
