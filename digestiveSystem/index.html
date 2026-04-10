@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digestive System</title>
+    <style>
+        body {
+            background: #fff;
+            margin: 0;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+        .digestive-poster {
+            width: 700px;
+            margin: 0 auto;
+            min-height: 1200px;
+            position: relative;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .digestive-header {
+            width: 100%;
+            text-align: center;
+            margin-top: 32px;
+        }
+        .digestive-header h1 {
+            font-size: 2.8em;
+            color: #4b2e83;
+            letter-spacing: 0.12em;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            text-shadow: 1px 2px 0 #fff, 2px 3px 0 #e0e0e0;
+        }
+        .digestive-intro {
+            width: 90%;
+            margin: 0 auto 30px auto;
+            text-align: center;
+            font-size: 1.1em;
+            color: #444;
+            background: #f7f7fa;
+            border-radius: 12px;
+            padding: 12px 10px 10px 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+        }
+        .organs-zigzag {
+            display: grid;
+            grid-template-columns: 0.95fr 0.6fr 0.95fr; /* less space between columns */
+            grid-template-rows: repeat(5, 250px); /* more height for bigger boxes and labels */
+            width: 95%; /* more width for bigger boxes */
+            position: relative;
+            column-gap: 18px; /* reduce gap between columns */
+            margin-left: -80px; /* shift all boxes much more to the left */
+        }
+        .organ-box {
+            width: 230px;
+            height: 230px;
+            border: 2px solid #333;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25em;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: #ffe066;
+            position: relative;
+            margin: 0 auto;
+        }
+        .mouth { grid-column: 1; grid-row: 1; background: #ffe066; color: #7a5a00; justify-self: start; }
+        .esophagus { grid-column: 3; grid-row: 2; background: #b5e0ff; color: #1a4b8a; justify-self: end; }
+        .stomach { grid-column: 1; grid-row: 3; background: #baffc9; color: #1b8a5a; justify-self: start; }
+        .small-intestine { grid-column: 3; grid-row: 4; background: #ffb3b3; color: #a12a2a; justify-self: end; }
+        .large-intestine { grid-column: 1; grid-row: 5; background: #fff7ae; color: #b39a00; justify-self: start; }
+        .organ-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            z-index: 2;
+        }
+        .organ-label {
+            z-index: 2;
+        }
+        .organ-desc {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #333;
+            border: 1.5px solid #aaa;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            padding: 8px 14px;
+            font-size: 1em;
+            font-weight: normal;
+            margin-top: 16px;
+            min-width: 180px;
+            text-align: center;
+            z-index: 10;
+            white-space: pre-line;
+            max-width: 260px;
+        }
+        .organ-box:hover .organ-desc {
+            display: block;
+        }
+        .scientist-img {
+            position: absolute;
+            right: -270px; /* a little more right */
+            top: 850px;
+            width: 320px;
+            height: auto;
+            z-index: 11;
+            background: none;
+            border: none;
+            box-shadow: none;
+            filter: none;
+        }
+        .digestive-footer {
+            width: 90%;
+            text-align: left;
+            font-size: 5.5em;
+            color: #4b2e83;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            margin-top: 120px;
+            padding: 40px 0 28px 40px;
+            padding-top: 38px;
+            background: none;
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="digestive-poster">
+        <header class="digestive-header">
+            <h1>The Digestive System</h1>
+        </header>
+        <section class="digestive-intro" style="text-align:center;">
+            <p>Did you ever wonder how your body digests food? Explore the journey of food through your body! Hover over each organ to discover its special role in digestion!</p>
+        </section>
+        <main class="organs-zigzag" style="position:relative;">
+            <div class="organ-box mouth">
+                <span class="organ-label">Mouth</span>
+                <span class="organ-desc">Babies are born with teeth under their gums</span>
+            </div>
+            <div class="organ-box esophagus">
+                <span class="organ-label">Esophagus</span>
+                <span class="organ-desc">On the top and bottom of the esophagus there is a flap that is called a sphincter</span>
+            </div>
+            <div class="organ-box stomach">
+                <span class="organ-label">Stomach</span>
+                <span class="organ-desc">Your stomach stores all the food</span>
+            </div>
+            <div class="organ-box small-intestine">
+                <span class="organ-label">Small Intestine</span>
+                <span class="organ-desc">The small intestine is around 20–25 feet long (it’s possible because it curls up)</span>
+            </div>
+            <div class="organ-box large-intestine">
+                <span class="organ-label">Large Intestine</span>
+                <span class="organ-desc">The large intestine is not large but it’s called the large intestine cuz it’s very fat (it’s only a few feet long)</span>
+            </div>
+        </main>
+        <footer class="digestive-footer">Bracha Klein</footer>
+        <img src="image/scientist.png" alt="Scientist" class="scientist-img">
+    </div>
+        <div style="padding-top: 10em; width: 80%; margin:auto; margin-bottom:12em; text-align:center;">
+            <footer>
+                <p></p>
+                <a href="../index.html">Back to Main Website</a>
+            </footer>
+        </div>    
+</body>
+</html>
